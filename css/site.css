@@ -579,3 +579,16 @@ h2.mm-acc-title { margin: 0; }
 .mm-review-by { margin: auto 0 0; display: flex; flex-direction: column; gap: 2px; padding-top: var(--mm-space-3); border-top: 1px solid var(--mm-marble-line); font-family: var(--mm-font-display); font-size: 13px; }
 .mm-review-by strong { font-weight: 800; letter-spacing: 0.02em; }
 .mm-review-by span { font-family: var(--mm-font-body); font-size: 13px; color: var(--mm-stone-ink); }
+/* ===== Paquetes: rejilla adaptativa; "Ver qué incluye" flota sin mover las demás tarjetas ===== */
+.mm-catalog-grid { grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); }
+.mm-catalog-card { position: relative; }
+@media (min-width: 560px) {
+  .mm-pkg-details > .mm-checklist {
+    position: absolute; left: -2px; right: -2px; top: calc(100% - 1px); z-index: 10;
+    max-height: min(60vh, 420px); overflow-y: auto; margin: 0;
+    padding: var(--mm-space-3) var(--mm-space-4) var(--mm-space-4);
+    background: var(--mm-white); border: var(--mm-rule) solid var(--mm-black);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
+  }
+  .mm-pkg-details[open] summary { color: var(--mm-black); }
+}

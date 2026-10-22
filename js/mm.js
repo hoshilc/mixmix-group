@@ -333,6 +333,20 @@
   });
   document.addEventListener("mmstore", refreshButtons);
 
+  /* ---------- "Ver qué incluye" de los paquetes: uno abierto a la vez; se cierra al pulsar fuera o con Esc ---------- */
+  document.addEventListener("toggle", function (e) {
+    var d = e.target;
+    if (!d.classList || !d.classList.contains("mm-pkg-details") || !d.open) return;
+    document.querySelectorAll(".mm-pkg-details[open]").forEach(function (o) { if (o !== d) o.open = false; });
+  }, true);
+  document.addEventListener("click", function (e) {
+    if (window.innerWidth < 560) return;     /* en una sola columna se despliega dentro de la tarjeta */
+    document.querySelectorAll(".mm-pkg-details[open]").forEach(function (o) { if (!o.contains(e.target)) o.open = false; });
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") document.querySelectorAll(".mm-pkg-details[open]").forEach(function (o) { o.open = false; });
+  });
+
   /* ---------- botones de descarga de lo comprado (cuenta.html) ---------- */
   function dlRow(label, file, name) {
     var li = el("li", "mm-dl-item");
