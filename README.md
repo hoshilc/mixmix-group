@@ -60,7 +60,7 @@ Para regenerar `descargas/` y `js/catalog.js`:
 powershell -ExecutionPolicy Bypass -File tools\build-catalog.ps1
 ```
 
-(opcional `-SrcRoot "C:\ruta\a\Descargables  MIXMIX 2026"`). Los nombres de descarga conservan acentos y ñ y llevan el prefijo `MixMix - `. Si un título tiene un error, corrígelo en `tools/catalog-config.json` y vuelve a ejecutar.
+(opcional `-SrcRoot "C:\ruta\a\Descargables  MIXMIX 2026"`). Genera los zips **por categoría** (8 de manuales, y uno por puestos, controles, KPIs, Mystery y juegos); **ningún zip pasa de 450 MB** (si un grupo pesara más, se parte en `-1`, `-2`…) y el script falla si alguno supera 500 MB. Hoy el más grande pesa unos 159 MB. Los nombres de descarga conservan acentos y ñ y llevan el prefijo `MixMix - `. Si un título tiene un error, corrígelo en `tools/catalog-config.json` y vuelve a ejecutar.
 
 ## Tienda en línea (carrito, cuenta, compras)
 

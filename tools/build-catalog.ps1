@@ -176,7 +176,8 @@ foreach ($c in @("manuales", "puestos", "controles", "kpis", "mystery", "juegos"
   }
 }
 
-# ---------- ZIPS (kit 360 solo si no existe: son 500 MB) ----------
+# ---------- ZIPS (ninguno pasa de 450 MB: si un grupo pesa mas, se parte en -1, -2...) ----------
+$MaxZipMB = 450
 function New-Zip($zipPath, $list) {
   if (Test-Path -LiteralPath $zipPath) { [System.IO.File]::Delete($zipPath) }
   $fs = [System.IO.File]::Open($zipPath, [System.IO.FileMode]::Create)
@@ -190,46 +191,75 @@ function New-Zip($zipPath, $list) {
   }
   $zip.Dispose(); $fs.Dispose()
 }
-# kit-1000.zip ya no se vende (se eliminaron los Kit 500 / Kit 1000)
-$k1 = Join-Path $out "kit-1000.zip"
-if (Test-Path -LiteralPath $k1) { [System.IO.File]::Delete($k1) }
-# el zip de manuales era kit-360.zip (500 MB): se renombra en vez de rehacerlo
-$mz = Join-Path $out "manuales.zip"
-$kz = Join-Path $out "kit-360.zip"
-if ((Test-Path -LiteralPath $kz) -and -not (Test-Path -LiteralPath $mz)) { [System.IO.File]::Move($kz, $mz); Write-Host "kit-360.zip -> manuales.zip" }
-if (Test-Path -LiteralPath $kz) { [System.IO.File]::Delete($kz) }
+# crea uno o varios zips para $list; devuelve @{ t; file } por cada parte
+function New-ZipParts($baseName, $title, $list) {
+  $limit = $MaxZipMB * 1MB
+  $parts = New-Object System.Collections.Generic.List[object]
+  $cur = New-Object System.Collections.Generic.List[object]; $curSize = 0
+  foreach ($it in $list) {
+    $sz = 0; foreach ($fl in $it._files) { $sz += (Get-Item -LiteralPath $fl.src).Length }
+    if ($cur.Count -gt 0 -and ($curSize + $sz) -gt $limit) { $parts.Add($cur); $cur = New-Object System.Collections.Generic.List[object]; $curSize = 0 }
+    $cur.Add($it); $curSize += $sz
+  }
+  if ($cur.Count -gt 0) { $parts.Add($cur) }
+  $outParts = @()
+  for ($i = 0; $i -lt $parts.Count; $i++) {
+    $nm = if ($parts.Count -eq 1) { $baseName + ".zip" } else { $baseName + "-" + ($i + 1) + ".zip" }
+    $ti = if ($parts.Count -eq 1) { $title } else { $title + " (parte " + ($i + 1) + " de " + $parts.Count + ")" }
+    New-Zip (Join-Path $out $nm) @($parts[$i])
+    $mb = [math]::Round((Get-Item -LiteralPath (Join-Path $out $nm)).Length / 1MB, 1)
+    Write-Host ("zip " + $nm + " -> " + @($parts[$i]).Count + " documentos, " + $mb + " MB")
+    $outParts += [PSCustomObject]@{ t = $ti; file = ("descargas/" + $nm) }
+  }
+  return $outParts
+}
+# zips que ya no se venden o que se reemplazaron por zips por categoria
+foreach ($old in @("kit-1000.zip", "kit-360.zip", "manuales.zip")) {
+  $op = Join-Path $out $old
+  if (Test-Path -LiteralPath $op) { [System.IO.File]::Delete($op); Write-Host ("borrado zip antiguo: " + $old) }
+}
+# y los zips por categoria/tipo anteriores (se rehacen completos)
+Get-ChildItem -LiteralPath $out -Filter "*.zip" -File -ErrorAction SilentlyContinue | ForEach-Object { [System.IO.File]::Delete($_.FullName) }
 
-# zips por tipo de documento (se rehacen cada vez, salvo manuales que pesa 500 MB)
-$typeZips = @(
-  @{ id = "bundle-puestos";   title = "Paquete: Descripciones de Puesto"; cat = "puestos";   zip = "puestos.zip" },
-  @{ id = "bundle-controles"; title = "Paquete: Controles Imprimibles";   cat = "controles"; zip = "controles.zip" },
-  @{ id = "bundle-kpis";      title = "Paquete: KPIs de Gerencia";        cat = "kpis";      zip = "kpis.zip" },
-  @{ id = "bundle-mystery";   title = "Paquete: Mystery Shopper";         cat = "mystery";   zip = "mystery.zip" },
-  @{ id = "bundle-juegos";    title = "Paquete: Juegos MixMix";           cat = "juegos";    zip = "juegos.zip" }
-)
 $bundleOut = New-Object System.Collections.Generic.List[object]
+$zipsCat = @()
 
-# Catalogo completo = ancla: manuales + puestos + controles + kpis + mystery (sin juegos)
-$mzCount = @($items | Where-Object { $_.cat -eq "manuales" }).Count
-if (-not (Test-Path -LiteralPath $mz)) { New-Zip $mz @($items | Where-Object { $_.cat -eq "manuales" }); Write-Host ("zip manuales.zip -> " + $mzCount + " archivos") }
-else { Write-Host "manuales.zip ya existe, se conserva" }
+# Manuales: un zip por categoria (cada uno muy por debajo del limite)
+foreach ($t in $cfg.themes) {
+  $list = @($items | Where-Object { $_.cat -eq "manuales" -and $_.g -eq $t.id })
+  if ($list.Count -eq 0) { continue }
+  $zipsCat += @(New-ZipParts ("manuales-" + $t.id) ("Manuales: " + $t.name) $list)
+}
+
+# Tipos de documento: un zip por tipo (puestos, controles, kpis, mystery, juegos)
+$typeZips = @(
+  @{ id = "bundle-puestos";   title = "Paquete: Descripciones de Puesto"; cat = "puestos";   zip = "puestos";   label = "Descripciones de Puesto" },
+  @{ id = "bundle-controles"; title = "Paquete: Controles Imprimibles";   cat = "controles"; zip = "controles"; label = "Controles Imprimibles" },
+  @{ id = "bundle-kpis";      title = "Paquete: KPIs de Gerencia";        cat = "kpis";      zip = "kpis";      label = "KPIs de Gerencia" },
+  @{ id = "bundle-mystery";   title = "Paquete: Mystery Shopper";         cat = "mystery";   zip = "mystery";   label = "Mystery Shopper" },
+  @{ id = "bundle-juegos";    title = "Paquete: Juegos MixMix";           cat = "juegos";    zip = "juegos";    label = "Juegos MixMix" }
+)
+$typeParts = @{}
 foreach ($z in $typeZips) {
   $list = @($items | Where-Object { $_.cat -eq $z.cat })
-  New-Zip (Join-Path $out $z.zip) $list
-  Write-Host ("zip " + $z.zip + " -> " + $list.Count + " documentos")
+  $parts = @(New-ZipParts $z.zip $z.label $list)
+  $typeParts[$z.id] = $parts
+  if ($z.cat -ne "juegos") { $zipsCat += $parts }
 }
-$zipsCat = @(
-  [PSCustomObject]@{ t = "Manuales T$([char]0x00E1)cticos"; file = "descargas/manuales.zip" },
-  [PSCustomObject]@{ t = "Descripciones de Puesto"; file = "descargas/puestos.zip" },
-  [PSCustomObject]@{ t = "Controles Imprimibles"; file = "descargas/controles.zip" },
-  [PSCustomObject]@{ t = "KPIs de Gerencia"; file = "descargas/kpis.zip" },
-  [PSCustomObject]@{ t = "Mystery Shopper"; file = "descargas/mystery.zip" }
-)
-$bundleOut.Add([PSCustomObject]@{ id = "catalogo"; title = ("Cat" + [char]0x00E1 + "logo completo"); cats = @("manuales","puestos","controles","kpis","mystery"); price = [int]$PR.catalogo; zips = $zipsCat; stripe = "" })
+
+# Catalogo completo = ancla: manuales + puestos + controles + kpis + mystery (sin juegos); se entrega en varios zips
+$bundleOut.Add([PSCustomObject]@{ id = "catalogo"; title = ("Cat" + [char]0x00E1 + "logo completo"); cats = @("manuales","puestos","controles","kpis","mystery"); price = [int]$PR.catalogo; zips = @($zipsCat); stripe = "" })
 foreach ($z in $typeZips) {
   $bp = if ($z.cat -eq "juegos") { [int]$PR.juegos } else { [int]$PR.types.($z.cat) }
-  $bundleOut.Add([PSCustomObject]@{ id = $z.id; title = $z.title; cats = @($z.cat); price = $bp; file = ("descargas/" + $z.zip); stripe = "" })
+  $pp = @($typeParts[$z.id])
+  if ($pp.Count -eq 1) { $bundleOut.Add([PSCustomObject]@{ id = $z.id; title = $z.title; cats = @($z.cat); price = $bp; file = $pp[0].file; stripe = "" }) }
+  else { $bundleOut.Add([PSCustomObject]@{ id = $z.id; title = $z.title; cats = @($z.cat); price = $bp; zips = $pp; stripe = "" }) }
 }
+# comprobacion final: ningun zip debe pasar de 500 MB
+$big = Get-ChildItem -LiteralPath $out -Filter "*.zip" -File | Where-Object { $_.Length -gt 500MB }
+if ($big) { throw ("Hay zips de mas de 500 MB: " + (($big | ForEach-Object { $_.Name }) -join ", ")) }
+$maxZip = (Get-ChildItem -LiteralPath $out -Filter "*.zip" -File | Measure-Object Length -Maximum).Maximum
+Write-Host ("zip mas grande: " + [math]::Round($maxZip / 1MB, 1) + " MB (limite 500 MB)")
 # una categoria de manuales = un paquete (precio de la tabla, sin zip)
 foreach ($t in $cfg.themes) {
   $ids = @($items | Where-Object { $_.cat -eq "manuales" -and $_.g -eq $t.id } | ForEach-Object { $_.id })
