@@ -1,5 +1,4 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <rect width="64" height="64" fill="#111110"/>
-  <rect x="3" y="3" width="58" height="58" fill="none" stroke="#C6A15B" stroke-width="2"/>
-  <text x="32" y="42" text-anchor="middle" font-family="Impact, 'Bebas Neue', 'Arial Narrow', sans-serif" font-size="26" fill="#F0EFF4">MIX</text>
+  <path fill="#F0EFF4" transform="translate(14.636 52) scale(0.04655)" d="M38.0859375,0L38.0859375,-859.375 299.8046875,-859.375 372.0703125,-335.44921875 443.84765625,-859.375 708.0078125,-859.375 708.0078125,0 550.78125,0 550.78125,-619.140625 452.1484375,0 297.8515625,0 193.359375,-619.140625 193.359375,0z"/>
 </svg>

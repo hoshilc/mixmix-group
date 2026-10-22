@@ -66,7 +66,7 @@ foreach ($f in (Get-ChildItem $root -File -Filter *.html)) {
   # 3) meta: icono + redes sociales
   $title = [regex]::Match($h, '<title>(.*?)</title>').Groups[1].Value
   $desc = [regex]::Match($h, 'name="description" content="(.*?)"').Groups[1].Value
-  $meta = '<link rel="icon" href="img/favicon.svg" type="image/svg+xml">' + "`n" + '<meta name="theme-color" content="#111110">'
+  $meta = '<link rel="icon" href="img/favicon.svg" type="image/svg+xml">' + "`n" + '<link rel="icon" href="img/favicon-48.png" sizes="48x48" type="image/png">' + "`n" + '<link rel="apple-touch-icon" href="img/apple-touch-icon.png">' + "`n" + '<meta name="theme-color" content="#111110">'
   if ($noindex -notcontains $name) {
     $url = if ($name -eq "index.html") { "$site/" } else { "$site/$name" }
     $sitemapPages += $url
