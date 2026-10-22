@@ -449,3 +449,12 @@ button.mm-btn { font-family: var(--mm-font-display); }
 .mm-home-pkg:hover { background: var(--mm-white); }
 .mm-home-pkg:hover .mm-h2 { text-decoration: underline; text-underline-offset: 4px; }.mm-home-pkg { display: flex; flex-direction: column; }
 .mm-home-pkg-meta { margin-top: auto; padding-top: var(--mm-space-4); }
+/* ===== Home: auditorias ===== */
+.mm-grid-3 { grid-template-columns: 1fr; }
+@media (min-width: 900px) { .mm-grid-3 { grid-template-columns: repeat(3, 1fr); } }
+.mm-audit-grid { margin-top: var(--mm-space-8); }
+.mm-audit-grid .mm-cell, .mm-audit-grid .mm-cell-dark { display: flex; flex-direction: column; }
+.mm-audit-grid .mm-h2 { font-size: clamp(20px, 2vw, 26px); margin: var(--mm-space-2) 0; }
+.mm-audit-grid .mm-home-pkg-meta { margin-top: auto; padding-top: var(--mm-space-4); }
+.mm-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: var(--mm-space-3) 0 0; }
+.mm-chips span { padding: 3px 10px; border: 1px solid var(--mm-black); font-family: var(--mm-font-display); font-weight: 600; font-size: 11px; letter-spacing: var(--mm-track-label); text-transform: uppercase; }
