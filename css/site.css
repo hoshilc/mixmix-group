@@ -459,3 +459,18 @@ button.mm-btn { font-family: var(--mm-font-display); }
 .mm-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: var(--mm-space-3) 0 0; }
 .mm-chips span { padding: 3px 10px; border: 1px solid var(--mm-black); font-family: var(--mm-font-display); font-weight: 600; font-size: 11px; letter-spacing: var(--mm-track-label); text-transform: uppercase; }
 .mm-stat-source { margin: var(--mm-space-2) 0 0; font-family: var(--mm-font-display); font-weight: 600; font-size: 11px; letter-spacing: 0.04em; color: var(--mm-stone-ink); }
+/* ===== Evidencia: videos de redes sociales (carga al dar clic) ===== */
+.mm-videos { display: grid; grid-template-columns: 1fr; gap: var(--mm-space-4); margin-top: var(--mm-space-8); align-items: start; }
+@media (min-width: 600px) { .mm-videos { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 900px) { .mm-videos { grid-template-columns: repeat(3, 1fr); } }
+.mm-videos[hidden] { display: none; }
+.mm-video-frame { position: relative; width: 100%; background: var(--mm-black); border: var(--mm-rule) solid var(--mm-black); overflow: hidden; }
+.mm-video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.mm-video-play {
+  position: absolute; inset: 0; width: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-start; gap: var(--mm-space-2);
+  padding: var(--mm-space-4); background: var(--mm-black); color: var(--mm-bone); border: 0; cursor: pointer; text-align: left; font-family: var(--mm-font-display);
+}
+.mm-video-net { font-size: 11px; font-weight: 700; letter-spacing: var(--mm-track-label); text-transform: uppercase; color: var(--mm-gold); }
+.mm-video-title { font-family: var(--mm-font-body); font-size: 16px; line-height: 1.3; }
+.mm-video-cta { margin-top: var(--mm-space-2); padding: 8px 14px; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; background: var(--mm-gold); color: var(--mm-black); }
+.mm-video-play:hover .mm-video-cta { background: var(--mm-bone); }
