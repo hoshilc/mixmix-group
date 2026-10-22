@@ -593,3 +593,28 @@ h2.mm-acc-title { margin: 0; }
   }
   .mm-pkg-details[open] summary { color: var(--mm-black); }
 }
+/* ===== Manuales por volumen: escalones y barra de seleccion ===== */
+.mm-tiers { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--mm-space-3); margin-top: var(--mm-space-3); }
+@media (min-width: 560px) { .mm-tiers { grid-template-columns: repeat(4, 1fr); } }
+@media (min-width: 900px) { .mm-tiers { grid-template-columns: repeat(7, 1fr); } }
+.mm-tier { padding: var(--mm-space-3) var(--mm-space-4); background: var(--mm-marble); border: var(--mm-rule) solid var(--mm-marble-line); }
+.mm-tier p { margin: 0; }
+.mm-tier-n { font-family: var(--mm-font-display); font-size: 13px; letter-spacing: var(--mm-track-label); text-transform: uppercase; color: var(--mm-stone-ink); }
+.mm-tier-n strong { font-size: 24px; color: var(--mm-black); letter-spacing: 0; }
+.mm-tier-price { margin-top: 2px !important; font-family: var(--mm-font-display); font-weight: 800; font-size: 18px; white-space: nowrap; }
+.mm-pick { display: flex; align-items: center; gap: var(--mm-space-3); cursor: pointer; flex: 1; min-width: 0; }
+.mm-pick input { width: 20px; height: 20px; flex-shrink: 0; accent-color: var(--mm-black); cursor: pointer; }
+.mm-pick input:disabled { cursor: not-allowed; }
+.mm-buy-item.is-picked { background: var(--mm-marble-deep); }
+.mm-pickbar {
+  position: sticky; bottom: 12px; z-index: 12; margin-top: var(--mm-space-4);
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--mm-space-3);
+  padding: var(--mm-space-3) var(--mm-space-4); background: var(--mm-white); border: var(--mm-rule) solid var(--mm-black); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+}
+.mm-pickbar[hidden] { display: none; }
+.mm-pickbar p { margin: 0; font-family: var(--mm-font-body); font-size: 15px; }
+.mm-pickbar-price { font-family: var(--mm-font-display); font-weight: 800; font-size: 20px; }
+.mm-pickbar-hint { font-size: 13px !important; color: var(--mm-stone-ink); margin-top: 2px !important; }
+.mm-pickbar-actions { display: flex; align-items: center; gap: var(--mm-space-4); }
+.mm-cart-discount { background: var(--mm-marble-deep); padding-left: var(--mm-space-3); padding-right: var(--mm-space-3); }
+.mm-cart-hint { margin: 4px 0 0; font-family: var(--mm-font-body); font-size: 13px; }

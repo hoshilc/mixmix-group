@@ -289,6 +289,7 @@ $sb = New-Object System.Text.StringBuilder
 [void]$sb.AppendLine("  ""themes"": " + (ConvertTo-Json -InputObject @($cfg.themes) -Compress) + ",")
 [void]$sb.AppendLine("  ""areas"": " + (ConvertTo-Json -InputObject @($cfg.areas) -Compress) + ",")
 [void]$sb.AppendLine("  ""categories"": " + (ConvertTo-Json -InputObject @($cats) -Compress) + ",")
+[void]$sb.AppendLine("  ""volume"": " + (ConvertTo-Json -InputObject $cfg.prices.volume -Compress -Depth 5) + ",")
 [void]$sb.AppendLine("  ""bundles"": [")
 [void]$sb.AppendLine((($bundleOut | ForEach-Object { "    " + (ConvertTo-Json -InputObject $_ -Compress -Depth 5) }) -join ",`n"))
 [void]$sb.AppendLine("  ],")

@@ -66,17 +66,32 @@
     if (!u) return [];
     return (read(K_ORDERS, {})[u.email] || []).slice().reverse();   /* la más reciente primero */
   };
+  /* precio del carrito: los manuales sueltos se cobran por volumen (paquetes de 1, 3, 5, 7, 10, 15 y 20);
+     lo demás (documentos cortos, juegos, paquetes) va a su precio. */
+  S.pricing = function (ids) {
+    ids = ids || S.cart();
+    var prods = ids.map(product).filter(Boolean);
+    var man = prods.filter(function (p) { return p.cat === "manuales"; });
+    var other = prods.filter(function (p) { return p.cat !== "manuales"; }).reduce(function (a, p) { return a + p.price; }, 0);
+    var base = man.reduce(function (a, p) { return a + p.price; }, 0);
+    var vc = (M() && man.length) ? M().volumeCost(man.length) : { cost: base, slots: man.length, plan: [] };
+    var cost = man.length ? Math.min(vc.cost, base) : 0;
+    return { manuals: man.length, manualsBase: base, manualsCost: cost, discount: base - cost, other: other, total: other + cost,
+             extra: (M() && man.length) ? M().volumeExtra(man.length) : 0, plan: vc.plan };
+  };
   S.placeOrder = function () {
     var u = S.user(), c = S.cart();
     if (!u || !c.length || !M()) return null;
     var all = read(K_ORDERS, {});
     var list = all[u.email] || [];
     var lines = c.map(function (id) { var p = product(id); return { id: id, title: p.title, price: p.price }; });
+    var pr = S.pricing(c);
     var order = {
       id: "MM-" + Date.now().toString(36).toUpperCase(),
       date: new Date().toISOString(),
       lines: lines,
-      total: lines.reduce(function (a, l) { return a + l.price; }, 0)
+      discount: pr.discount,
+      total: pr.total
     };
     list.push(order);
     all[u.email] = list;

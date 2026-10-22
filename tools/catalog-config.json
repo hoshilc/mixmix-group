@@ -37,7 +37,19 @@
     "catalogo": 6999,
     "themes": { "apertura": 2499, "fundamentos": 1799, "arquitectura": 1599, "servicio": 799, "marketing": 1099, "finanzas": 549, "talento": 1799, "blindaje": 1599 },
     "types": { "puestos": 2249, "controles": 1149, "kpis": 749, "mystery": 579 },
-    "juegos": 699
+    "juegos": 699,
+    "volume": {
+      "_nota": "Manuales por volumen: precio base x N con el descuento de la estrategia (2-4: 10%, 5-9: 25%, 10-20: 35%), redondeado a ...49/...99 y ajustado para que el precio por manual nunca suba al llevar mas.",
+      "manuales": [
+        { "n": 1,  "price": 299 },
+        { "n": 3,  "price": 799 },
+        { "n": 5,  "price": 1149 },
+        { "n": 7,  "price": 1599 },
+        { "n": 10, "price": 1949 },
+        { "n": 15, "price": 2899 },
+        { "n": 20, "price": 3849 }
+      ]
+    }
   },
   "games": [
     { "id": "loteria-ingles", "title": "Lotería MIXMIX: Inglés", "price": 249,

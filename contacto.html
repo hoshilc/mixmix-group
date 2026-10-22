@@ -162,6 +162,12 @@
     }
   }
 
+  /* mensaje preparado desde la seleccion de manuales (descargables.html) */
+  try {
+    var pre = sessionStorage.getItem("mm_interes");
+    if (pre) { document.getElementById("mensaje").value = pre; sessionStorage.removeItem("mm_interes"); }
+  } catch (e) { /* sin almacenamiento */ }
+
   function show(text) { msg.textContent = text; msg.hidden = false; msg.scrollIntoView({ block: "nearest" }); }
 
   form.addEventListener("submit", function (e) {

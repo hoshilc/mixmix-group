@@ -113,6 +113,8 @@
     var plain = ids.filter(function (id) { return M.byId[id].cat; });
     if (plain.length < 2) return [];
     var cands = M.catalog.bundles.concat(M.catalog.packages.filter(function (p) { return !p.parent && !p.choose; }));
+    var pr0 = S.pricing(ids), ratio = pr0.manualsBase ? pr0.manualsCost / pr0.manualsBase : 1;   /* precio real de cada manual tras el descuento por volumen */
+    function eff(id) { var p = M.byId[id]; return p.cat === "manuales" ? p.price * ratio : p.price; }
     var out = [];
     cands.forEach(function (c) {
       if (ids.indexOf(c.id) > -1 || S.owns(c.id)) return;
@@ -120,7 +122,7 @@
       M.contentsOf(c).forEach(function (i) { set[i.id] = true; });
       var mine = plain.filter(function (id) { return set[id]; });
       if (mine.length < 2) return;
-      var paid = mine.reduce(function (a, id) { return a + M.byId[id].price; }, 0);
+      var paid = Math.round(mine.reduce(function (a, id) { return a + eff(id); }, 0));
       if (paid < c.price * 0.5) return;
       var n = Object.keys(set).length;
       out.push({ c: c, mine: mine, paid: paid, diff: c.price - paid, more: n - mine.length, n: n });
@@ -157,7 +159,24 @@
       ul.appendChild(li);
     });
 
-    var total = prods.reduce(function (a, p) { return a + p.price; }, 0);
+    /* manuales por volumen: línea de descuento y aviso de cuántos más caben al mismo precio */
+    var pr = S.pricing(ids);
+    if (pr.manuals > 0 && pr.discount > 0) {
+      var dl = document.createElement("li");
+      dl.className = "mm-cart-line mm-cart-discount";
+      dl.innerHTML = '<div><p class="mm-cart-title">Descuento por volumen</p>' +
+        '<p class="mm-cart-kind">' + pr.manuals + (pr.manuals === 1 ? " manual" : " manuales") + ' · ' + M.money(pr.manualsCost) + ' en total (' + M.money(Math.round(pr.manualsCost / pr.manuals)) + ' c/u)</p>' +
+        (pr.extra > 0 ? '<p class="mm-cart-hint">Puedes agregar ' + pr.extra + (pr.extra === 1 ? ' manual más' : ' manuales más') + ' sin pagar más. <a href="descargables.html#manuales">Elegir manuales</a></p>' : '') + '</div>' +
+        '<div class="mm-cart-right"><span class="mm-cart-price">−' + M.money(pr.discount) + '</span></div>';
+      ul.appendChild(dl);
+    } else if (pr.manuals > 0 && pr.extra > 0) {
+      var hl = document.createElement("li");
+      hl.className = "mm-cart-line mm-cart-discount";
+      hl.innerHTML = '<div><p class="mm-cart-hint">Puedes agregar ' + pr.extra + (pr.extra === 1 ? ' manual más' : ' manuales más') + ' sin pagar más. <a href="descargables.html#manuales">Elegir manuales</a></p></div>';
+      ul.appendChild(hl);
+    }
+
+    var total = pr.total;
     var docs = {};
     prods.forEach(function (p) { docsOf(p).forEach(function (i) { docs[i.id] = true; }); });
     $("sum-count").textContent = prods.length;

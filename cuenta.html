@@ -168,7 +168,7 @@
       d.className = "mm-acc mm-order";
       d.open = o.id === openId;
       d.innerHTML = '<summary><span class="mm-acc-title">Pedido ' + esc(o.id) + '</span>' +
-        '<span class="mm-acc-meta">' + esc(fmtDate(o.date)) + ' · ' + o.lines.length + (o.lines.length === 1 ? ' producto' : ' productos') + ' · ' + M.money(o.total) + '</span></summary>';
+        '<span class="mm-acc-meta">' + esc(fmtDate(o.date)) + ' · ' + o.lines.length + (o.lines.length === 1 ? ' producto' : ' productos') + ' · ' + M.money(o.total) + (o.discount > 0 ? ' (incluye descuento por volumen de ' + M.money(o.discount) + ')' : '') + '</span></summary>';
       var body = document.createElement("div");
       body.className = "mm-acc-body";
       o.lines.forEach(function (l) {

@@ -51,9 +51,41 @@
     return n + (ext || ".pdf");
   }
 
+  /* ---------- manuales por volumen ----------
+     Escalones de js/catalog.js (volume.manuales): 1, 3, 5, 7, 10, 15 y 20 manuales.
+     El precio de N manuales es el más barato entre todas las combinaciones de paquetes que cubran
+     al menos N (p. ej. 4 = paquete de 3 + 1 suelto). Nunca baja al agregar un manual, y a veces
+     llevar uno más cuesta lo mismo: por eso se avisa "puedes elegir X más sin pagar más". */
+  var VOL = ((C.volume && C.volume.manuales) || []).slice().sort(function (a, b) { return a.n - b.n; });
+  function manualBase() { return (catById.manuales && catById.manuales.price) || 299; }
+  function volumeCost(n) {
+    if (n <= 0) return { cost: 0, slots: 0, plan: [] };
+    if (!VOL.length) return { cost: n * manualBase(), slots: n, plan: [n] };
+    var maxT = VOL[VOL.length - 1].n, lim = n + maxT, INF = 1e12, dp = [0], from = [0], k, i;
+    for (k = 1; k <= lim; k++) {
+      dp[k] = INF; from[k] = 0;
+      for (i = 0; i < VOL.length; i++) {
+        var t = VOL[i];
+        if (k >= t.n && dp[k - t.n] + t.price < dp[k]) { dp[k] = dp[k - t.n] + t.price; from[k] = t.n; }
+      }
+    }
+    var best = n;
+    for (k = n; k <= lim; k++) if (dp[k] < dp[best]) best = k;
+    var plan = [];
+    for (k = best; k > 0; k -= from[k]) plan.push(from[k]);
+    return { cost: dp[best], slots: best, plan: plan.sort(function (a, b) { return b - a; }) };
+  }
+  /* cuántos manuales más se pueden llevar al mismo precio */
+  function volumeExtra(n) {
+    var c = volumeCost(n).cost, e = 0;
+    while (e < 25 && volumeCost(n + e + 1).cost === c) e++;
+    return e;
+  }
+
   window.MM = {
     catalog: C, byId: byId, catById: catById, itemsOf: itemsOf, contentsOf: contentsOf,
-    money: money, buyHref: buyHref, niceName: niceName, themeName: themeName, areaName: areaName, filesOf: filesOf
+    money: money, buyHref: buyHref, niceName: niceName, themeName: themeName, areaName: areaName, filesOf: filesOf,
+    volume: VOL, volumeCost: volumeCost, volumeExtra: volumeExtra
   };
 
   /* texto sin acentos ni mayúsculas, para buscar */
@@ -128,9 +160,15 @@
       refreshButtons();
     }
 
+    /* manuales: se eligen con casilla y el precio baja solo por volumen */
+    var picker = cat.id === "manuales" && VOL.length > 0;
     var ul = el("ul", "mm-buy-list mm-buy-flat");
     var rows = list.map(function (i) {
-      var li = el("li", "mm-buy-item", rowHtml(i, groups ? gName[i.g] : ""));
+      var li = picker
+        ? el("li", "mm-buy-item", '<label class="mm-pick"><input type="checkbox" value="' + esc(i.id) + '" aria-label="Elegir ' + esc(i.title) + '">' +
+            '<span class="mm-buy-title">' + esc(i.title) + (groups ? ' <span class="mm-row-tag">' + esc(gName[i.g]) + '</span>' : '') + '</span></label>' +
+            '<span class="mm-buy-price">' + short(i.price) + '</span>')
+        : el("li", "mm-buy-item", rowHtml(i, groups ? gName[i.g] : ""));
       li.setAttribute("data-g", i.g || "");
       li.setAttribute("data-q", norm(i.title + " " + (gName ? gName[i.g] || "" : "")));
       ul.appendChild(li);
@@ -163,7 +201,90 @@
     root.appendChild(offer);
     root.appendChild(ul);
     root.appendChild(empty);
+
+    if (picker) {
+      var bar2 = el("div", "mm-pickbar");
+      bar2.hidden = true;
+      bar2.setAttribute("aria-live", "polite");
+      root.appendChild(bar2);
+      var boxes = function () { return Array.prototype.slice.call(ul.querySelectorAll('input[type="checkbox"]:checked')); };
+      var update = function () {
+        var chosen = boxes(), n = chosen.length;
+        rows.forEach(function (li) { var cb = li.querySelector("input"); li.classList.toggle("is-picked", !!(cb && cb.checked)); });
+        if (!n) { bar2.hidden = true; return; }
+        var vc = volumeCost(n), base = chosen.reduce(function (a, cb) { return a + byId[cb.value].price; }, 0);
+        var extra = volumeExtra(n), hint = "";
+        if (extra > 0) {
+          hint = "Puedes elegir " + extra + (extra === 1 ? " manual más" : " manuales más") + " sin pagar más.";
+        } else {
+          var next = VOL.filter(function (t) { return t.n > n; })[0];
+          if (next) hint = "Con " + next.n + " manuales pagas " + money(next.price) + " (" + per(next.price, next.n) + ").";
+        }
+        bar2.innerHTML =
+          '<div class="mm-pickbar-info"><p class="mm-pickbar-main"><strong>' + n + (n === 1 ? " manual elegido" : " manuales elegidos") + '</strong> · ' +
+          '<span class="mm-pickbar-price">' + money(vc.cost) + '</span>' +
+          (base > vc.cost ? ' <span class="mm-price-old">' + money(base) + '</span>' : '') +
+          ' <span class="mm-per">' + per(vc.cost, n) + (base > vc.cost ? ' · ahorras ' + money(base - vc.cost) : '') + '</span></p>' +
+          (hint ? '<p class="mm-pickbar-hint">' + esc(hint) + '</p>' : '') + '</div>' +
+          '<div class="mm-pickbar-actions"><button type="button" class="mm-link-btn" data-pick-clear>Quitar selección</button>' +
+          '<button type="button" class="mm-btn" data-pick-go>' + (storeOn() ? "Agregar " + n + " al carrito" : "Me interesa") + '</button></div>';
+        bar2.hidden = false;
+      };
+      /* con tienda activa: lo ya comprado o ya en el carrito no se puede volver a elegir */
+      var sync = function () {
+        var S = window.MMStore;
+        if (!storeOn() || !S) return;
+        rows.forEach(function (li) {
+          var cb = li.querySelector("input"), owned = S.owns(cb.value), inCart = S.has(cb.value);
+          cb.disabled = owned || inCart;
+          if (cb.disabled) cb.checked = false;
+          var tag = li.querySelector(".mm-pick-state");
+          if (!tag) { tag = document.createElement("span"); tag.className = "mm-row-tag mm-pick-state"; li.querySelector(".mm-buy-title").appendChild(tag); }
+          tag.textContent = owned ? "Ya lo tienes" : inCart ? "En el carrito" : "";
+          tag.hidden = !tag.textContent;
+        });
+        update();
+      };
+      document.addEventListener("mmstore", sync);
+      sync();
+      ul.addEventListener("change", update);
+      bar2.addEventListener("click", function (e) {
+        var chosen = boxes();
+        if (e.target.closest("[data-pick-clear]")) {
+          chosen.forEach(function (cb) { cb.checked = false; });
+          update();
+        } else if (e.target.closest("[data-pick-go]")) {
+          var ids = chosen.map(function (cb) { return cb.value; });
+          if (storeOn() && window.MMStore) {
+            ids.forEach(function (id) { window.MMStore.add(id); });
+            chosen.forEach(function (cb) { cb.checked = false; });
+            update();
+          } else {
+            var vc2 = volumeCost(ids.length);
+            try {
+              sessionStorage.setItem("mm_interes", "Me interesa un paquete de " + ids.length + (ids.length === 1 ? " manual" : " manuales") + " (" + money(vc2.cost) + "): " +
+                ids.map(function (id) { return byId[id].title; }).join("; "));
+            } catch (err) { /* sin almacenamiento: el formulario queda sin mensaje */ }
+            location.href = "contacto.html?interes=descargables";
+          }
+        }
+      });
+    }
     apply();
+  }
+
+  /* ---------- escalones de manuales por volumen ---------- */
+  function renderVolumeTiers(root) {
+    if (!VOL.length) return;
+    var base = manualBase();
+    root.className = "mm-tiers";
+    VOL.forEach(function (t) {
+      var save = Math.round((1 - t.price / (t.n * base)) * 100);
+      root.appendChild(el("div", "mm-tier",
+        '<p class="mm-tier-n"><strong>' + t.n + '</strong> ' + (t.n === 1 ? "manual" : "manuales") + '</p>' +
+        '<p class="mm-tier-price">' + money(t.price) + '</p>' +
+        '<p class="mm-per">' + per(t.price, t.n) + (save > 0 ? ' · ahorras ' + save + '%' : '') + '</p>'));
+    });
   }
 
   /* ---------- buscador general (todo el catálogo) ---------- */
@@ -412,6 +533,7 @@
     else if (kind === "search") renderSearch(root);
     else if (kind === "packages") renderPackages(root);
     else if (kind === "catalog-offer") renderCatalogOffer(root);
+    else if (kind === "volume-tiers") renderVolumeTiers(root);
     else if (kind === "home-packages") renderHomePackages(root);
     else if (kind === "games") renderGames(root);
     else if (kind === "bundle-offer") renderBundleOffer(root);
