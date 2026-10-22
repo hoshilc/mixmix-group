@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contacto — Grupo MixMix</title>
+<meta name="description" content="Agenda una consultoría o resuelve dudas sobre los manuales de Grupo MixMix.">
+<link rel="stylesheet" href="css/mixmix-brand/mixmix.css">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+<a class="mm-skip" href="#content">Ir al contenido</a>
+
+<header class="mm-header">
+  <div class="mm-container">
+    <a class="mm-logo" href="index.html"><img class="mm-logo-img" src="img/logo.png" alt="MixMix"></a>
+    <nav aria-label="Principal">
+      <ul class="mm-navlinks">
+        <li><a href="index.html">Nosotros</a></li>
+        <li><a href="descargables.html">Descargables</a></li>
+        <li><a href="consultoria.html">Consultoría</a></li>
+        <li><a href="contacto.html" aria-current="page">Contacto</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="content">
+  <section class="mm-hero mm-section">
+    <div class="mm-container">
+      <p class="mm-label" style="color:var(--mm-stone-onblack)">Hablemos</p>
+      <h1 class="mm-display" style="font-size:clamp(30px,5vw,56px)">ENTRA, COMANDA.</h1>
+      <p class="mm-body">¿Dudas sobre un manual o quieres una consultoría a la medida? Cuéntanos de tu restaurante.</p>
+    </div>
+  </section>
+
+  <section class="mm-section">
+    <div class="mm-container">
+      <div class="mm-grid" style="align-items:start;">
+
+        <div class="mm-cell">
+          <h2 class="mm-h2">Escríbenos</h2>
+          <form class="mm-form" id="mm-contact-form">
+            <div class="mm-field">
+              <label for="nombre">Nombre *</label>
+              <input class="mm-input" type="text" id="nombre" name="nombre" required>
+            </div>
+            <div class="mm-field">
+              <label for="telefono">Teléfono *</label>
+              <input class="mm-input" type="tel" id="telefono" name="telefono" required>
+            </div>
+            <div class="mm-field">
+              <label for="correo">Correo</label>
+              <input class="mm-input" type="email" id="correo" name="correo">
+            </div>
+            <div class="mm-field">
+              <label for="restaurante">Nombre de tu restaurante</label>
+              <input class="mm-input" type="text" id="restaurante" name="restaurante">
+            </div>
+            <div class="mm-field">
+              <label for="mensaje">Mensaje</label>
+              <textarea class="mm-input" id="mensaje" name="mensaje" rows="5"></textarea>
+            </div>
+            <button class="mm-btn" type="submit">Enviar mensaje</button>
+          </form>
+          <!--
+            Este formulario abre el cliente de correo del visitante con los
+            datos ya llenos (mailto:), para que funcione sin backend.
+            Reemplaza CORREO_DESTINO más abajo por tu correo real, o
+            conecta un servicio como Formspree / Netlify Forms si prefieres
+            recibir los mensajes directamente en un panel.
+          -->
+        </div>
+
+        <div class="mm-cell-dark">
+          <h2 class="mm-h2" style="color:var(--mm-bone)">Datos de contacto</h2>
+          <p class="mm-body" style="color:var(--mm-stone-onblack)">
+            Correo: <a href="mailto:contacto@grupomixmix.com">contacto@grupomixmix.com</a><br>
+            <!-- Reemplaza con el teléfono/WhatsApp real de MixMix -->
+            WhatsApp: [agregar número]
+          </p>
+          <p class="mm-body" style="color:var(--mm-stone-onblack); margin-top:var(--mm-space-6)">
+            ¿Prefieres ver primero las herramientas disponibles?
+          </p>
+          <a class="mm-btn mm-btn-secondary" style="color:var(--mm-bone); border-color:var(--mm-bone)" href="descargables.html">Ver descargables</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="mm-footer">
+  <div class="mm-container">
+    <ul class="mm-navlinks">
+      <li><a href="index.html">Nosotros</a></li>
+      <li><a href="descargables.html">Descargables</a></li>
+      <li><a href="consultoria.html">Consultoría</a></li>
+      <li><a href="contacto.html">Contacto</a></li>
+    </ul>
+    <p class="mm-footer-legal">Copyright © 2026 Grupo MixMix. Todos los derechos reservados.</p>
+  </div>
+</footer>
+
+<script>
+  // Envía el formulario como mailto: (sin backend). Ajusta CORREO_DESTINO.
+  var CORREO_DESTINO = "contacto@grupomixmix.com";
+  document.getElementById("mm-contact-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var f = e.target;
+    var asunto = "Nuevo contacto desde grupomixmix.com — " + f.nombre.value;
+    var cuerpo =
+      "Nombre: " + f.nombre.value + "\n" +
+      "Teléfono: " + f.telefono.value + "\n" +
+      "Correo: " + f.correo.value + "\n" +
+      "Restaurante: " + f.restaurante.value + "\n\n" +
+      "Mensaje:\n" + f.mensaje.value;
+    window.location.href =
+      "mailto:" + CORREO_DESTINO +
+      "?subject=" + encodeURIComponent(asunto) +
+      "&body=" + encodeURIComponent(cuerpo);
+  });
+</script>
+
+<script src="js/store.js"></script>
+</body>
+</html>

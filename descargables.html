@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Descargables — Grupo MixMix</title>
+<meta name="description" content="Todos los manuales, formatos, KPIs, descripciones de puesto y juegos de MixMix: el catálogo completo, paquetes por perfil o cada documento por separado.">
+<link rel="stylesheet" href="css/mixmix-brand/mixmix.css">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+<a class="mm-skip" href="#content">Ir al contenido</a>
+
+<header class="mm-header">
+  <div class="mm-container">
+    <a class="mm-logo" href="index.html"><img class="mm-logo-img" src="img/logo.png" alt="MixMix"></a>
+    <nav aria-label="Principal">
+      <ul class="mm-navlinks">
+        <li><a href="index.html">Nosotros</a></li>
+        <li><a href="descargables.html" aria-current="page">Descargables</a></li>
+        <li><a href="consultoria.html">Consultoría</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="content">
+
+  <section class="mm-hero mm-section">
+    <div class="mm-container">
+      <p class="mm-label" style="color:var(--mm-stone-onblack)">Descarga digital, acceso inmediato</p>
+      <h1 class="mm-display">DESCARGABLES</h1>
+      <p class="mm-body"><span data-mm-count="total"></span> documentos y <span data-mm-count="juegos"></span> juegos de capacitación: compra el que necesitas, un paquete armado para tu perfil, o el catálogo completo. Cuantos más documentos llevas, menos pagas por cada uno.</p>
+    </div>
+  </section>
+
+  <section class="mm-section">
+    <div class="mm-container">
+
+      <!-- ================= BUSCADOR GENERAL ================= -->
+      <div data-mm="search"></div>
+
+      <!-- ================= CATÁLOGO COMPLETO (ancla de precio) ================= -->
+      <div id="catalogo" style="margin-top:var(--mm-space-6)">
+        <div data-mm="catalog-offer"></div>
+      </div>
+
+      <!-- ================= ÍNDICE: cada botón abre su sección ================= -->
+      <p class="mm-label mm-label-accent" style="margin-top:var(--mm-space-8)">O explora por sección</p>
+      <div class="mm-filter-bar">
+        <a class="mm-filter-btn" href="#paquetes">Paquetes por perfil · <span data-mm-count="packages"></span></a>
+        <a class="mm-filter-btn" href="#manuales">Manuales Tácticos · <span data-mm-count="manuales"></span></a>
+        <a class="mm-filter-btn" href="#puestos">Descripciones de Puesto · <span data-mm-count="puestos"></span></a>
+        <a class="mm-filter-btn" href="#controles">Controles Imprimibles · <span data-mm-count="controles"></span></a>
+        <a class="mm-filter-btn" href="#kpis">KPIs de Gerencia · <span data-mm-count="kpis"></span></a>
+        <a class="mm-filter-btn" href="#mystery">Mystery Shopper · <span data-mm-count="mystery"></span></a>
+        <a class="mm-filter-btn" href="#juegos">Juegos MixMix · <span data-mm-count="juegos"></span></a>
+      </div>
+      <p class="mm-acc-tools">
+        <button type="button" class="mm-link-btn" data-acc="open">Abrir todas</button> ·
+        <button type="button" class="mm-link-btn" data-acc="close">Cerrar todas</button>
+      </p>
+
+      <div class="mm-acc-group">
+
+        <!-- ================= PAQUETES POR PERFIL ================= -->
+        <details id="paquetes" class="mm-acc" open>
+          <summary>
+            <span class="mm-acc-title">Paquetes por perfil</span>
+            <span class="mm-acc-meta"><span data-mm-count="packages"></span> paquetes · ahorras frente a precio suelto</span>
+          </summary>
+          <div class="mm-acc-body">
+            <p class="mm-body" style="font-size:15px; margin-top:0">Cada paquete reúne manuales, controles, descripciones de puesto, KPIs y evaluaciones para un perfil concreto — más barato que comprar cada archivo por separado.</p>
+            <div data-mm="packages"></div>
+          </div>
+        </details>
+
+        <!-- ================= MANUALES TÁCTICOS ================= -->
+        <details id="manuales" class="mm-acc">
+          <summary>
+            <span class="mm-acc-title">Manuales Tácticos</span>
+            <span class="mm-acc-meta"><span data-mm-count="manuales"></span> manuales · <span data-mm-unit="manuales"></span></span>
+          </summary>
+          <div class="mm-acc-body">
+            <p class="mm-body" style="font-size:15px; margin-top:0">Una guía completa por tema: cómo abrir cada tipo de negocio, operar la cocina, controlar costos, formar al equipo y llenar las mesas. Busca por palabra y filtra por categoría; los dos filtros se combinan.</p>
+            <div data-mm="list" data-cat="manuales" data-group="theme"></div>
+          </div>
+        </details>
+
+        <!-- ================= DESCRIPCIONES DE PUESTO ================= -->
+        <details id="puestos" class="mm-acc">
+          <summary>
+            <span class="mm-acc-title">Descripciones de Puesto</span>
+            <span class="mm-acc-meta"><span data-mm-count="puestos"></span> documentos · <span data-mm-unit="puestos"></span></span>
+          </summary>
+          <div class="mm-acc-body">
+            <p class="mm-body" style="font-size:15px; margin-top:0">Puesto por puesto: salón, cocina, bar, administración, marketing y recursos humanos — incluye la Secuencia de Servicio para Meseros.</p>
+            <div data-mm="bundle-offer" data-bundle="bundle-puestos" data-lead="¿Las quieres todas?"></div>
+            <div data-mm="list" data-cat="puestos" data-group="area"></div>
+          </div>
+        </details>
+
+        <!-- ================= CONTROLES IMPRIMIBLES ================= -->
+        <details id="controles" class="mm-acc">
+          <summary>
+            <span class="mm-acc-title">Controles Imprimibles</span>
+            <span class="mm-acc-meta"><span data-mm-count="controles"></span> documentos · <span data-mm-unit="controles"></span></span>
+          </summary>
+          <div class="mm-acc-body">
+            <p class="mm-body" style="font-size:15px; margin-top:0">Recepción, inventario, traspasos, producción, mermas, requisición, checklists y control de temperaturas — listos para imprimir y usar en tu operación diaria.</p>
+            <div data-mm="bundle-offer" data-bundle="bundle-controles" data-lead="¿Los quieres todos?"></div>
+            <div data-mm="list" data-cat="controles"></div>
+          </div>
+        </details>
+
+        <!-- ================= KPIS DE GERENCIA ================= -->
+        <details id="kpis" class="mm-acc">
+          <summary>
+            <span class="mm-acc-title">KPIs de Gerencia</span>
+            <span class="mm-acc-meta"><span data-mm-count="kpis"></span> cuadros de mando · <span data-mm-unit="kpis"></span></span>
+          </summary>
+          <div class="mm-acc-body">
+            <p class="mm-body" style="font-size:15px; margin-top:0">Para medir el desempeño de: Capitán de Sala, Subgerente de Unidad, Subchef, Administrador General, Jefe de Producción, Director de Operaciones, Jefe de Bares y Chef General.</p>
+            <div data-mm="bundle-offer" data-bundle="bundle-kpis" data-lead="¿Los quieres todos?"></div>
+            <div data-mm="list" data-cat="kpis"></div>
+          </div>
+        </details>
+
+        <!-- ================= MYSTERY SHOPPER ================= -->
+        <details id="mystery" class="mm-acc">
+          <summary>
+            <span class="mm-acc-title">Mystery Shopper</span>
+            <span class="mm-acc-meta"><span data-mm-count="mystery"></span> formatos · <span data-mm-unit="mystery"></span></span>
+          </summary>
+          <div class="mm-acc-body">
+            <p class="mm-body" style="font-size:15px; margin-top:0">Salón, Gerente, Cocina, Bar, General e Higiene e Inocuidad — evalúa tu restaurante como lo haría un cliente anónimo.</p>
+            <div data-mm="bundle-offer" data-bundle="bundle-mystery" data-lead="¿Los quieres todos?"></div>
+            <div data-mm="list" data-cat="mystery"></div>
+          </div>
+        </details>
+
+        <!-- ================= JUEGOS MIXMIX ================= -->
+        <details id="juegos" class="mm-acc">
+          <summary>
+            <span class="mm-acc-title">Juegos MixMix</span>
+            <span class="mm-acc-meta"><span data-mm-count="juegos"></span> juegos · 7 archivos</span>
+          </summary>
+          <div class="mm-acc-body">
+            <p class="mm-body" style="font-size:15px; margin-top:0">Loterías y memoramas para capacitar a tu equipo jugando, no solo leyendo un manual. Listos para imprimir.</p>
+            <div data-mm="bundle-offer" data-bundle="bundle-juegos" data-lead="¿Los quieres todos?"></div>
+            <div data-mm="games"></div>
+          </div>
+        </details>
+
+      </div>
+
+      <p class="mm-body" style="margin-top:var(--mm-space-12)">¿Necesitas algo más a la medida? <a href="consultoria.html">Conoce nuestra consultoría</a>.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="mm-footer">
+  <div class="mm-container">
+    <ul class="mm-navlinks">
+      <li><a href="index.html">Nosotros</a></li>
+      <li><a href="descargables.html">Descargables</a></li>
+      <li><a href="consultoria.html">Consultoría</a></li>
+      <li><a href="contacto.html">Contacto</a></li>
+    </ul>
+    <p class="mm-footer-legal">Copyright © 2026 Grupo MixMix. Todos los derechos reservados.</p>
+  </div>
+</footer>
+
+<script src="js/catalog.js"></script>
+<script src="js/mm.js"></script>
+<script src="js/store.js"></script>
+<script>
+  /* Abrir todas / cerrar todas las secciones */
+  document.querySelectorAll("[data-acc]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var open = b.getAttribute("data-acc") === "open";
+      document.querySelectorAll("details.mm-acc").forEach(function (d) { d.open = open; });
+    });
+  });
+</script>
+
+</body>
+</html>

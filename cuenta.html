@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi cuenta — Grupo MixMix</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="css/mixmix-brand/mixmix.css">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+<a class="mm-skip" href="#content">Ir al contenido</a>
+
+<header class="mm-header">
+  <div class="mm-container">
+    <a class="mm-logo" href="index.html"><img class="mm-logo-img" src="img/logo.png" alt="MixMix"></a>
+    <nav aria-label="Principal">
+      <ul class="mm-navlinks">
+        <li><a href="index.html">Nosotros</a></li>
+        <li><a href="descargables.html">Descargables</a></li>
+        <li><a href="consultoria.html">Consultoría</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="content">
+  <section class="mm-section">
+    <div class="mm-container">
+
+      <!-- ============ SIN SESIÓN ============ -->
+      <div id="view-login" hidden>
+        <p class="mm-label mm-label-accent">Mi cuenta</p>
+        <h1 class="mm-display" style="font-size:clamp(30px,5vw,56px); color:var(--mm-black)">ENTRAR</h1>
+        <p class="mm-demo-note">Modo demostración: no hay contraseña ni servidor; tu sesión y tus compras se guardan solo en este navegador.</p>
+
+        <div class="mm-auth">
+          <div class="mm-filter-bar" role="tablist" style="margin-top:0">
+            <button type="button" class="mm-filter-btn active" role="tab" data-tab="in">Ya tengo cuenta</button>
+            <button type="button" class="mm-filter-btn" role="tab" data-tab="new">Crear cuenta</button>
+          </div>
+          <form id="auth-form" novalidate>
+            <label class="mm-field" id="f-name" hidden>Nombre
+              <input class="mm-search" type="text" id="in-name" autocomplete="name" placeholder="Tu nombre">
+            </label>
+            <label class="mm-field">Correo
+              <input class="mm-search" type="email" id="in-email" autocomplete="email" placeholder="tu@correo.com" required>
+            </label>
+            <p id="auth-error" class="mm-cart-warn" role="alert" hidden></p>
+            <button type="submit" class="mm-btn" id="auth-btn">Entrar</button>
+          </form>
+          <p class="mm-body" style="font-size:13px">Con tu cuenta, todo lo que compres queda guardado y puedes descargarlo cuando quieras.</p>
+        </div>
+      </div>
+
+      <!-- ============ CON SESIÓN ============ -->
+      <div id="view-account" hidden>
+        <p class="mm-label mm-label-accent">Mi cuenta</p>
+        <h1 class="mm-display" style="font-size:clamp(30px,5vw,56px); color:var(--mm-black)" id="acc-name">HOLA</h1>
+        <p class="mm-body" style="margin-top:0"><span id="acc-email"></span> · <button type="button" class="mm-link-btn" id="logout-btn">Cerrar sesión</button></p>
+        <p class="mm-demo-note">Modo demostración: tus compras se guardan solo en este navegador.</p>
+
+        <div id="thanks" class="mm-thanks" hidden>
+          <p class="mm-label" style="color:var(--mm-stone-onblack)">Compra confirmada</p>
+          <h2 class="mm-h2" style="color:var(--mm-bone); margin:4px 0">Gracias, chef.</h2>
+          <p class="mm-body" style="color:var(--mm-stone-onblack); margin:0">Tu pedido <strong id="thanks-id"></strong> ya está en tus compras: descarga tus archivos aquí abajo.</p>
+        </div>
+
+        <div class="mm-filter-bar" role="tablist">
+          <button type="button" class="mm-filter-btn active" role="tab" data-panel="compras">Mis compras · <span id="n-orders">0</span></button>
+          <button type="button" class="mm-filter-btn" role="tab" data-panel="descargas">Mis descargas · <span id="n-docs">0</span></button>
+        </div>
+
+        <div id="panel-compras" style="margin-top:var(--mm-space-4)"></div>
+        <div id="panel-descargas" style="margin-top:var(--mm-space-4)" hidden></div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<footer class="mm-footer">
+  <div class="mm-container">
+    <ul class="mm-navlinks">
+      <li><a href="index.html">Nosotros</a></li>
+      <li><a href="descargables.html">Descargables</a></li>
+      <li><a href="consultoria.html">Consultoría</a></li>
+      <li><a href="contacto.html">Contacto</a></li>
+    </ul>
+    <p class="mm-footer-legal">Copyright © 2026 Grupo MixMix. Todos los derechos reservados.</p>
+  </div>
+</footer>
+
+<script src="js/catalog.js"></script>
+<script src="js/mm.js"></script>
+<script src="js/store.js"></script>
+<script>
+(function () {
+  var S = window.MMStore, M = window.MM;
+  var params = new URLSearchParams(location.search);
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+  function fmtDate(iso) {
+    return new Date(iso).toLocaleDateString("es-MX", { day: "numeric", month: "long", year: "numeric" });
+  }
+
+  /* ---------- login / crear cuenta ---------- */
+  var mode = "in";
+  document.querySelectorAll("[data-tab]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      mode = b.getAttribute("data-tab");
+      document.querySelectorAll("[data-tab]").forEach(function (x) { x.classList.toggle("active", x === b); });
+      $("f-name").hidden = mode !== "new";
+      $("auth-btn").textContent = mode === "new" ? "Crear cuenta" : "Entrar";
+    });
+  });
+  $("auth-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var r = S.login($("in-email").value, mode === "new" ? $("in-name").value : "");
+    var err = $("auth-error");
+    if (!r.ok) { err.textContent = r.error; err.hidden = false; return; }
+    err.hidden = true;
+    var next = params.get("next");
+    if (next === "carrito.html" || next === "descargables.html") { location.href = next; return; }
+    render();
+  });
+  $("logout-btn").addEventListener("click", function () { S.logout(); });
+
+  /* ---------- paneles ---------- */
+  function showPanel(name) {
+    document.querySelectorAll("[data-panel]").forEach(function (b) { b.classList.toggle("active", b.getAttribute("data-panel") === name); });
+    $("panel-compras").hidden = name !== "compras";
+    $("panel-descargas").hidden = name !== "descargas";
+  }
+  document.querySelectorAll("[data-panel]").forEach(function (b) {
+    b.addEventListener("click", function () { showPanel(b.getAttribute("data-panel")); history.replaceState(null, "", "#" + b.getAttribute("data-panel")); });
+  });
+
+  function renderOrders(orders, openId) {
+    var box = $("panel-compras");
+    box.innerHTML = "";
+    if (!orders.length) {
+      box.innerHTML = '<p class="mm-body">Todavía no tienes compras.</p><a class="mm-btn" href="descargables.html">Ver descargables</a>';
+      return;
+    }
+    orders.forEach(function (o) {
+      var d = document.createElement("details");
+      d.className = "mm-acc mm-order";
+      d.open = o.id === openId;
+      d.innerHTML = '<summary><span class="mm-acc-title">Pedido ' + esc(o.id) + '</span>' +
+        '<span class="mm-acc-meta">' + esc(fmtDate(o.date)) + ' · ' + o.lines.length + (o.lines.length === 1 ? ' producto' : ' productos') + ' · ' + M.money(o.total) + '</span></summary>';
+      var body = document.createElement("div");
+      body.className = "mm-acc-body";
+      o.lines.forEach(function (l) {
+        var p = M.byId[l.id];
+        var h = document.createElement("p");
+        h.className = "mm-order-line";
+        h.innerHTML = '<strong>' + esc(l.title) + '</strong> <span class="mm-cart-kind">' + M.money(l.price) + '</span>';
+        /* un documento de un solo archivo ya muestra su título en el botón de descarga */
+        if (!(p && p.cat && M.filesOf(p).length === 1)) body.appendChild(h);
+        if (p) body.appendChild(M.downloadsFor(p));
+        else body.appendChild(Object.assign(document.createElement("p"), { className: "mm-body", textContent: "Este producto ya no está en el catálogo; escríbenos y te lo enviamos." }));
+      });
+      d.appendChild(body);
+      box.appendChild(d);
+    });
+  }
+
+  function renderLibrary() {
+    var box = $("panel-descargas");
+    box.innerHTML = "";
+    var own = S.ownedItems();
+    var ids = M.catalog.items.filter(function (i) { return own[i.id]; }).map(function (i) { return i.id; });
+    $("n-docs").textContent = ids.length;
+    if (!ids.length) {
+      box.innerHTML = '<p class="mm-body">Aquí aparecerán todos tus documentos comprados, siempre disponibles para descargar.</p><a class="mm-btn" href="descargables.html">Ver descargables</a>';
+      return;
+    }
+    box.innerHTML = '<p class="mm-body" style="font-size:15px;margin-top:0">Todo lo que has comprado, sin repetidos.</p>';
+    var dl = M.downloadsFor({ id: "biblioteca", title: "Mis descargas", items: ids });
+    var det = dl.querySelector("details");
+    if (det) det.open = true;
+    box.appendChild(dl);
+  }
+
+  function render() {
+    var u = S.user();
+    $("view-login").hidden = !!u;
+    $("view-account").hidden = !u;
+    if (!u) return;
+    $("acc-name").textContent = ("HOLA, " + u.name).toUpperCase();
+    $("acc-email").textContent = u.email;
+    var orders = S.orders();
+    $("n-orders").textContent = orders.length;
+    var pedido = params.get("pedido");
+    var found = pedido && orders.some(function (o) { return o.id === pedido; });
+    $("thanks").hidden = !found;
+    if (found) $("thanks-id").textContent = pedido;
+    renderOrders(orders, found ? pedido : null);
+    renderLibrary();
+    showPanel(location.hash === "#descargas" ? "descargas" : "compras");
+  }
+
+  document.addEventListener("mmstore", function (e) { if (e.detail && (e.detail.what === "login" || e.detail.what === "logout" || e.detail.what === "ready" || e.detail.what === "sync")) render(); });
+  window.addEventListener("hashchange", function () { if (S.user()) showPanel(location.hash === "#descargas" ? "descargas" : "compras"); });
+  render();
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gracias por tu compra — Grupo MixMix</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="css/mixmix-brand/mixmix.css">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+<a class="mm-skip" href="#content">Ir al contenido</a>
+
+<header class="mm-header">
+  <div class="mm-container">
+    <a class="mm-logo" href="index.html"><img class="mm-logo-img" src="img/logo.png" alt="MixMix"></a>
+    <nav aria-label="Principal">
+      <ul class="mm-navlinks">
+        <li><a href="index.html">Nosotros</a></li>
+        <li><a href="descargables.html">Descargables</a></li>
+        <li><a href="consultoria.html">Consultoría</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="content">
+  <section class="mm-section">
+    <div class="mm-container">
+      <p class="mm-label mm-label-accent">Compra confirmada</p>
+      <h1 class="mm-display" style="font-size:clamp(30px,5vw,56px)">GRACIAS, CHEF.</h1>
+
+      <div class="mm-download-box" style="max-width:640px; margin-top:var(--mm-space-6)">
+        <p class="mm-label" style="color:var(--mm-stone-onblack)" id="mm-download-label">Tu descarga está lista</p>
+        <h2 class="mm-h2" id="mm-download-title" style="color:var(--mm-bone)">MixMix</h2>
+        <p class="mm-body" id="mm-download-desc" style="color:var(--mm-stone-onblack)">Haz clic en el botón para descargar tu archivo.</p>
+        <a class="mm-btn" id="mm-download-btn" href="#">Descargar PDF</a>
+        <p class="mm-body" id="mm-download-note" style="color:var(--mm-stone-onblack); font-size:13px; margin-top:var(--mm-space-3)" hidden></p>
+        <div id="mm-download-zips" class="mm-download-items" hidden>
+          <p class="mm-label" style="color:var(--mm-stone-onblack); margin-top:var(--mm-space-6)">Descarga por categoría (un .zip cada una)</p>
+          <ul id="mm-download-zips-list" class="mm-download-items-list"></ul>
+        </div>
+        <div id="mm-download-items" class="mm-download-items" hidden>
+          <p class="mm-label" style="color:var(--mm-stone-onblack); margin-top:var(--mm-space-6)">O descarga cada documento por separado</p>
+          <ul id="mm-download-items-list" class="mm-download-items-list"></ul>
+        </div>
+      </div>
+
+      <p class="mm-body" style="margin-top:var(--mm-space-6)">¿No te llegó tu descarga o tienes algún problema con el pago? <a href="contacto.html">Escríbenos</a> y te lo resolvemos.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="mm-footer">
+  <div class="mm-container">
+    <ul class="mm-navlinks">
+      <li><a href="index.html">Nosotros</a></li>
+      <li><a href="descargables.html">Descargables</a></li>
+      <li><a href="consultoria.html">Consultoría</a></li>
+      <li><a href="contacto.html">Contacto</a></li>
+    </ul>
+    <p class="mm-footer-legal">Copyright © 2026 Grupo MixMix. Todos los derechos reservados.</p>
+  </div>
+</footer>
+
+<script src="js/catalog.js"></script>
+<script src="js/mm.js"></script>
+<script src="js/store.js"></script>
+<script>
+  /*
+    Esta página lee ?manual=<id> y busca el producto en js/catalog.js:
+    - un documento suelto      -> un botón de descarga
+    - un kit o paquete         -> descarga de todo + un botón por documento
+    En Stripe, el redirect "After payment" de cada Payment Link debe ser:
+    https://TU-DOMINIO/gracias.html?manual=<id del producto>
+  */
+  function fileRow(label, file, downloadName) {
+    var li = document.createElement("li");
+    li.className = "mm-download-item";
+    var span = document.createElement("span");
+    span.textContent = label;
+    var a = document.createElement("a");
+    a.className = "mm-btn mm-btn-secondary";
+    a.href = file;
+    a.setAttribute("download", downloadName || MM.niceName(label));
+    a.textContent = "Descargar";
+    li.appendChild(span);
+    li.appendChild(a);
+    return li;
+  }
+  (function () {
+    var key =new URLSearchParams(window.location.search).get("manual");
+    var x = window.MM && window.MM.byId[key];
+    var btn = document.getElementById("mm-download-btn");
+
+    if (!x) {
+      document.getElementById("mm-download-label").textContent = "Tu compra fue recibida";
+      document.getElementById("mm-download-title").textContent = "Gracias por tu compra";
+      document.getElementById("mm-download-desc").textContent = "Escríbenos indicando qué compraste y te lo enviamos de inmediato.";
+      btn.textContent = "Contactar a MixMix";
+      btn.href = "contacto.html";
+      return;
+    }
+
+    var isBundle = !!(x.cats || x.items);
+    document.getElementById("mm-download-title").textContent = x.title;
+
+    if (!isBundle) {
+      var fl = MM.filesOf(x);
+      document.getElementById("mm-download-desc").textContent = MM.catById[x.cat].name + (fl.length > 1 ? " · " + fl.length + " archivos." : ".");
+      if (fl.length === 1) {
+        btn.href = fl[0].file;
+        btn.setAttribute("download", MM.niceName(fl[0].t));
+        btn.textContent = "Descargar PDF";
+      } else {
+        /* juego con varios archivos (cartas + tablas): un botón por archivo */
+        btn.hidden = true;
+        var box = document.getElementById("mm-download-items");
+        var ul0 = document.getElementById("mm-download-items-list");
+        fl.forEach(function (f) { ul0.appendChild(fileRow(f.t, f.file)); });
+        box.querySelector("p").textContent = "Descarga cada archivo";
+        box.hidden = false;
+      }
+      return;
+    }
+
+    var list = MM.contentsOf(x);
+    document.getElementById("mm-download-desc").textContent = list.length + " documentos.";
+
+    if (x.zips) {
+      /* catálogo completo: un .zip por categoría (más ligeros que un solo archivo de 1 GB) */
+      btn.hidden = true;
+      var zbox = document.getElementById("mm-download-zips");
+      var zul = document.getElementById("mm-download-zips-list");
+      x.zips.forEach(function (z) { zul.appendChild(fileRow(z.t + " (.zip)", z.file, MM.niceName(z.t, ".zip"))); });
+      zbox.hidden = false;
+    } else if (x.file) {
+      /* kits y paquetes de categoría: un .zip con todo */
+      btn.href = x.file;
+      btn.setAttribute("download", MM.niceName(x.title, ".zip"));
+      btn.textContent = "Descargar todo (.zip)";
+    } else {
+      /* paquetes por perfil: se descargan los archivos uno tras otro */
+      btn.href = "#";
+      btn.textContent = "Descargar todos los archivos";
+      var note = document.getElementById("mm-download-note");
+      note.textContent = "Se descargarán " + list.length + " archivos uno tras otro; tu navegador puede pedirte permiso para descargar varios.";
+      note.hidden = false;
+      btn.addEventListener("click", function (e) {
+        e.preventDefault();
+        var all = [];
+        list.forEach(function (item) { MM.filesOf(item).forEach(function (f) { all.push(f); }); });
+        all.forEach(function (f, i) {
+          setTimeout(function () {
+            var a = document.createElement("a");
+            a.href = f.file;
+            a.download = MM.niceName(f.t);
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+          }, i * 700);
+        });
+      });
+    }
+
+    var ul = document.getElementById("mm-download-items-list");
+    MM.catalog.categories.forEach(function (c) {
+      var group = list.filter(function (i) { return i.cat === c.id; }).sort(function (a, b) { return a.title.localeCompare(b.title, "es"); });
+      if (!group.length) return;
+      var h = document.createElement("li");
+      h.className = "mm-download-group";
+      h.textContent = c.name + " · " + group.length;
+      ul.appendChild(h);
+      group.forEach(function (item) {
+        MM.filesOf(item).forEach(function (f) { ul.appendChild(fileRow(f.t, f.file)); });
+      });
+    });
+    document.getElementById("mm-download-items").hidden = false;
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,9 @@
+# Los documentos de pago NO van al repositorio (son publicos si se publican y pesan ~550 MB)
+descargas/
+*.pdf
+*.zip
+
+# Secretos
+.env
+.env.*
+*.key

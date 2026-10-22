@@ -1,0 +1,155 @@
+/* Mix Mix Group — sistema de diseño v1 (identidad gráfica)
+   Consultoría para restaurantes · negro y dorado, modernista institucional */
+
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Archivo:wght@400;500;600;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap");
+
+@font-face {
+  font-family: "Moontime";
+  src: url("./fonts/Moontime-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+
+:root {
+  /* — color — */
+  --mm-black: #111110;      /* fondo y tinta principal (55%) */
+  --mm-bone: #F0EFF4;       /* fondo claro y tinta sobre negro (25%) */
+  --mm-gold: #C6A15B;       /* acento único: títulos, filetes, iconos (12%) */
+  --mm-gold-ink: #8C6B33;   /* dorado legible para texto pequeño / enlaces */
+  --mm-gold-soft: #E3CB9A;  /* fondos tintados */
+  --mm-stone: #7A7978;      /* filetes y fondos */
+  --mm-stone-ink: #5C5B5A;  /* texto secundario sobre hueso (AA) */
+  --mm-stone-onblack: #A8A7A6; /* texto secundario sobre negro (AA) */
+  --mm-wine: #820934;       /* etiquetas y señalética (3%) */
+  --mm-white: #FFFFFF;
+
+  /* — tipografía — */
+  --mm-font-logo: "Bebas Neue", Impact, sans-serif;     /* caja alta, tracking 0.06–0.14em */
+  --mm-font-display: "Archivo", system-ui, sans-serif;  /* subtítulos y datos: 500/600/800 */
+  --mm-font-body: "Source Serif 4", Georgia, serif;     /* texto corrido */
+  --mm-font-script: "Moontime", cursive;                /* acento, una vez por pieza */
+
+  --mm-track-logo: 0.14em;
+  --mm-track-label: 0.2em;
+  --mm-track-display: -0.02em;
+
+  /* — ritmo — */
+  --mm-rule: 2px;           /* todos los filetes son de 2px */
+  --mm-radius: 0;           /* sin esquinas redondeadas, nunca */
+  --mm-space-1: 4px;
+  --mm-space-2: 8px;
+  --mm-space-3: 12px;
+  --mm-space-4: 16px;
+  --mm-space-6: 24px;
+  --mm-space-8: 32px;
+  --mm-space-12: 48px;
+  --mm-space-16: 64px;
+  --mm-maxw: 1180px;
+}
+
+/* — base — */
+body {
+  margin: 0;
+  background: var(--mm-bone);
+  color: var(--mm-black);
+  font-family: var(--mm-font-display);
+  font-size: 15px;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+a { color: var(--mm-gold-ink); text-decoration: none; }
+a:hover { color: var(--mm-wine); }
+::selection { background: var(--mm-gold); color: var(--mm-black); }
+:focus-visible { outline: var(--mm-rule) solid var(--mm-gold); outline-offset: 2px; }
+* { border-radius: var(--mm-radius); }
+
+/* — tipografía — */
+.mm-logo {
+  font-family: var(--mm-font-logo);
+  letter-spacing: var(--mm-track-logo);
+  text-transform: uppercase;
+  line-height: 0.92;
+}
+.mm-display {           /* titulares de cartel, Bebas */
+  font-family: var(--mm-font-logo);
+  font-size: clamp(38px, 7vw, 96px);
+  line-height: 0.9;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.mm-h2 {
+  font-family: var(--mm-font-display);
+  font-weight: 800;
+  font-size: clamp(24px, 2.6vw, 34px);
+  line-height: 1.08;
+  letter-spacing: var(--mm-track-display);
+  margin: 0 0 var(--mm-space-4);
+}
+.mm-label {             /* kickers y metadatos */
+  font-family: var(--mm-font-display);
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: var(--mm-track-label);
+  text-transform: uppercase;
+  color: var(--mm-stone-ink);
+}
+.mm-label-accent { color: var(--mm-wine); }
+.mm-body {
+  font-family: var(--mm-font-body);
+  font-size: clamp(16px, 1.5vw, 19px);
+  line-height: 1.55;
+  max-width: 62ch;
+}
+.mm-script {            /* una palabra o frase corta por pieza; jamás en caja alta */
+  font-family: var(--mm-font-script);
+  font-size: clamp(28px, 4vw, 48px);
+  line-height: 1.25;
+  color: var(--mm-gold);
+}
+
+/* — estructura — */
+.mm-container { max-width: var(--mm-maxw); margin: 0 auto; padding: 0 clamp(20px, 4vw, 56px); }
+.mm-section { padding: clamp(40px, 6vw, 72px) 0; border-bottom: var(--mm-rule) solid var(--mm-black); }
+.mm-rule { height: var(--mm-rule); border: 0; background: var(--mm-black); margin: var(--mm-space-4) 0; }
+.mm-grid {              /* rejilla modular: celdas separadas por el filete */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--mm-rule);
+  background: var(--mm-black);
+  padding: var(--mm-rule);
+}
+.mm-cell { background: var(--mm-bone); padding: clamp(20px, 3vw, 32px); }
+.mm-cell-dark { background: var(--mm-black); color: var(--mm-bone); padding: clamp(20px, 3vw, 32px); }
+.mm-cell-dark .mm-label { color: var(--mm-stone-onblack); }
+
+/* — controles — */
+.mm-btn {
+  display: inline-flex; align-items: center; justify-content: flex-start; gap: var(--mm-space-2);
+  font-family: var(--mm-font-display); font-weight: 600; font-size: 14px;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 12px var(--mm-space-4); border: var(--mm-rule) solid var(--mm-black);
+  background: var(--mm-black); color: var(--mm-bone); cursor: pointer;
+}
+.mm-btn:hover { background: var(--mm-gold-ink); border-color: var(--mm-gold-ink); }
+.mm-btn:active { background: var(--mm-wine); border-color: var(--mm-wine); }
+.mm-btn-secondary { background: transparent; color: var(--mm-black); }
+.mm-btn-secondary:hover { background: var(--mm-gold-soft); border-color: var(--mm-black); color: var(--mm-black); }
+.mm-btn[disabled] { opacity: 0.45; pointer-events: none; }
+
+.mm-tag {
+  display: inline-block; font-family: var(--mm-font-display); font-weight: 600;
+  font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+  padding: 4px var(--mm-space-2); background: var(--mm-wine); color: var(--mm-bone);
+}
+.mm-tag-gold { background: var(--mm-gold); color: var(--mm-black); }
+
+.mm-input {
+  font-family: var(--mm-font-display); font-size: 14px;
+  padding: 10px var(--mm-space-3); background: var(--mm-white);
+  border: var(--mm-rule) solid var(--mm-black); color: var(--mm-black); width: 100%;
+}
+.mm-input::placeholder { color: var(--mm-stone-ink); }
+
+/* — imagen: siempre en blanco y negro — */
+.mm-grayscale { filter: grayscale(1) contrast(1.08); }
+.mm-grayscale img { display: block; width: 100%; height: auto; }

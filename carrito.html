@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carrito — Grupo MixMix</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="css/mixmix-brand/mixmix.css">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+<a class="mm-skip" href="#content">Ir al contenido</a>
+
+<header class="mm-header">
+  <div class="mm-container">
+    <a class="mm-logo" href="index.html"><img class="mm-logo-img" src="img/logo.png" alt="MixMix"></a>
+    <nav aria-label="Principal">
+      <ul class="mm-navlinks">
+        <li><a href="index.html">Nosotros</a></li>
+        <li><a href="descargables.html">Descargables</a></li>
+        <li><a href="consultoria.html">Consultoría</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="content">
+  <section class="mm-section">
+    <div class="mm-container">
+      <p class="mm-breadcrumb"><a href="descargables.html">Descargables</a> / Carrito</p>
+      <h1 class="mm-display" style="font-size:clamp(30px,5vw,56px); color:var(--mm-black)">CARRITO</h1>
+
+      <p class="mm-demo-note">Modo demostración: el carrito, el inicio de sesión y el pago son simulados; no se hace ningún cargo.</p>
+
+      <div id="cart-empty" hidden>
+        <p class="mm-body">Tu carrito está vacío.</p>
+        <a class="mm-btn" href="descargables.html">Ver descargables</a>
+      </div>
+
+      <div id="cart-full" class="mm-product-layout" hidden>
+        <div>
+          <ul id="cart-lines" class="mm-cart-lines"></ul>
+          <div id="cart-tips"></div>
+        </div>
+
+        <div class="mm-buybox">
+          <p class="mm-label mm-label-accent">Resumen</p>
+          <dl class="mm-cart-sum">
+            <div><dt>Productos</dt><dd id="sum-count">0</dd></div>
+            <div><dt>Documentos incluidos</dt><dd id="sum-docs">0</dd></div>
+            <div class="mm-cart-total"><dt>Total</dt><dd id="sum-total">$0 MXN</dd></div>
+          </dl>
+          <p id="sum-owned" class="mm-body" style="font-size:13px" hidden></p>
+          <button type="button" class="mm-btn" id="pay-btn" style="margin-top:var(--mm-space-4)">Pagar</button>
+          <p id="pay-note" class="mm-guarantee"></p>
+          <button type="button" class="mm-link-btn" id="clear-btn" style="margin-top:var(--mm-space-3)">Vaciar carrito</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="mm-footer">
+  <div class="mm-container">
+    <ul class="mm-navlinks">
+      <li><a href="index.html">Nosotros</a></li>
+      <li><a href="descargables.html">Descargables</a></li>
+      <li><a href="consultoria.html">Consultoría</a></li>
+      <li><a href="contacto.html">Contacto</a></li>
+    </ul>
+    <p class="mm-footer-legal">Copyright © 2026 Grupo MixMix. Todos los derechos reservados.</p>
+  </div>
+</footer>
+
+<script src="js/catalog.js"></script>
+<script src="js/mm.js"></script>
+<script src="js/store.js"></script>
+<script>
+(function () {
+  var S = window.MMStore, M = window.MM;
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+  function docsOf(p) { return p.cat ? [p] : M.contentsOf(p); }
+  function kind(p) {
+    if (p.cat) return M.catById[p.cat].name;
+    return (p.id === "catalogo" ? "Catálogo completo" : "Paquete") + " · " + docsOf(p).length + " documentos";
+  }
+
+  /* paquetes que conviene llevar en vez de varios documentos sueltos */
+  function suggestions(ids) {
+    var plain = ids.filter(function (id) { return M.byId[id].cat; });
+    if (plain.length < 2) return [];
+    var cands = M.catalog.bundles.concat(M.catalog.packages.filter(function (p) { return !p.parent && !p.choose; }));
+    var out = [];
+    cands.forEach(function (c) {
+      if (ids.indexOf(c.id) > -1 || S.owns(c.id)) return;
+      var set = {};
+      M.contentsOf(c).forEach(function (i) { set[i.id] = true; });
+      var mine = plain.filter(function (id) { return set[id]; });
+      if (mine.length < 2) return;
+      var paid = mine.reduce(function (a, id) { return a + M.byId[id].price; }, 0);
+      if (paid < c.price * 0.5) return;
+      var n = Object.keys(set).length;
+      out.push({ c: c, mine: mine, paid: paid, diff: c.price - paid, more: n - mine.length, n: n });
+    });
+    out.sort(function (a, b) { return a.diff - b.diff; });
+    return out.slice(0, 2);
+  }
+
+  function render() {
+    var ids = S.cart();
+    $("cart-empty").hidden = ids.length > 0;
+    $("cart-full").hidden = ids.length === 0;
+    if (!ids.length) return;
+
+    var prods = ids.map(function (id) { return M.byId[id]; });
+    var ul = $("cart-lines");
+    ul.innerHTML = "";
+    var ownedCount = 0;
+    prods.forEach(function (p) {
+      var notes = [];
+      if (S.owns(p.id)) { notes.push("Ya lo tienes en tu cuenta"); ownedCount++; }
+      if (p.cat) {
+        prods.forEach(function (q) {
+          if (q.id !== p.id && !q.cat && M.contentsOf(q).some(function (i) { return i.id === p.id; })) notes.push("Ya viene en «" + q.title + "»");
+        });
+      }
+      var li = document.createElement("li");
+      li.className = "mm-cart-line";
+      li.innerHTML = '<div><p class="mm-cart-title">' + esc(p.title) + '</p>' +
+        '<p class="mm-cart-kind">' + esc(kind(p)) + '</p>' +
+        notes.map(function (n) { return '<p class="mm-cart-warn">' + esc(n) + '</p>'; }).join("") + '</div>' +
+        '<div class="mm-cart-right"><span class="mm-cart-price">' + M.money(p.price) + '</span>' +
+        '<button type="button" class="mm-link-btn" data-rm="' + esc(p.id) + '">Quitar</button></div>';
+      ul.appendChild(li);
+    });
+
+    var total = prods.reduce(function (a, p) { return a + p.price; }, 0);
+    var docs = {};
+    prods.forEach(function (p) { docsOf(p).forEach(function (i) { docs[i.id] = true; }); });
+    $("sum-count").textContent = prods.length;
+    $("sum-docs").textContent = Object.keys(docs).length;
+    $("sum-total").textContent = M.money(total);
+    var ow = $("sum-owned");
+    ow.hidden = !ownedCount;
+    ow.textContent = ownedCount ? "Hay " + ownedCount + (ownedCount > 1 ? " productos que ya tienes: quítalos para no pagarlos de nuevo." : " producto que ya tienes: quítalo para no pagarlo de nuevo.") : "";
+
+    var tips = $("cart-tips");
+    tips.innerHTML = "";
+    suggestions(ids).forEach(function (s) {
+      var box = document.createElement("div");
+      box.className = "mm-bundle-offer";
+      var extra = s.more === 1 ? "1 documento más" : s.more + " documentos más";
+      var msg = s.diff <= 0
+        ? 'Ahorra ' + M.money(-s.diff) + (s.more ? ' y llévate ' + extra + '.' : ' llevando el paquete.')
+        : 'Por ' + M.money(s.diff) + ' más llevas los ' + s.n + ' documentos (' + extra + ').';
+      box.innerHTML = '<p><strong>' + esc(s.c.title) + '</strong> · ' + M.money(s.c.price) + '<br>' +
+        'Ya llevas ' + s.mine.length + ' de sus documentos (' + M.money(s.paid) + '). ' + msg + '</p>';
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "mm-btn mm-btn-secondary"; b.textContent = "Cambiar por el paquete";
+      b.addEventListener("click", function () {
+        s.mine.forEach(function (id) { S.remove(id); });
+        S.add(s.c.id);
+      });
+      box.appendChild(b);
+      tips.appendChild(box);
+    });
+
+    var pay = $("pay-btn"), u = S.user();
+    pay.textContent = u ? "Pagar " + M.money(total) + " (demo)" : "Inicia sesión para pagar";
+    $("pay-note").textContent = u ? "Comprando como " + u.email + ". Modo demostración: sin cargo real." : "Necesitas una cuenta para que tus descargas queden guardadas.";
+  }
+
+  $("cart-lines").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-rm]");
+    if (b) S.remove(b.getAttribute("data-rm"));
+  });
+  $("clear-btn").addEventListener("click", function () { S.clear(); });
+  $("pay-btn").addEventListener("click", function () {
+    if (!S.user()) { location.href = "cuenta.html?next=carrito.html"; return; }
+    var o = S.placeOrder();
+    if (o) location.href = "cuenta.html?pedido=" + encodeURIComponent(o.id) + "#compras";
+  });
+  document.addEventListener("mmstore", render);
+  render();
+})();
+</script>
+
+</body>
+</html>
