@@ -586,7 +586,8 @@ h2.mm-acc-title { margin: 0; }
   .mm-pkg-details > .mm-checklist {
     position: absolute; left: -2px; right: -2px; top: calc(100% - 1px); z-index: 10;
     max-height: min(60vh, 420px); overflow-y: auto; margin: 0;
-    padding: var(--mm-space-3) var(--mm-space-4) var(--mm-space-4);
+    padding: clamp(20px, 3vw, 28px);              /* mismo margen interior que las tarjetas */
+    scrollbar-gutter: stable both-edges;           /* la barra de desplazamiento no desbalancea los márgenes */
     background: var(--mm-white); border: var(--mm-rule) solid var(--mm-black);
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
   }
