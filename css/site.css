@@ -441,3 +441,11 @@ button.mm-btn { font-family: var(--mm-font-display); }
   .mm-cart-line { flex-direction: column; }
   .mm-cart-right { flex-direction: row; align-items: baseline; justify-content: space-between; width: 100%; }
 }
+/* ===== Home: paquetes por perfil ===== */
+.mm-home-pkg { display: block; color: inherit; text-decoration: none; }
+.mm-home-pkg .mm-h2 { font-size: clamp(20px, 2vw, 24px); margin: var(--mm-space-2) 0; }
+.mm-home-pkg .mm-body { font-size: 15px; }
+.mm-home-pkg-meta { margin: var(--mm-space-4) 0 0; font-family: var(--mm-font-display); font-weight: 700; font-size: 12px; letter-spacing: var(--mm-track-label); text-transform: uppercase; }
+.mm-home-pkg:hover { background: var(--mm-white); }
+.mm-home-pkg:hover .mm-h2 { text-decoration: underline; text-underline-offset: 4px; }.mm-home-pkg { display: flex; flex-direction: column; }
+.mm-home-pkg-meta { margin-top: auto; padding-top: var(--mm-space-4); }

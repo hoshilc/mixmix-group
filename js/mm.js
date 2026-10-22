@@ -209,6 +209,21 @@
       addBtn(b.id, "Agregar catálogo completo", "") + '</div>';
   }
 
+  /* ---------- home: los paquetes por perfil como mapa de "quién eres" ---------- */
+  function renderHomePackages(root) {
+    root.className = "mm-grid mm-grid-fixed mm-pillars-grid";
+    packages.filter(function (p) { return !p.parent; }).forEach(function (p, i) {
+      var count = contentsOf(p).length + (p.choose ? 1 : 0);
+      var a = el("a", "mm-cell mm-home-pkg",
+        '<span class="mm-pillar-num">' + (i < 9 ? "0" : "") + (i + 1) + '</span>' +
+        '<h3 class="mm-h2">' + esc(p.title) + '</h3>' +
+        '<p class="mm-body">' + esc(p.who) + '</p>' +
+        '<p class="mm-home-pkg-meta">' + count + ' documentos · ' + money(p.price) + '</p>');
+      a.href = "descargables.html#paquetes";
+      root.appendChild(a);
+    });
+  }
+
   /* ---------- juegos ---------- */
   function renderGames(root) {
     var grid = el("div", "mm-catalog-grid");
@@ -372,6 +387,7 @@
     else if (kind === "search") renderSearch(root);
     else if (kind === "packages") renderPackages(root);
     else if (kind === "catalog-offer") renderCatalogOffer(root);
+    else if (kind === "home-packages") renderHomePackages(root);
     else if (kind === "games") renderGames(root);
     else if (kind === "bundle-offer") renderBundleOffer(root);
   });
