@@ -9,7 +9,7 @@ Menú: **Nosotros · Descargables · Consultoría · Contacto**.
 |---|---|
 | WhatsApp, calendario, redes sociales, analítica, activar la tienda | `js/config.js` |
 | Videos de redes (Home > Evidencia) | `js/social.js` |
-| Logos de Emprendimientos y Clientes, cifras, testimonios | `js/reputacion.js` (logos en `img/logos/`) |
+| Logos de Emprendimientos, reseñas de Clientes y cifras | `js/reputacion.js` (logos en `img/logos/`) |
 | Encabezado y pie de todas las páginas | `partials/header.html`, `partials/footer.html` |
 | Precios, títulos, categorías y paquetes del catálogo | `tools/catalog-config.json` |
 | Textos de cada página | el `.html` correspondiente |
@@ -27,9 +27,9 @@ Ese script reescribe el encabezado/pie en todas las páginas, las etiquetas para
 Por defecto el sitio público **no muestra** nada que esté a medias:
 
 - No hay carrito ni cuenta; los botones de compra dicen **Me interesa** y llevan a Contacto con el producto ya elegido.
-- Los videos, logos, cifras y testimonios solo aparecen cuando tienen contenido real; si no, su sección se oculta.
+- Los recuadros de ejemplo (videos, logos de Emprendimientos, reseñas de Clientes) **se ven** mientras llegan los reales. Para ocultar los que sigan vacíos al lanzar, pon `showPlaceholders: false` en `js/config.js`. Las cifras solo aparecen si son reales.
 
-Para ver el diseño completo (tienda de demostración y recuadros de ejemplo) agrega **`?demo=1`** a cualquier dirección, por ejemplo `index.html?demo=1`. `?demo=0` lo apaga.
+Para ver la tienda de demostración (y las cifras de ejemplo) agrega **`?demo=1`** a cualquier dirección, por ejemplo `index.html?demo=1`. `?demo=0` lo apaga.
 
 ## Estrategia de precios (3 capas)
 

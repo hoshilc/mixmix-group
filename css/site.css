@@ -562,3 +562,20 @@ h2.mm-acc-title { margin: 0; }
 .mm-social a { font-family: var(--mm-font-display); font-weight: 700; font-size: 12px; letter-spacing: var(--mm-track-label); text-transform: uppercase; color: var(--mm-gold); text-decoration: underline; text-underline-offset: 4px; }
 .mm-social-light { margin-top: var(--mm-space-4); }
 .mm-social-light a { color: var(--mm-black); }
+/* ===== Clientes: resenas con logo ===== */
+.mm-reviews { display: grid; grid-template-columns: 1fr; gap: var(--mm-space-4); margin-top: var(--mm-space-6); }
+@media (min-width: 640px) { .mm-reviews { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 980px) { .mm-reviews { grid-template-columns: repeat(3, 1fr); } }
+.mm-reviews[hidden] { display: none; }
+.mm-review { display: flex; flex-direction: column; gap: var(--mm-space-3); padding: var(--mm-space-6); background: var(--mm-white); border: var(--mm-rule) solid var(--mm-black); }
+.mm-review.is-placeholder { background: transparent; border-style: dashed; border-color: var(--mm-stone-ink); }
+.mm-review-logo { display: flex; align-items: center; justify-content: flex-start; height: 56px; }
+.mm-review-logo img { max-height: 56px; max-width: 70%; object-fit: contain; }
+.mm-review-logo.is-placeholder { justify-content: flex-start; gap: var(--mm-space-3); height: 56px; padding: 0 var(--mm-space-3); border: 1px dashed var(--mm-stone-ink); color: var(--mm-stone-ink); width: max-content; max-width: 100%; }
+.mm-review-logo .mm-logo-ph { font-size: 14px; }
+.mm-review-logo .mm-logo-ph-name { font-size: 12px; }
+.mm-review-quote { margin: 0; font-family: var(--mm-font-body); font-size: 17px; line-height: 1.5; }
+.mm-review.is-placeholder .mm-review-quote { color: var(--mm-stone-ink); }
+.mm-review-by { margin: auto 0 0; display: flex; flex-direction: column; gap: 2px; padding-top: var(--mm-space-3); border-top: 1px solid var(--mm-marble-line); font-family: var(--mm-font-display); font-size: 13px; }
+.mm-review-by strong { font-weight: 800; letter-spacing: 0.02em; }
+.mm-review-by span { font-family: var(--mm-font-body); font-size: 13px; color: var(--mm-stone-ink); }

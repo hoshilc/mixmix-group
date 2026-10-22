@@ -1,89 +1,104 @@
-/* MixMix — reputación en Home: logos de "Emprendimientos" y "Nuestros clientes", cifras y testimonios.
+/* MixMix — reputación en Home: logos de "Emprendimientos", reseñas de "Nuestros clientes" y cifras.
 
-   CÓMO FUNCIONA: solo se muestra lo que tenga contenido real. Si una lista está vacía (o solo tiene
-   ejemplos), su sección completa se oculta. Con ?demo=1 en la dirección se ven recuadros de ejemplo.
+   CÓMO FUNCIONA: mientras una lista tenga recuadros de ejemplo (sin logo ni reseña) se muestran como
+   placeholders. Cuando pongas los reales, reemplaza el ejemplo. Para ocultar los que queden vacíos al
+   lanzar, pon showPlaceholders: false en js/config.js.
 
-   LOGOS
+   EMPRENDIMIENTOS (logos)
      1. Guarda el archivo en img/logos/ (mejor PNG con fondo transparente o SVG).
      2. Escribe su ruta en logo y el nombre en name:
           { name: "Nombre del negocio", logo: "img/logos/nombre.png", url: "" }
         url es opcional: si lo pones, el logo enlaza a esa página (por ejemplo su Instagram).
-   CIFRAS        { num: "120+", label: "restaurantes asesorados" }      (solo cifras reales y comprobables)
-   TESTIMONIOS   { quote: "Lo que dijo el cliente.", name: "Nombre", role: "Cargo, Restaurante" }  (con permiso de la persona) */
+   CLIENTES (reseñas)
+          { name: "Nombre de la persona", role: "Cargo, Restaurante", logo: "img/logos/restaurante.png",
+            quote: "Lo que dijo del trabajo con MixMix." }
+        Pon solo reseñas reales y con permiso de la persona.
+   CIFRAS        { num: "120+", label: "restaurantes asesorados" }   (solo cifras reales; se muestran si hay 2 o más) */
 (function () {
   "use strict";
   var C = window.MM_CONFIG || {};
-  var DEMO = !!C.showPlaceholders;
+  var SHOW_PH = !!C.showPlaceholders;
 
-  var LOGOS = {
-    emprendimientos: [
-      { name: "Emprendimiento 1", logo: "", url: "" },
-      { name: "Emprendimiento 2", logo: "", url: "" },
-      { name: "Emprendimiento 3", logo: "", url: "" },
-      { name: "Emprendimiento 4", logo: "", url: "" },
-      { name: "Emprendimiento 5", logo: "", url: "" }
-    ],
-    clientes: [
-      { name: "Cliente 1", logo: "", url: "" },
-      { name: "Cliente 2", logo: "", url: "" },
-      { name: "Cliente 3", logo: "", url: "" },
-      { name: "Cliente 4", logo: "", url: "" },
-      { name: "Cliente 5", logo: "", url: "" }
-    ]
-  };
+  var EMPRENDIMIENTOS = [
+    { name: "Emprendimiento 1", logo: "", url: "" },
+    { name: "Emprendimiento 2", logo: "", url: "" },
+    { name: "Emprendimiento 3", logo: "", url: "" },
+    { name: "Emprendimiento 4", logo: "", url: "" },
+    { name: "Emprendimiento 5", logo: "", url: "" }
+  ];
+
+  var CLIENTES = [
+    { name: "Nombre del cliente", role: "Cargo, Restaurante 1", logo: "", quote: "" },
+    { name: "Nombre del cliente", role: "Cargo, Restaurante 2", logo: "", quote: "" },
+    { name: "Nombre del cliente", role: "Cargo, Restaurante 3", logo: "", quote: "" },
+    { name: "Nombre del cliente", role: "Cargo, Restaurante 4", logo: "", quote: "" },
+    { name: "Nombre del cliente", role: "Cargo, Restaurante 5", logo: "", quote: "" }
+  ];
 
   var CIFRAS = [
     { num: "2015", label: "empezamos en el oficio" }
     /* { num: "120+", label: "restaurantes asesorados" }, */
   ];
 
-  var TESTIMONIOS = [
-    /* { quote: "Lo que dijo el cliente.", name: "Nombre", role: "Cargo, Restaurante" }, */
-  ];
-  var TESTIMONIOS_EJEMPLO = [
-    { quote: "Aquí va el testimonio de un cliente, con su permiso.", name: "Nombre del cliente", role: "Cargo, Restaurante" },
-    { quote: "Aquí va el testimonio de un cliente, con su permiso.", name: "Nombre del cliente", role: "Cargo, Restaurante" },
-    { quote: "Aquí va el testimonio de un cliente, con su permiso.", name: "Nombre del cliente", role: "Cargo, Restaurante" }
-  ];
+  function has(s) { return !!(s && String(s).trim()); }
 
-  function hasLogo(i) { return !!(i.logo && i.logo.trim()); }
-
-  function logoCell(item) {
-    var has = hasLogo(item);
-    var box = document.createElement(has && item.url ? "a" : "div");
-    box.className = "mm-logo-cell" + (has ? "" : " is-placeholder");
-    if (has && item.url) { box.href = item.url; box.target = "_blank"; box.rel = "noopener"; }
-    if (has) {
+  function logoBox(item, cls) {
+    var wrap = document.createElement(has(item.logo) && item.url ? "a" : "div");
+    wrap.className = cls + (has(item.logo) ? "" : " is-placeholder");
+    if (has(item.logo) && item.url) { wrap.href = item.url; wrap.target = "_blank"; wrap.rel = "noopener"; }
+    if (has(item.logo)) {
       var img = document.createElement("img");
-      img.src = item.logo;
-      img.alt = item.name;
-      img.loading = "lazy";
-      box.appendChild(img);
+      img.src = item.logo; img.alt = item.name; img.loading = "lazy";
+      wrap.appendChild(img);
     } else {
-      box.innerHTML = '<span class="mm-logo-ph">Logo</span><span class="mm-logo-ph-name"></span>';
-      box.querySelector(".mm-logo-ph-name").textContent = item.name;
+      wrap.innerHTML = '<span class="mm-logo-ph">Logo</span><span class="mm-logo-ph-name"></span>';
+      wrap.querySelector(".mm-logo-ph-name").textContent = item.name;
     }
-    return box;
+    return wrap;
   }
 
-  /* oculta la sección entera (la <section> que contiene el bloque) si no hay nada que mostrar */
+  /* oculta la sección entera (la <section data-hide-empty> que lo contiene) si no hay nada que mostrar */
   function toggleSection(root, show) {
     root.hidden = !show;
     var sec = root.closest("section[data-hide-empty]");
     if (sec) sec.hidden = !show;
   }
 
+  /* ---- emprendimientos: fila de logos ---- */
   document.querySelectorAll('[data-mm="logos"]').forEach(function (root) {
-    var all = LOGOS[root.getAttribute("data-set")] || [];
-    var list = DEMO ? all : all.filter(hasLogo);
+    var list = EMPRENDIMIENTOS.filter(function (i) { return SHOW_PH || has(i.logo); });
     root.className = "mm-logos";
-    list.forEach(function (item) { root.appendChild(logoCell(item)); });
+    list.forEach(function (item) { root.appendChild(logoBox(item, "mm-logo-cell")); });
     toggleSection(root, list.length > 0);
   });
 
+  /* ---- clientes: reseñas ---- */
+  document.querySelectorAll('[data-mm="reviews"]').forEach(function (root) {
+    var list = CLIENTES.filter(function (i) { return SHOW_PH || has(i.quote) || has(i.logo); });
+    root.className = "mm-reviews";
+    list.forEach(function (c) {
+      var real = has(c.quote);
+      var card = document.createElement("article");
+      card.className = "mm-review" + (real ? "" : " is-placeholder");
+      card.appendChild(logoBox({ name: c.role || c.name, logo: c.logo, url: "" }, "mm-review-logo"));
+      var q = document.createElement("p");
+      q.className = "mm-review-quote";
+      q.textContent = real ? "“" + c.quote + "”" : "“Aquí va la reseña del cliente, con su permiso.”";
+      card.appendChild(q);
+      var by = document.createElement("p");
+      by.className = "mm-review-by";
+      by.innerHTML = "<strong></strong><span></span>";
+      by.querySelector("strong").textContent = c.name;
+      by.querySelector("span").textContent = c.role || "";
+      card.appendChild(by);
+      root.appendChild(card);
+    });
+    toggleSection(root, list.length > 0);
+  });
+
+  /* ---- cifras (solo reales; con ?demo=1 se ven de ejemplo) ---- */
   document.querySelectorAll('[data-mm="stats"]').forEach(function (root) {
-    var list = CIFRAS.length >= 2 || DEMO ? CIFRAS : [];
-    if (DEMO && list.length < 3) list = list.concat([{ num: "00+", label: "dato de ejemplo" }, { num: "00+", label: "dato de ejemplo" }]);
+    var list = CIFRAS.length >= 2 ? CIFRAS : (C.preview ? CIFRAS.concat([{ num: "00+", label: "dato de ejemplo" }, { num: "00+", label: "dato de ejemplo" }]) : []);
     root.className = "mm-stats mm-stats-strip";
     list.forEach(function (s) {
       var d = document.createElement("div");
@@ -92,20 +107,6 @@
       d.querySelector(".mm-stat-num").textContent = s.num;
       d.querySelector("p").textContent = s.label;
       root.appendChild(d);
-    });
-    toggleSection(root, list.length > 0);
-  });
-
-  document.querySelectorAll('[data-mm="testimonials"]').forEach(function (root) {
-    var list = TESTIMONIOS.length ? TESTIMONIOS : (DEMO ? TESTIMONIOS_EJEMPLO : []);
-    root.className = "mm-testimonials";
-    list.forEach(function (t) {
-      var q = document.createElement("blockquote");
-      q.className = "mm-quote mm-testimonial";
-      q.innerHTML = '<p></p><cite></cite>';
-      q.querySelector("p").textContent = "“" + t.quote + "”";
-      q.querySelector("cite").textContent = t.name + (t.role ? " · " + t.role : "");
-      root.appendChild(q);
     });
     toggleSection(root, list.length > 0);
   });

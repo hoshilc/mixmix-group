@@ -9,7 +9,7 @@
    plausibleDomain  dominio registrado en Plausible (analítica sin cookies). Vacío = sin analítica.
 
    VISTA PREVIA: agrega ?demo=1 a cualquier dirección del sitio (p. ej. index.html?demo=1) para ver
-   la tienda de demostración y los recuadros de ejemplo (videos, logos, testimonios). ?demo=0 lo apaga. */
+   la tienda de demostración y todos los recuadros de ejemplo. ?demo=0 lo apaga. */
 window.MM_CONFIG = {
   siteUrl: "https://mixmixgroup.netlify.app",
   storeLive: false,
@@ -17,6 +17,9 @@ window.MM_CONFIG = {
   whatsapp: "",
   calendarUrl: "",
   plausibleDomain: "",
+  /* true = se ven los recuadros de ejemplo (videos, logos, reseñas) mientras llegan los reales.
+     Ponlo en false al lanzar para ocultar los que sigan vacíos. */
+  showPlaceholders: true,
   /* redes sociales: pega la dirección completa de cada perfil; las vacías no se muestran */
   social: { instagram: "", tiktok: "", youtube: "", facebook: "" }
 };
@@ -34,5 +37,5 @@ window.MM_CONFIG = {
   }
   C.preview = on;
   C.store = !!C.storeLive || on;     /* ¿se muestran carrito, cuenta y botones "Agregar"? */
-  C.showPlaceholders = on;           /* ¿se muestran recuadros de ejemplo? */
+  C.showPlaceholders = (C.showPlaceholders !== false) || on;   /* ¿se muestran recuadros de ejemplo? */
 })();
