@@ -458,3 +458,4 @@ button.mm-btn { font-family: var(--mm-font-display); }
 .mm-audit-grid .mm-home-pkg-meta { margin-top: auto; padding-top: var(--mm-space-4); }
 .mm-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: var(--mm-space-3) 0 0; }
 .mm-chips span { padding: 3px 10px; border: 1px solid var(--mm-black); font-family: var(--mm-font-display); font-weight: 600; font-size: 11px; letter-spacing: var(--mm-track-label); text-transform: uppercase; }
+.mm-stat-source { margin: var(--mm-space-2) 0 0; font-family: var(--mm-font-display); font-weight: 600; font-size: 11px; letter-spacing: 0.04em; color: var(--mm-stone-ink); }
