@@ -3,18 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Descargables — Grupo MixMix</title>
+<title>Descargables para restaurantes: manuales, formatos y paquetes — Grupo MixMix</title>
 <meta name="description" content="Todos los manuales, formatos, KPIs, descripciones de puesto y juegos de MixMix: el catálogo completo, paquetes por perfil o cada documento por separado.">
 <link rel="stylesheet" href="css/mixmix-brand/mixmix.css">
 <link rel="stylesheet" href="css/site.css">
+<!--#meta-->
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#111110">
+<link rel="canonical" href="https://mixmixgroup.netlify.app/descargables.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Grupo MixMix">
+<meta property="og:locale" content="es_MX">
+<meta property="og:title" content="Descargables para restaurantes: manuales, formatos y paquetes — Grupo MixMix">
+<meta property="og:description" content="Todos los manuales, formatos, KPIs, descripciones de puesto y juegos de MixMix: el catálogo completo, paquetes por perfil o cada documento por separado.">
+<meta property="og:url" content="https://mixmixgroup.netlify.app/descargables.html">
+<meta property="og:image" content="https://mixmixgroup.netlify.app/img/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<!--/#meta-->
 </head>
 <body>
 <a class="mm-skip" href="#content">Ir al contenido</a>
 
+<!--#header-->
 <header class="mm-header">
   <div class="mm-container">
-    <a class="mm-logo" href="index.html"><img class="mm-logo-img" src="img/logo.png" alt="MixMix"></a>
-    <nav aria-label="Principal">
+    <a class="mm-logo" href="index.html"><img class="mm-logo-img" src="img/logo.png" alt="MixMix, inicio"></a>
+    <button type="button" class="mm-menu-btn" aria-expanded="false" aria-controls="mm-nav">Menú</button>
+    <nav id="mm-nav" aria-label="Principal">
       <ul class="mm-navlinks">
         <li><a href="index.html">Nosotros</a></li>
         <li><a href="descargables.html" aria-current="page">Descargables</a></li>
@@ -24,6 +39,7 @@
     </nav>
   </div>
 </header>
+<!--/#header-->
 
 <main id="content">
 
@@ -37,6 +53,8 @@
 
   <section class="mm-section">
     <div class="mm-container">
+
+      <p class="mm-demo-note" data-mm-nostore>La compra en línea abre muy pronto. Mientras tanto, pulsa <strong>Me interesa</strong> en lo que necesites y te contactamos para entregártelo.</p>
 
       <!-- ================= BUSCADOR GENERAL ================= -->
       <div data-mm="search"></div>
@@ -67,7 +85,7 @@
         <!-- ================= PAQUETES POR PERFIL ================= -->
         <details id="paquetes" class="mm-acc" open>
           <summary>
-            <span class="mm-acc-title">Paquetes por perfil</span>
+            <h2 class="mm-acc-title">Paquetes por perfil</h2>
             <span class="mm-acc-meta"><span data-mm-count="packages"></span> paquetes · ahorras frente a precio suelto</span>
           </summary>
           <div class="mm-acc-body">
@@ -79,7 +97,7 @@
         <!-- ================= MANUALES TÁCTICOS ================= -->
         <details id="manuales" class="mm-acc">
           <summary>
-            <span class="mm-acc-title">Manuales Tácticos</span>
+            <h2 class="mm-acc-title">Manuales Tácticos</h2>
             <span class="mm-acc-meta"><span data-mm-count="manuales"></span> manuales · <span data-mm-unit="manuales"></span></span>
           </summary>
           <div class="mm-acc-body">
@@ -91,7 +109,7 @@
         <!-- ================= DESCRIPCIONES DE PUESTO ================= -->
         <details id="puestos" class="mm-acc">
           <summary>
-            <span class="mm-acc-title">Descripciones de Puesto</span>
+            <h2 class="mm-acc-title">Descripciones de Puesto</h2>
             <span class="mm-acc-meta"><span data-mm-count="puestos"></span> documentos · <span data-mm-unit="puestos"></span></span>
           </summary>
           <div class="mm-acc-body">
@@ -104,7 +122,7 @@
         <!-- ================= CONTROLES IMPRIMIBLES ================= -->
         <details id="controles" class="mm-acc">
           <summary>
-            <span class="mm-acc-title">Controles Imprimibles</span>
+            <h2 class="mm-acc-title">Controles Imprimibles</h2>
             <span class="mm-acc-meta"><span data-mm-count="controles"></span> documentos · <span data-mm-unit="controles"></span></span>
           </summary>
           <div class="mm-acc-body">
@@ -117,7 +135,7 @@
         <!-- ================= KPIS DE GERENCIA ================= -->
         <details id="kpis" class="mm-acc">
           <summary>
-            <span class="mm-acc-title">KPIs de Gerencia</span>
+            <h2 class="mm-acc-title">KPIs de Gerencia</h2>
             <span class="mm-acc-meta"><span data-mm-count="kpis"></span> cuadros de mando · <span data-mm-unit="kpis"></span></span>
           </summary>
           <div class="mm-acc-body">
@@ -130,7 +148,7 @@
         <!-- ================= MYSTERY SHOPPER ================= -->
         <details id="mystery" class="mm-acc">
           <summary>
-            <span class="mm-acc-title">Mystery Shopper</span>
+            <h2 class="mm-acc-title">Mystery Shopper</h2>
             <span class="mm-acc-meta"><span data-mm-count="mystery"></span> formatos · <span data-mm-unit="mystery"></span></span>
           </summary>
           <div class="mm-acc-body">
@@ -143,7 +161,7 @@
         <!-- ================= JUEGOS MIXMIX ================= -->
         <details id="juegos" class="mm-acc">
           <summary>
-            <span class="mm-acc-title">Juegos MixMix</span>
+            <h2 class="mm-acc-title">Juegos MixMix</h2>
             <span class="mm-acc-meta"><span data-mm-count="juegos"></span> juegos · 7 archivos</span>
           </summary>
           <div class="mm-acc-body">
@@ -161,6 +179,7 @@
 
 </main>
 
+<!--#footer-->
 <footer class="mm-footer">
   <div class="mm-container">
     <ul class="mm-navlinks">
@@ -169,13 +188,21 @@
       <li><a href="consultoria.html">Consultoría</a></li>
       <li><a href="contacto.html">Contacto</a></li>
     </ul>
-    <p class="mm-footer-legal">Copyright © 2026 Grupo MixMix. Todos los derechos reservados.</p>
+    <ul class="mm-navlinks mm-footer-legal-links">
+      <li><a href="privacidad.html">Aviso de privacidad</a></li>
+      <li><a href="terminos.html">Términos y reembolsos</a></li>
+    </ul>
+    <p class="mm-social" data-mm-social hidden></p>
+    <p class="mm-footer-legal">Copyright © <span data-mm-year>2026</span> Grupo MixMix. Todos los derechos reservados.</p>
   </div>
 </footer>
+<!--/#footer-->
 
+<script src="js/config.js"></script>
 <script src="js/catalog.js"></script>
 <script src="js/mm.js"></script>
 <script src="js/store.js"></script>
+<script src="js/site.js"></script>
 <script>
   /* Abrir todas / cerrar todas las secciones */
   document.querySelectorAll("[data-acc]").forEach(function (b) {

@@ -114,7 +114,9 @@
     var root = document.querySelector('[data-mm="videos"]');
     if (!root) return;
     root.innerHTML = "";
-    var cards = (list || []).map(card).filter(Boolean);
+    /* sin ?demo=1 solo se muestran los videos que ya tienen enlace */
+    var show = (window.MM_CONFIG && window.MM_CONFIG.showPlaceholders) ? list : (list || []).filter(function (v) { return v.url && v.url.trim(); });
+    var cards = (show || []).map(card).filter(Boolean);
     root.hidden = cards.length === 0;
     if (!cards.length) return;
     root.className = "mm-videos";

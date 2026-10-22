@@ -3,18 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Grupo MixMix — Nosotros</title>
-<meta name="description" content="Quiénes somos, nuestra historia y por qué existimos: la estructura real que convierte el caos de un restaurante en utilidades.">
+<title>Consultoría gastronómica para restaurantes — Grupo MixMix</title>
+<meta name="description" content="Auditorías, capacitación y consultoría para restaurantes, más manuales, controles y paquetes descargables: la estructura real que convierte el caos en utilidades.">
 <link rel="stylesheet" href="css/mixmix-brand/mixmix.css">
 <link rel="stylesheet" href="css/site.css">
+<!--#meta-->
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#111110">
+<link rel="canonical" href="https://mixmixgroup.netlify.app/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Grupo MixMix">
+<meta property="og:locale" content="es_MX">
+<meta property="og:title" content="Consultoría gastronómica para restaurantes — Grupo MixMix">
+<meta property="og:description" content="Auditorías, capacitación y consultoría para restaurantes, más manuales, controles y paquetes descargables: la estructura real que convierte el caos en utilidades.">
+<meta property="og:url" content="https://mixmixgroup.netlify.app/">
+<meta property="og:image" content="https://mixmixgroup.netlify.app/img/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<!--/#meta-->
 </head>
 <body>
 <a class="mm-skip" href="#content">Ir al contenido</a>
 
+<!--#header-->
 <header class="mm-header">
   <div class="mm-container">
-    <a class="mm-logo" href="index.html"><img class="mm-logo-img" src="img/logo.png" alt="MixMix"></a>
-    <nav aria-label="Principal">
+    <a class="mm-logo" href="index.html"><img class="mm-logo-img" src="img/logo.png" alt="MixMix, inicio"></a>
+    <button type="button" class="mm-menu-btn" aria-expanded="false" aria-controls="mm-nav">Menú</button>
+    <nav id="mm-nav" aria-label="Principal">
       <ul class="mm-navlinks">
         <li><a href="index.html" aria-current="page">Nosotros</a></li>
         <li><a href="descargables.html">Descargables</a></li>
@@ -24,6 +39,7 @@
     </nav>
   </div>
 </header>
+<!--/#header-->
 
 <main id="content">
 
@@ -36,7 +52,7 @@
         <p class="mm-script">sin humo.</p>
         <p class="mm-body">Manuales operativos, checklists y capacitaciones para cada área de tu restaurante — desde el mesero hasta el administrador. Sin importar el giro o el tamaño de tu negocio, te damos la estructura para convertir tus esfuerzos en utilidades.</p>
         <div class="mm-hero-actions">
-          <a class="mm-btn" href="contacto.html">Agendar consultoría</a>
+          <a class="mm-btn" href="contacto.html?interes=llamada" data-mm-call>Agendar consultoría</a>
           <a class="mm-btn mm-btn-secondary" href="descargables.html">Ver descargables</a>
         </div>
       </div>
@@ -58,6 +74,62 @@
     </div>
   </section>
 
+  <!-- AUDITORÍAS -->
+  <section class="mm-section" id="auditorias">
+    <div class="mm-container">
+      <p class="mm-label mm-label-accent">Consultoría · Auditorías</p>
+      <h2 class="mm-h2">Cuando el documento no basta, entra el equipo</h2>
+      <p class="mm-body">Trabajamos contigo con todos nuestros expertos. Elige cómo: con un especialista que te capacita en un tema, con la auditoría de un área completa o con una revisión integral de toda la operación.</p>
+
+      <div class="mm-grid mm-grid-3 mm-audit-grid">
+        <div class="mm-cell">
+          <span class="mm-pillar-num">01</span>
+          <h3 class="mm-h2">Capacitación y consultoría individual</h3>
+          <p class="mm-body">Un experto, un tema. El especialista de MixMix que corresponde trabaja contigo y con tu equipo el punto que más te preocupa: te capacita y te acompaña a resolverlo.</p>
+          <p class="mm-body" style="font-size:14px"><a href="consultoria.html#individual">Ver cómo funciona</a></p>
+          <p class="mm-home-pkg-meta">Para un tema concreto</p>
+        </div>
+        <div class="mm-cell">
+          <span class="mm-pillar-num">02</span>
+          <h3 class="mm-h2">Auditoría por área</h3>
+          <p class="mm-body">Revisamos a fondo el área que elijas, con el experto de esa especialidad.</p>
+          <p class="mm-chips"><span>Operación</span><span>Administración</span><span>Recursos Humanos</span><span>Marketing</span></p>
+          <p class="mm-body" style="font-size:14px"><a href="consultoria.html#area">Ver cómo funciona</a></p>
+          <p class="mm-home-pkg-meta">Para ordenar un departamento</p>
+        </div>
+        <div class="mm-cell-dark">
+          <span class="mm-pillar-num">03</span>
+          <h3 class="mm-h2" style="color:var(--mm-bone)">Auditoría integral</h3>
+          <p class="mm-body" style="color:var(--mm-stone-onblack)">Todos nuestros expertos revisan tu restaurante de punta a punta, y sales con una visión completa de toda tu operación.</p>
+          <p class="mm-body" style="font-size:14px"><a href="consultoria.html#integral" style="color:var(--mm-gold)">Ver cómo funciona</a></p>
+          <p class="mm-home-pkg-meta" style="color:var(--mm-gold)">Para ver todo el panorama</p>
+        </div>
+      </div>
+
+      <p class="mm-body" style="margin-top:var(--mm-space-6)">Cada servicio se cotiza según tu restaurante. ¿No sabes cuál te conviene? Platícanos en una llamada, sin costo ni compromiso, y te decimos cómo trabajarlo.</p>
+      <p class="mm-hero-actions" style="margin-top:var(--mm-space-4)">
+        <a class="mm-btn" href="contacto.html?interes=llamada" data-mm-call>Agendar llamada gratis</a>
+        <a class="mm-btn mm-btn-secondary" href="consultoria.html">Ver toda la consultoría</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- CLIENTES -->
+  <section class="mm-section" id="clientes" data-hide-empty>
+    <div class="mm-container">
+      <p class="mm-label mm-label-accent">Reputación · Clientes</p>
+      <h2 class="mm-h2">Nuestros clientes</h2>
+      <p class="mm-body">Restaurantes donde ya hicimos consultoría.</p>
+      <div data-mm="logos" data-set="clientes"></div>
+    </div>
+  </section>
+
+  <!-- CIFRAS (solo si hay cifras reales: js/reputacion.js) -->
+  <section class="mm-section" data-hide-empty>
+    <div class="mm-container">
+      <div data-mm="stats"></div>
+    </div>
+  </section>
   <!-- MIXMIX? -->
   <section class="mm-section">
     <div class="mm-container">
@@ -73,91 +145,13 @@
 
       <div data-mm="home-packages"></div>
 
-      <p class="mm-body" style="margin-top:var(--mm-space-6)"><strong>¿Solo necesitas uno?</strong> Todo también se vende por separado: cada manual, descripción de puesto, control, KPI, formato de Mystery Shopper o juego. Desde <span data-mm-unit="puestos"></span> el documento, y puedes mezclar lo que quieras en un mismo carrito.</p>
+      <p class="mm-body" style="margin-top:var(--mm-space-6)"><strong>¿Solo necesitas uno?</strong> Todo también se vende por separado: cada manual, descripción de puesto, control, KPI, formato de Mystery Shopper o juego. Desde <span data-mm-unit="puestos"></span> el documento, <span data-mm-store-only>y puedes mezclar lo que quieras en un mismo carrito.</span></p>
 
       <p class="mm-hero-actions" style="margin-top:var(--mm-space-6)">
         <a class="mm-btn" href="descargables.html#paquetes">Ver los paquetes</a>
-        <a class="mm-btn mm-btn-secondary" href="descargables.html">Comprar documentos por separado</a>
+        <a class="mm-btn mm-btn-secondary" href="descargables.html">Ver documentos por separado</a>
         <a class="mm-btn mm-btn-secondary" href="descargables.html#catalogo">Ver el catálogo completo</a>
       </p>
-    </div>
-  </section>
-
-  <!-- AUDITORÍAS -->
-  <section class="mm-section" id="auditorias">
-    <div class="mm-container">
-      <p class="mm-label mm-label-accent">Consultoría · Auditorías</p>
-      <h2 class="mm-h2">Cuando el documento no basta, entra el equipo</h2>
-      <p class="mm-body">Trabajamos contigo con todos nuestros expertos. Elige cómo: con un especialista que te capacita en un tema, con la auditoría de un área completa o con una revisión integral de toda la operación.</p>
-
-      <div class="mm-grid mm-grid-3 mm-audit-grid">
-        <div class="mm-cell">
-          <span class="mm-pillar-num">01</span>
-          <h3 class="mm-h2">Capacitación y consultoría individual</h3>
-          <p class="mm-body">Un experto, un tema. El especialista de MixMix que corresponde trabaja contigo y con tu equipo el punto que más te preocupa: te capacita y te acompaña a resolverlo.</p>
-          <p class="mm-home-pkg-meta">Para un tema concreto</p>
-        </div>
-        <div class="mm-cell">
-          <span class="mm-pillar-num">02</span>
-          <h3 class="mm-h2">Auditoría por área</h3>
-          <p class="mm-body">Revisamos a fondo el área que elijas, con el experto de esa especialidad.</p>
-          <p class="mm-chips"><span>Operación</span><span>Administración</span><span>Recursos Humanos</span><span>Marketing</span></p>
-          <p class="mm-home-pkg-meta">Para ordenar un departamento</p>
-        </div>
-        <div class="mm-cell-dark">
-          <span class="mm-pillar-num">03</span>
-          <h3 class="mm-h2" style="color:var(--mm-bone)">Auditoría integral</h3>
-          <p class="mm-body" style="color:var(--mm-stone-onblack)">Todos nuestros expertos revisan tu restaurante de punta a punta, y sales con una visión completa de toda tu operación.</p>
-          <p class="mm-home-pkg-meta" style="color:var(--mm-gold)">Para ver todo el panorama</p>
-        </div>
-      </div>
-
-      <p class="mm-body" style="margin-top:var(--mm-space-6)">Cada servicio se cotiza según tu restaurante. ¿No sabes cuál te conviene? Platícanos en una llamada, sin costo ni compromiso, y te decimos cómo trabajarlo.</p>
-      <p class="mm-hero-actions" style="margin-top:var(--mm-space-4)">
-        <a class="mm-btn" href="contacto.html">Agendar llamada gratis</a>
-        <a class="mm-btn mm-btn-secondary" href="consultoria.html">Ver toda la consultoría</a>
-      </p>
-    </div>
-  </section>
-
-  <!-- CLIENTES -->
-  <section class="mm-section" id="clientes">
-    <div class="mm-container">
-      <p class="mm-label mm-label-accent">Reputación · Clientes</p>
-      <h2 class="mm-h2">Nuestros clientes</h2>
-      <p class="mm-body">Restaurantes donde ya hicimos consultoría.</p>
-      <div data-mm="logos" data-set="clientes"></div>
-    </div>
-  </section>
-
-  <!-- DOS CAMINOS -->
-  <section class="mm-section">
-    <div class="mm-container">
-      <p class="mm-label mm-label-accent">Elige tu camino</p>
-      <h2 class="mm-h2">Descárgalo hoy, o trabajemos juntos</h2>
-      <p class="mm-body">Dos formas de poner orden en tu restaurante, según qué tan a fondo lo necesites.</p>
-
-      <div class="mm-grid mm-grid-2" style="margin-top:var(--mm-space-8)">
-        <div class="mm-cell-dark">
-          <svg class="mm-icon" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="stroke:var(--mm-gold)">
-            <path d="M4 8c4-3 10-3 14 0v22c-4-3-10-3-14 0V8z"/><path d="M32 8c-4-3-10-3-14 0v22c4-3 10-3 14 0V8z"/>
-          </svg>
-          <p class="mm-tag-gold mm-tag">Autoservicio</p>
-          <h3 class="mm-h2" style="color:var(--mm-bone); margin-top:var(--mm-space-3)">Descargables</h3>
-          <p class="mm-body" style="color:var(--mm-stone-onblack)"><span data-mm-count="total"></span> documentos: manuales, descripciones de puesto, controles imprimibles, KPIs y Mystery Shopper, más juegos de capacitación. Desde <span data-mm-unit="puestos"></span>, descarga inmediata.</p>
-          <a class="mm-btn" style="margin-top:var(--mm-space-4); background:var(--mm-gold); border-color:var(--mm-gold); color:var(--mm-black)" href="descargables.html">Ver descargables</a>
-        </div>
-
-        <div class="mm-cell">
-          <svg class="mm-icon" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <circle cx="20" cy="20" r="6"/><path d="M20 4v6M20 30v6M4 20h6M30 20h6M9.5 9.5l4.2 4.2M26.3 26.3l4.2 4.2M9.5 30.5l4.2-4.2M26.3 13.7l4.2-4.2"/>
-          </svg>
-          <p class="mm-tag mm-tag-gold">Acompañamiento</p>
-          <h3 class="mm-h2" style="margin-top:var(--mm-space-3)">Consultoría</h3>
-          <p class="mm-body">Cuando un documento no basta, entra nuestro equipo — asesoría directa, uno a uno o reingeniería completa de tu operación.</p>
-          <a class="mm-btn" style="margin-top:var(--mm-space-4)" href="consultoria.html">Ver consultoría</a>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -218,12 +212,13 @@
       <p class="mm-label mm-label-accent">Evidencia</p>
       <h2 class="mm-h2">Todo respaldado en campo real</h2>
       <p class="mm-body">En nuestras redes sociales puedes ver las marcas que levantamos, los negocios que construimos, las asesorías que impartimos y también los aprendizajes de los proyectos que no funcionaron. Todo lo que hacemos está respaldado con evidencia real, no con teoría.</p>
+      <p class="mm-social mm-social-light" data-mm-social hidden></p>
       <div data-mm="videos" hidden></div>
     </div>
   </section>
 
   <!-- EMPRENDIMIENTOS -->
-  <section class="mm-section" id="emprendimientos">
+  <section class="mm-section" id="emprendimientos" data-hide-empty>
     <div class="mm-container">
       <p class="mm-label mm-label-accent">Reputación · Emprendimientos</p>
       <h2 class="mm-h2">Emprendimientos</h2>
@@ -232,6 +227,14 @@
     </div>
   </section>
 
+  <!-- TESTIMONIOS (solo si hay testimonios reales: js/reputacion.js) -->
+  <section class="mm-section" id="testimonios" data-hide-empty>
+    <div class="mm-container">
+      <p class="mm-label mm-label-accent">Reputación · Testimonios</p>
+      <h2 class="mm-h2">Lo que dicen quienes ya trabajaron con nosotros</h2>
+      <div data-mm="testimonials"></div>
+    </div>
+  </section>
   <!-- MENTORES -->
   <section class="mm-section">
     <div class="mm-container">
@@ -270,14 +273,15 @@
       <p class="mm-label" style="color:var(--mm-stone-onblack)">Tu restaurante no necesita suerte</p>
       <h2 class="mm-display" style="font-size:clamp(30px,5vw,56px)">NECESITA <em>CIMIENTOS</em>.</h2>
       <div class="mm-hero-actions">
-        <a class="mm-btn" href="descargables.html">Ver descargables</a>
-        <a class="mm-btn mm-btn-secondary" href="consultoria.html">Ver consultoría</a>
+        <a class="mm-btn" href="contacto.html?interes=llamada" data-mm-call>Agendar llamada gratis</a>
+        <a class="mm-btn mm-btn-secondary" href="descargables.html">Ver descargables</a>
       </div>
     </div>
   </section>
 
 </main>
 
+<!--#footer-->
 <footer class="mm-footer">
   <div class="mm-container">
     <ul class="mm-navlinks">
@@ -286,15 +290,22 @@
       <li><a href="consultoria.html">Consultoría</a></li>
       <li><a href="contacto.html">Contacto</a></li>
     </ul>
-    <p class="mm-footer-legal">Copyright © 2026 Grupo MixMix. Todos los derechos reservados.</p>
+    <ul class="mm-navlinks mm-footer-legal-links">
+      <li><a href="privacidad.html">Aviso de privacidad</a></li>
+      <li><a href="terminos.html">Términos y reembolsos</a></li>
+    </ul>
+    <p class="mm-social" data-mm-social hidden></p>
+    <p class="mm-footer-legal">Copyright © <span data-mm-year>2026</span> Grupo MixMix. Todos los derechos reservados.</p>
   </div>
 </footer>
+<!--/#footer-->
 
+<script src="js/config.js"></script>
 <script src="js/catalog.js"></script>
 <script src="js/mm.js"></script>
 <script src="js/social.js"></script>
-<script src="js/logos.js"></script>
+<script src="js/reputacion.js"></script>
 <script src="js/store.js"></script>
-
+<script src="js/site.js"></script>
 </body>
 </html>

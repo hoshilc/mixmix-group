@@ -1,0 +1,164 @@
+{
+  "accents": {
+    "Capitan": "Capitán",
+    "Mixologo": "Mixólogo",
+    "Produccion": "Producción",
+    "Almacen": "Almacén",
+    "Nomina": "Nómina",
+    "Capacitacion": "Capacitación",
+    "Disenador Grafico": "Diseñador Gráfico",
+    "Recepcion": "Recepción",
+    "Maximos": "Máximos",
+    "Minimos": "Mínimos",
+    "Fisico": "Físico",
+    "Ciclico": "Cíclico",
+    "Bitacora": "Bitácora",
+    "Requisicion": "Requisición",
+    "Lineas": "Líneas",
+    "Operacion": "Operación",
+    "Salon": "Salón"
+  },
+  "fixes": {
+    "Especialista Marketing Digital": "Especialista en Marketing Digital",
+    "Control de Stock Máximos y Mínimos": "Control de Stock Máximo y Mínimo"
+  },
+  "themes": [
+    { "id": "apertura",      "name": "Apertura por giro de negocio" },
+    { "id": "fundamentos",   "name": "Fundamentos y filosofía de negocio" },
+    { "id": "arquitectura",  "name": "Arquitectura, diseño y logística" },
+    { "id": "servicio",      "name": "Servicio y experiencia del cliente" },
+    { "id": "marketing",     "name": "Marketing y crecimiento de ingresos" },
+    { "id": "finanzas",      "name": "Finanzas y proveedores" },
+    { "id": "talento",       "name": "Talento, RRHH y desarrollo de carrera" },
+    { "id": "blindaje",      "name": "Blindaje, riesgo y seguridad" }
+  ],
+  "prices": {
+    "manual": 299, "corto": 129,
+    "catalogo": 6999,
+    "themes": { "apertura": 2499, "fundamentos": 1799, "arquitectura": 1599, "servicio": 799, "marketing": 1099, "finanzas": 549, "talento": 1799, "blindaje": 1599 },
+    "types": { "puestos": 2249, "controles": 1149, "kpis": 749, "mystery": 579 },
+    "juegos": 699
+  },
+  "games": [
+    { "id": "loteria-ingles", "title": "Lotería MIXMIX: Inglés", "price": 249,
+      "desc": "Lotería de capacitación para que tu equipo practique inglés de restaurante. Incluye cartas y tablas para imprimir.",
+      "files": [ "Cartas de Ingl", "Tablas de Ingl" ] },
+    { "id": "loteria-servicio", "title": "Lotería MIXMIX: Servicio", "price": 249,
+      "desc": "Lotería de capacitación sobre el servicio en sala. Incluye cartas y tablas para imprimir.",
+      "files": [ "Cartas de Servicio", "Tablas de Servicio" ] },
+    { "id": "memorama-kpi", "title": "MIX Games: KPI", "price": 149,
+      "desc": "Memorama de capacitación para aprender los indicadores del restaurante jugando.",
+      "files": [ "MIX Games - KPI" ] },
+    { "id": "memorama-marketing", "title": "MIX Games: Marketing", "price": 149,
+      "desc": "Memorama de capacitación para aprender marketing gastronómico jugando.",
+      "files": [ "MIX Games - Marketing" ] },
+    { "id": "memorama-crisis", "title": "MIX Games: Restaurante en Crisis", "price": 149,
+      "desc": "Memorama de capacitación para entrenar al equipo ante situaciones de crisis en el restaurante.",
+      "files": [ "Restaurante en Crisis" ] }
+  ],
+  "areas": [
+    { "id": "admin",   "name": "Administración" },
+    { "id": "bar",     "name": "Bar" },
+    { "id": "cocina",  "name": "Cocina" },
+    { "id": "mkt",     "name": "Marketing" },
+    { "id": "rrhh",    "name": "Recursos humanos" },
+    { "id": "salon",   "name": "Salón" }
+  ],
+  "manuales": {
+    "1":  { "t": "Conceptos Gastronómicos", "g": "fundamentos" },
+    "2":  { "t": "Historia y Legado del Servicio", "g": "fundamentos" },
+    "3":  { "t": "Cómo Abrir y Operar un Local de Tamales", "g": "apertura" },
+    "4":  { "t": "Cómo Abrir tu Primera Taquería", "g": "apertura" },
+    "5":  { "t": "Iniciación: El Gerente Políglota", "g": "fundamentos" },
+    "6":  { "t": "Tienda de Donas", "g": "apertura" },
+    "7":  { "t": "Manual de Guerra: El Imperio de la Michelada", "g": "apertura" },
+    "8":  { "t": "Cómo Entender el Costo desde Cero", "g": "finanzas" },
+    "9":  { "t": "20 Claves para Emprender en Gastronomía", "g": "fundamentos" },
+    "10": { "t": "Sushi de Combate", "g": "apertura" },
+    "11": { "t": "Administración Básica para Restaurantes", "g": "fundamentos" },
+    "12": { "t": "Cómo Tratar, Evaluar y Negociar con Proveedores", "g": "finanzas" },
+    "13": { "t": "Cómo Abrir y Operar una Panadería", "g": "apertura" },
+    "14": { "t": "Operación de CEDIS Interno: Hub & Spoke", "g": "arquitectura" },
+    "15": { "t": "Ascenso: De Jefe de Bares a Gerente General", "g": "talento" },
+    "16": { "t": "Alto Rendimiento: Gerente General", "g": "talento" },
+    "17": { "t": "Arquitectura Operativa de un Restaurante", "g": "arquitectura" },
+    "18": { "t": "Logística de Guerra Asiática", "g": "arquitectura" },
+    "19": { "t": "Arquitectura Operativa: Cocinas de Combate", "g": "arquitectura" },
+    "20": { "t": "Marketing Gastronómico", "g": "marketing" },
+    "21": { "t": "Cómo Abrir tu Primera Rosticería", "g": "apertura" },
+    "22": { "t": "Alta Etiqueta de Servicio", "g": "servicio" },
+    "23": { "t": "Alto Rendimiento: Chef Ejecutivo", "g": "talento" },
+    "24": { "t": "Blindaje y Auditoría Sanitaria", "g": "blindaje" },
+    "25": { "t": "El Principio Escoffier", "g": "fundamentos" },
+    "26": { "t": "Puntos Críticos de Riesgo y Seguridad", "g": "blindaje" },
+    "27": { "t": "Filosofía Operativa: La Cocina es Guerra", "g": "fundamentos" },
+    "28": { "t": "Alto Rendimiento: Jefe de Bares", "g": "talento" },
+    "29": { "t": "Descripciones de Puestos Maestros", "g": "talento" },
+    "30": { "t": "Cómo Abrir tu Primer Bar", "g": "apertura" },
+    "31": { "t": "Cómo Detectar Robos Internos", "g": "blindaje" },
+    "32": { "t": "Cómo Crear Paquetes y Servicios Extra", "g": "marketing" },
+    "33": { "t": "Cómo Hablar con un Asesor de Marketing Gastronómico", "g": "marketing" },
+    "34": { "t": "De Hostess a Gerenta", "g": "talento" },
+    "35": { "t": "Maestro de Apertura: Marisquería", "g": "apertura" },
+    "36": { "t": "Formatos Operativos para Restaurantes", "g": "arquitectura" },
+    "37": { "t": "Blindaje Logístico: Almacenes y Sistemas", "g": "blindaje" },
+    "38": { "t": "Diseño Integral de Restaurantes", "g": "arquitectura" },
+    "39": { "t": "Emprender en Gastronomía: Lo que Realmente Importa", "g": "fundamentos" },
+    "40": { "t": "Estilos de Servicio en Restaurantes", "g": "servicio" },
+    "41": { "t": "Decoración de Interiores Gastronómicos", "g": "arquitectura" },
+    "42": { "t": "Perfiles de Puesto y Perfil DISC Ideal", "g": "talento" },
+    "43": { "t": "Recursos Humanos en Restaurantes", "g": "talento" },
+    "44": { "t": "Marketing Gastronómico para Restaurantes", "g": "marketing" },
+    "45": { "t": "Blindaje Humano: Recursos Humanos", "g": "blindaje" },
+    "46": { "t": "Cómo Ser Capitán de Piso Excelente", "g": "servicio" },
+    "47": { "t": "Blindaje Laboral: Desvinculación Estratégica", "g": "blindaje" },
+    "48": { "t": "Cómo Montar un Negocio de Elotes y Hacerlo Marca", "g": "apertura" },
+    "49": { "t": "Despliegue Táctico: Cafetería de Alto Flujo", "g": "apertura" },
+    "50": { "t": "Estrategia Líquida: El Origen del Bar", "g": "apertura" },
+    "51": { "t": "Quesadillería Profesional y Branding Gastronómico", "g": "apertura" },
+    "52": { "t": "Contrainteligencia: Cómo Te Roban", "g": "blindaje" }
+  },
+  "packages": [
+    {
+      "id": "pkg-apertura", "title": "Apertura de Negocio", "price": 3299,
+      "who": "Para quien está por abrir un concepto (tacos, bar, marisquería, panadería…): el manual de tu giro más toda la base para arrancar.",
+      "choose": { "cat": "manuales", "g": "apertura" },
+      "parts": [ { "cat": "manuales", "g": "fundamentos" }, { "cat": "manuales", "g": "arquitectura" }, { "cat": "controles" } ]
+    },
+    {
+      "id": "pkg-operacion", "title": "Operación Diaria", "price": 1999,
+      "who": "Para el gerente de operaciones de un restaurante ya abierto: controles, indicadores y evaluación del servicio.",
+      "parts": [ { "cat": "controles" }, { "cat": "manuales", "titles": ["Formatos Operativos para Restaurantes"] }, { "cat": "kpis" }, { "cat": "mystery" } ]
+    },
+    {
+      "id": "pkg-talento", "title": "Talento y RRHH", "price": 3399,
+      "who": "Para el gerente de RRHH o el dueño que arma su equipo: todas las descripciones de puesto y los manuales de talento.",
+      "parts": [ { "cat": "puestos", "exceptTitles": ["Secuencia de Servicio: Meseros"] }, { "cat": "manuales", "g": "talento" } ]
+    },
+    {
+      "id": "pkg-servicio", "title": "Servicio y Experiencia", "price": 1849,
+      "who": "Para el capitán de sala o gerente de piso: servicio, evaluación de cliente incógnito y los puestos de salón.",
+      "parts": [ { "cat": "manuales", "g": "servicio" }, { "cat": "mystery" }, { "cat": "kpis", "titles": ["Cuadro de Mando: Capitán de Sala"] }, { "cat": "puestos", "g": "salon" } ]
+    },
+    {
+      "id": "pkg-marketing", "title": "Marketing y Crecimiento", "price": 1299,
+      "who": "Para el dueño o encargado de marketing que quiere subir ingresos.",
+      "parts": [ { "cat": "manuales", "g": "marketing" }, { "cat": "puestos", "g": "mkt" } ]
+    },
+    {
+      "id": "pkg-liderazgo", "title": "Liderazgo y Alto Rendimiento", "price": 1349,
+      "who": "Para el personal en vía de ascenso a gerente: la serie Alto Rendimiento y el camino de carrera.",
+      "parts": [ { "cat": "manuales", "titles": ["Alto Rendimiento: Gerente General", "Alto Rendimiento: Chef Ejecutivo", "Alto Rendimiento: Jefe de Bares", "Ascenso: De Jefe de Bares a Gerente General", "De Hostess a Gerenta", "Perfiles de Puesto y Perfil DISC Ideal"] } ]
+    },
+    {
+      "id": "pkg-blindaje", "title": "Blindaje y Control de Riesgo", "price": 1799,
+      "who": "Para el operador multi-unidad enfocado en pérdidas y cumplimiento.",
+      "parts": [ { "cat": "manuales", "g": "blindaje" }, { "cat": "controles", "titles": ["Control de Temperaturas", "Bitácora y Control de Mermas"] } ]
+    },
+    {
+      "id": "pkg-finanzas", "title": "Finanzas y Proveedores", "price": 799,
+      "who": "Para el dueño o administrador enfocado en costos.",
+      "parts": [ { "cat": "manuales", "g": "finanzas" }, { "cat": "controles", "titles": ["Alta de Proveedores", "Control de Stock Máximo y Mínimo"] } ]
+    }
+  ]
+}

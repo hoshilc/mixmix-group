@@ -7,14 +7,20 @@
 <meta name="robots" content="noindex">
 <link rel="stylesheet" href="css/mixmix-brand/mixmix.css">
 <link rel="stylesheet" href="css/site.css">
+<!--#meta-->
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#111110">
+<!--/#meta-->
 </head>
 <body>
 <a class="mm-skip" href="#content">Ir al contenido</a>
 
+<!--#header-->
 <header class="mm-header">
   <div class="mm-container">
-    <a class="mm-logo" href="index.html"><img class="mm-logo-img" src="img/logo.png" alt="MixMix"></a>
-    <nav aria-label="Principal">
+    <a class="mm-logo" href="index.html"><img class="mm-logo-img" src="img/logo.png" alt="MixMix, inicio"></a>
+    <button type="button" class="mm-menu-btn" aria-expanded="false" aria-controls="mm-nav">Menú</button>
+    <nav id="mm-nav" aria-label="Principal">
       <ul class="mm-navlinks">
         <li><a href="index.html">Nosotros</a></li>
         <li><a href="descargables.html">Descargables</a></li>
@@ -24,6 +30,7 @@
     </nav>
   </div>
 </header>
+<!--/#header-->
 
 <main id="content">
   <section class="mm-section">
@@ -52,6 +59,8 @@
             <div class="mm-cart-total"><dt>Total</dt><dd id="sum-total">$0 MXN</dd></div>
           </dl>
           <p id="sum-owned" class="mm-body" style="font-size:13px" hidden></p>
+          <label class="mm-check"><input type="checkbox" id="terms"> <span>Acepto los <a href="terminos.html" target="_blank">términos de venta y la política de reembolsos</a> y el <a href="privacidad.html" target="_blank">aviso de privacidad</a>.</span></label>
+          <p id="terms-msg" class="mm-cart-warn" role="alert" hidden>Para continuar, acepta los términos.</p>
           <button type="button" class="mm-btn" id="pay-btn" style="margin-top:var(--mm-space-4)">Pagar</button>
           <p id="pay-note" class="mm-guarantee"></p>
           <button type="button" class="mm-link-btn" id="clear-btn" style="margin-top:var(--mm-space-3)">Vaciar carrito</button>
@@ -61,6 +70,7 @@
   </section>
 </main>
 
+<!--#footer-->
 <footer class="mm-footer">
   <div class="mm-container">
     <ul class="mm-navlinks">
@@ -69,15 +79,24 @@
       <li><a href="consultoria.html">Consultoría</a></li>
       <li><a href="contacto.html">Contacto</a></li>
     </ul>
-    <p class="mm-footer-legal">Copyright © 2026 Grupo MixMix. Todos los derechos reservados.</p>
+    <ul class="mm-navlinks mm-footer-legal-links">
+      <li><a href="privacidad.html">Aviso de privacidad</a></li>
+      <li><a href="terminos.html">Términos y reembolsos</a></li>
+    </ul>
+    <p class="mm-social" data-mm-social hidden></p>
+    <p class="mm-footer-legal">Copyright © <span data-mm-year>2026</span> Grupo MixMix. Todos los derechos reservados.</p>
   </div>
 </footer>
+<!--/#footer-->
 
+<script src="js/config.js"></script>
 <script src="js/catalog.js"></script>
 <script src="js/mm.js"></script>
 <script src="js/store.js"></script>
+<script src="js/site.js"></script>
 <script>
 (function () {
+  if (window.MM_CONFIG && !window.MM_CONFIG.store) { location.replace("descargables.html"); return; }
   var S = window.MMStore, M = window.MM;
   function $(id) { return document.getElementById(id); }
   function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
@@ -179,6 +198,7 @@
   $("clear-btn").addEventListener("click", function () { S.clear(); });
   $("pay-btn").addEventListener("click", function () {
     if (!S.user()) { location.href = "cuenta.html?next=carrito.html"; return; }
+    if (!$("terms").checked) { $("terms-msg").hidden = false; return; }
     var o = S.placeOrder();
     if (o) location.href = "cuenta.html?pedido=" + encodeURIComponent(o.id) + "#compras";
   });

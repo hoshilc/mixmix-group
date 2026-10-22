@@ -7,14 +7,29 @@
 <meta name="description" content="Asesoría completa: entramos con todo nuestro equipo a bajar cada proceso de tu restaurante, departamento por departamento.">
 <link rel="stylesheet" href="css/mixmix-brand/mixmix.css">
 <link rel="stylesheet" href="css/site.css">
+<!--#meta-->
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#111110">
+<link rel="canonical" href="https://mixmixgroup.netlify.app/reingenieria-360.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Grupo MixMix">
+<meta property="og:locale" content="es_MX">
+<meta property="og:title" content="Reingeniería 360 — Grupo MixMix">
+<meta property="og:description" content="Asesoría completa: entramos con todo nuestro equipo a bajar cada proceso de tu restaurante, departamento por departamento.">
+<meta property="og:url" content="https://mixmixgroup.netlify.app/reingenieria-360.html">
+<meta property="og:image" content="https://mixmixgroup.netlify.app/img/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<!--/#meta-->
 </head>
 <body>
 <a class="mm-skip" href="#content">Ir al contenido</a>
 
+<!--#header-->
 <header class="mm-header">
   <div class="mm-container">
-    <a class="mm-logo" href="index.html"><img class="mm-logo-img" src="img/logo.png" alt="MixMix"></a>
-    <nav aria-label="Principal">
+    <a class="mm-logo" href="index.html"><img class="mm-logo-img" src="img/logo.png" alt="MixMix, inicio"></a>
+    <button type="button" class="mm-menu-btn" aria-expanded="false" aria-controls="mm-nav">Menú</button>
+    <nav id="mm-nav" aria-label="Principal">
       <ul class="mm-navlinks">
         <li><a href="index.html">Nosotros</a></li>
         <li><a href="descargables.html">Descargables</a></li>
@@ -24,6 +39,7 @@
     </nav>
   </div>
 </header>
+<!--/#header-->
 
 <main id="content">
   <section class="mm-section">
@@ -74,7 +90,7 @@
           </div>
           <p class="mm-body" style="font-size:14px; margin-top:8px">Inversión única. Alcance y tiempos se definen según tu restaurante.</p>
 
-          <a class="mm-btn" style="margin-top:var(--mm-space-4)" href="contacto.html">Solicitar esta asesoría</a>
+          <a class="mm-btn" style="margin-top:var(--mm-space-4)" href="contacto.html?interes=reingenieria">Solicitar esta asesoría</a>
 
           <p class="mm-guarantee">Te respondemos por el mismo medio que nos escribas para agendar tu diagnóstico.</p>
         </div>
@@ -84,6 +100,7 @@
   </section>
 </main>
 
+<!--#footer-->
 <footer class="mm-footer">
   <div class="mm-container">
     <ul class="mm-navlinks">
@@ -92,10 +109,18 @@
       <li><a href="consultoria.html">Consultoría</a></li>
       <li><a href="contacto.html">Contacto</a></li>
     </ul>
-    <p class="mm-footer-legal">Copyright © 2026 Grupo MixMix. Todos los derechos reservados.</p>
+    <ul class="mm-navlinks mm-footer-legal-links">
+      <li><a href="privacidad.html">Aviso de privacidad</a></li>
+      <li><a href="terminos.html">Términos y reembolsos</a></li>
+    </ul>
+    <p class="mm-social" data-mm-social hidden></p>
+    <p class="mm-footer-legal">Copyright © <span data-mm-year>2026</span> Grupo MixMix. Todos los derechos reservados.</p>
   </div>
 </footer>
+<!--/#footer-->
 
+<script src="js/config.js"></script>
 <script src="js/store.js"></script>
+<script src="js/site.js"></script>
 </body>
 </html>

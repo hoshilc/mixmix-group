@@ -4,17 +4,32 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Contacto — Grupo MixMix</title>
-<meta name="description" content="Agenda una consultoría o resuelve dudas sobre los manuales de Grupo MixMix.">
+<meta name="description" content="Escríbenos o agenda una llamada gratis: consultoría, auditorías y descargables para tu restaurante.">
 <link rel="stylesheet" href="css/mixmix-brand/mixmix.css">
 <link rel="stylesheet" href="css/site.css">
+<!--#meta-->
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#111110">
+<link rel="canonical" href="https://mixmixgroup.netlify.app/contacto.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Grupo MixMix">
+<meta property="og:locale" content="es_MX">
+<meta property="og:title" content="Contacto — Grupo MixMix">
+<meta property="og:description" content="Escríbenos o agenda una llamada gratis: consultoría, auditorías y descargables para tu restaurante.">
+<meta property="og:url" content="https://mixmixgroup.netlify.app/contacto.html">
+<meta property="og:image" content="https://mixmixgroup.netlify.app/img/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<!--/#meta-->
 </head>
 <body>
 <a class="mm-skip" href="#content">Ir al contenido</a>
 
+<!--#header-->
 <header class="mm-header">
   <div class="mm-container">
-    <a class="mm-logo" href="index.html"><img class="mm-logo-img" src="img/logo.png" alt="MixMix"></a>
-    <nav aria-label="Principal">
+    <a class="mm-logo" href="index.html"><img class="mm-logo-img" src="img/logo.png" alt="MixMix, inicio"></a>
+    <button type="button" class="mm-menu-btn" aria-expanded="false" aria-controls="mm-nav">Menú</button>
+    <nav id="mm-nav" aria-label="Principal">
       <ul class="mm-navlinks">
         <li><a href="index.html">Nosotros</a></li>
         <li><a href="descargables.html">Descargables</a></li>
@@ -24,13 +39,14 @@
     </nav>
   </div>
 </header>
+<!--/#header-->
 
 <main id="content">
   <section class="mm-hero mm-section">
     <div class="mm-container">
       <p class="mm-label" style="color:var(--mm-stone-onblack)">Hablemos</p>
       <h1 class="mm-display" style="font-size:clamp(30px,5vw,56px)">ENTRA, COMANDA.</h1>
-      <p class="mm-body">¿Dudas sobre un manual o quieres una consultoría a la medida? Cuéntanos de tu restaurante.</p>
+      <p class="mm-body">¿Quieres una consultoría o auditoría a la medida, o tienes dudas sobre un manual? Cuéntanos de tu restaurante y te respondemos.</p>
     </div>
   </section>
 
@@ -40,18 +56,33 @@
 
         <div class="mm-cell">
           <h2 class="mm-h2">Escríbenos</h2>
-          <form class="mm-form" id="mm-contact-form">
+          <form class="mm-form" id="mm-contact-form" name="contacto" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+            <input type="hidden" name="form-name" value="contacto">
+            <p class="mm-trap" aria-hidden="true"><label>No llenar este campo <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+            <div class="mm-field">
+              <label for="interes">¿Qué te interesa?</label>
+              <select class="mm-input" id="interes" name="interes">
+                <option value="llamada">Agendar una llamada gratis</option>
+                <option value="individual">Capacitación y consultoría individual</option>
+                <option value="area">Auditoría por área</option>
+                <option value="integral">Auditoría integral</option>
+                <option value="intensiva">MixMix Intensiva</option>
+                <option value="reingenieria">Reingeniería 360</option>
+                <option value="descargables">Descargables (manuales, formatos, paquetes)</option>
+                <option value="otro">Otro / no estoy seguro</option>
+              </select>
+            </div>
             <div class="mm-field">
               <label for="nombre">Nombre *</label>
-              <input class="mm-input" type="text" id="nombre" name="nombre" required>
+              <input class="mm-input" type="text" id="nombre" name="nombre" required autocomplete="name">
             </div>
             <div class="mm-field">
               <label for="telefono">Teléfono *</label>
-              <input class="mm-input" type="tel" id="telefono" name="telefono" required>
+              <input class="mm-input" type="tel" id="telefono" name="telefono" required autocomplete="tel">
             </div>
             <div class="mm-field">
               <label for="correo">Correo</label>
-              <input class="mm-input" type="email" id="correo" name="correo">
+              <input class="mm-input" type="email" id="correo" name="correo" autocomplete="email">
             </div>
             <div class="mm-field">
               <label for="restaurante">Nombre de tu restaurante</label>
@@ -61,23 +92,20 @@
               <label for="mensaje">Mensaje</label>
               <textarea class="mm-input" id="mensaje" name="mensaje" rows="5"></textarea>
             </div>
-            <button class="mm-btn" type="submit">Enviar mensaje</button>
+            <label class="mm-check"><input type="checkbox" id="acepto" required> <span>He leído el <a href="privacidad.html">aviso de privacidad</a>.</span></label>
+            <p class="mm-form-msg" id="mm-form-msg" role="status" hidden></p>
+            <button class="mm-btn" type="submit" id="mm-form-btn">Enviar mensaje</button>
           </form>
-          <!--
-            Este formulario abre el cliente de correo del visitante con los
-            datos ya llenos (mailto:), para que funcione sin backend.
-            Reemplaza CORREO_DESTINO más abajo por tu correo real, o
-            conecta un servicio como Formspree / Netlify Forms si prefieres
-            recibir los mensajes directamente en un panel.
-          -->
         </div>
 
         <div class="mm-cell-dark">
           <h2 class="mm-h2" style="color:var(--mm-bone)">Datos de contacto</h2>
           <p class="mm-body" style="color:var(--mm-stone-onblack)">
-            Correo: <a href="mailto:contacto@grupomixmix.com">contacto@grupomixmix.com</a><br>
-            <!-- Reemplaza con el teléfono/WhatsApp real de MixMix -->
-            WhatsApp: [agregar número]
+            Correo: <a href="mailto:contacto@grupomixmix.com" data-mm-email>contacto@grupomixmix.com</a>
+          </p>
+          <p class="mm-hero-actions" style="margin-top:var(--mm-space-4)">
+            <a class="mm-btn" style="background:var(--mm-gold); border-color:var(--mm-gold); color:var(--mm-black)" href="#" data-mm-whatsapp hidden>Escribir por WhatsApp</a>
+            <a class="mm-btn" style="background:var(--mm-gold); border-color:var(--mm-gold); color:var(--mm-black)" href="#" data-mm-call data-mm-call-needs-calendar hidden>Agendar llamada gratis</a>
           </p>
           <p class="mm-body" style="color:var(--mm-stone-onblack); margin-top:var(--mm-space-6)">
             ¿Prefieres ver primero las herramientas disponibles?
@@ -90,6 +118,7 @@
   </section>
 </main>
 
+<!--#footer-->
 <footer class="mm-footer">
   <div class="mm-container">
     <ul class="mm-navlinks">
@@ -98,30 +127,70 @@
       <li><a href="consultoria.html">Consultoría</a></li>
       <li><a href="contacto.html">Contacto</a></li>
     </ul>
-    <p class="mm-footer-legal">Copyright © 2026 Grupo MixMix. Todos los derechos reservados.</p>
+    <ul class="mm-navlinks mm-footer-legal-links">
+      <li><a href="privacidad.html">Aviso de privacidad</a></li>
+      <li><a href="terminos.html">Términos y reembolsos</a></li>
+    </ul>
+    <p class="mm-social" data-mm-social hidden></p>
+    <p class="mm-footer-legal">Copyright © <span data-mm-year>2026</span> Grupo MixMix. Todos los derechos reservados.</p>
   </div>
 </footer>
+<!--/#footer-->
 
-<script>
-  // Envía el formulario como mailto: (sin backend). Ajusta CORREO_DESTINO.
-  var CORREO_DESTINO = "contacto@grupomixmix.com";
-  document.getElementById("mm-contact-form").addEventListener("submit", function (e) {
-    e.preventDefault();
-    var f = e.target;
-    var asunto = "Nuevo contacto desde grupomixmix.com — " + f.nombre.value;
-    var cuerpo =
-      "Nombre: " + f.nombre.value + "\n" +
-      "Teléfono: " + f.telefono.value + "\n" +
-      "Correo: " + f.correo.value + "\n" +
-      "Restaurante: " + f.restaurante.value + "\n\n" +
-      "Mensaje:\n" + f.mensaje.value;
-    window.location.href =
-      "mailto:" + CORREO_DESTINO +
-      "?subject=" + encodeURIComponent(asunto) +
-      "&body=" + encodeURIComponent(cuerpo);
-  });
-</script>
-
+<script src="js/config.js"></script>
 <script src="js/store.js"></script>
-</body>
+<script src="js/site.js"></script>
+<script>
+(function () {
+  var form = document.getElementById("mm-contact-form");
+  var msg = document.getElementById("mm-form-msg");
+  var btn = document.getElementById("mm-form-btn");
+  var sel = document.getElementById("interes");
+  var C = window.MM_CONFIG || {};
+
+  /* ?interes=individual|area|... o el nombre de un producto del catalogo */
+  var q = new URLSearchParams(location.search).get("interes");
+  if (q) {
+    var known = Array.prototype.some.call(sel.options, function (o) { return o.value === q; });
+    if (known) sel.value = q;
+    else {
+      sel.value = "descargables";
+      var m = document.getElementById("mensaje");
+      if (!m.value) m.value = "Me interesa: " + q;
+    }
+  }
+
+  function show(text) { msg.textContent = text; msg.hidden = false; msg.scrollIntoView({ block: "nearest" }); }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!form.reportValidity()) return;
+    var data = new FormData(form);
+    data.delete("acepto");
+    var body = new URLSearchParams(data).toString();
+    btn.disabled = true;
+    btn.textContent = "Enviando…";
+    var ctl = (window.AbortController ? new AbortController() : null);
+    var timer = setTimeout(function () { if (ctl) ctl.abort(); }, 10000);   /* sin respuesta en 10 s: se usa el correo */
+    fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: body, signal: ctl ? ctl.signal : undefined })
+      .then(function (r) {
+        clearTimeout(timer);
+        if (!r.ok) throw new Error("http " + r.status);
+        form.reset();
+        show("¡Gracias! Recibimos tu mensaje y te respondemos pronto.");
+        btn.textContent = "Enviado";
+      })
+      .catch(function () {
+        clearTimeout(timer);
+        /* sin servidor de formularios (o sin conexión): se abre el correo con todo ya escrito */
+        var lines = ["Nombre: " + data.get("nombre"), "Teléfono: " + data.get("telefono"), "Correo: " + (data.get("correo") || ""),
+                     "Restaurante: " + (data.get("restaurante") || ""), "Interés: " + sel.options[sel.selectedIndex].text, "", data.get("mensaje") || ""];
+        location.href = "mailto:" + (C.email || "contacto@grupomixmix.com") + "?subject=" + encodeURIComponent("Contacto desde la página: " + sel.options[sel.selectedIndex].text) + "&body=" + encodeURIComponent(lines.join("\n"));
+        show("No pudimos enviarlo automáticamente: se abrió tu correo con el mensaje listo para enviar.");
+        btn.disabled = false;
+        btn.textContent = "Enviar mensaje";
+      });
+  });
+})();
+</script></body>
 </html>

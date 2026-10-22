@@ -34,6 +34,7 @@
   S.cart = function () { return read(K_CART, []).filter(function (id) { return !M() || product(id); }); };
   S.has = function (id) { return S.cart().indexOf(id) > -1; };
   S.add = function (id) {
+    if (!storeOn()) return;
     var c = S.cart();
     if (c.indexOf(id) === -1) { c.push(id); write(K_CART, c); changed(id, "add"); }
   };
@@ -133,22 +134,34 @@
   }
   function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
 
+  /* la tienda (carrito + cuenta) solo se muestra si js/config.js la activa (storeLive o ?demo=1) */
+  function storeOn() { return !(window.MM_CONFIG) || !!window.MM_CONFIG.store; }
+
   function paintHeader() {
     var u = S.user(), n = read(K_CART, []).length;
     var acct = document.querySelector("[data-mm-account]");
     var cart = document.querySelector("[data-mm-cartlink]");
-    if (acct) acct.textContent = u ? "Hola, " + u.name.split(" ")[0] : "Mi cuenta";
-    if (cart) cart.innerHTML = 'Carrito' + (n ? ' <span class="mm-cart-count">' + n + '</span>' : "");
+    if (acct) { acct.title = u ? "Mi cuenta (" + u.name + ")" : "Mi cuenta"; acct.classList.toggle("is-in", !!u); }
+    if (cart) {
+      cart.setAttribute("aria-label", "Carrito" + (n ? ", " + n + (n === 1 ? " producto" : " productos") : ""));
+      var badge = cart.querySelector(".mm-cart-count");
+      if (badge) { badge.textContent = n; badge.hidden = !n; }
+    }
   }
   function injectHeader() {
-    var ul = document.querySelector(".mm-header .mm-navlinks");
-    if (!ul || ul.querySelector("[data-mm-account]")) return;
+    var box = document.querySelector(".mm-header .mm-container");
+    if (!box || box.querySelector("[data-mm-account]") || !storeOn()) return;
     var here = location.pathname.split("/").pop();
-    function li(href, attr, label) {
-      var cur = here === href ? ' aria-current="page"' : "";
-      return '<li class="mm-nav-util"><a href="' + href + '" ' + attr + cur + '>' + label + '</a></li>';
-    }
-    ul.insertAdjacentHTML("beforeend", li("cuenta.html", "data-mm-account", "Mi cuenta") + li("carrito.html", "data-mm-cartlink", "Carrito"));
+    function cur(href) { return here === href ? ' aria-current="page"' : ""; }
+    var userSvg = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v2"/></svg>';
+    var bagSvg = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>';
+    var util = document.createElement("div");
+    util.className = "mm-header-util";
+    util.innerHTML =
+      '<a href="cuenta.html" data-mm-account aria-label="Mi cuenta" title="Mi cuenta"' + cur("cuenta.html") + '>' + userSvg + '</a>' +
+      '<a href="carrito.html" data-mm-cartlink aria-label="Carrito"' + cur("carrito.html") + '>' + bagSvg + '<span class="mm-cart-count" hidden>0</span></a>';
+    var btn = box.querySelector(".mm-menu-btn");
+    box.insertBefore(util, btn || null);
     paintHeader();
   }
 

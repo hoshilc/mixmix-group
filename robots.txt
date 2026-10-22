@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /carrito.html
+Disallow: /cuenta.html
+Disallow: /gracias.html
+
+Sitemap: https://mixmixgroup.netlify.app/sitemap.xml

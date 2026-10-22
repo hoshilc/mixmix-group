@@ -64,7 +64,13 @@
       addBtn(i.id, "Agregar", "mm-btn-secondary");
   }
   /* botón de carrito: refreshButtons() le pone el estado (agregar / en el carrito / ya lo tienes) */
+  function storeOn() { return !window.MM_CONFIG || !!window.MM_CONFIG.store; }
   function addBtn(id, label, cls) {
+    /* sin tienda activa: el botón lleva a Contacto con el producto ya elegido */
+    if (!storeOn()) {
+      var p = byId[id];
+      return '<a class="mm-btn ' + (cls || "") + '" href="contacto.html?interes=' + encodeURIComponent(p ? p.title : id) + '">Me interesa</a>';
+    }
     return '<button type="button" class="mm-btn ' + (cls || "") + '" data-add="' + esc(id) + '" data-label="' + esc(label) + '">' + esc(label) + '</button>';
   }
 
@@ -219,7 +225,7 @@
         '<h3 class="mm-h2">' + esc(p.title) + '</h3>' +
         '<p class="mm-body">' + esc(p.who) + '</p>' +
         '<p class="mm-home-pkg-meta">' + count + ' documentos · ' + money(p.price) + '</p>');
-      a.href = "descargables.html#paquetes";
+      a.href = "descargables.html#" + p.id;
       root.appendChild(a);
     });
   }
@@ -266,6 +272,7 @@
         addBtn(variants ? variants[0].id : p.id, "Agregar paquete", "");
 
       var card = el("div", "mm-catalog-card", inner);
+      card.id = p.id;   /* para enlazar un paquete concreto: descargables.html#pkg-operacion */
 
       /* qué incluye, agrupado por categoría */
       var d = el("details", "mm-pkg-details");
@@ -283,7 +290,11 @@
 
       if (variants) {
         var sel = card.querySelector("select"), btn = card.querySelector(".mm-btn");
-        sel.addEventListener("change", function () { btn.setAttribute("data-add", sel.value); refreshButtons(); });
+        sel.addEventListener("change", function () {
+          btn.setAttribute("data-add", sel.value);
+          if (btn.tagName === "A") btn.href = "contacto.html?interes=" + encodeURIComponent(byId[sel.value].title);
+          refreshButtons();
+        });
       }
       grid.appendChild(card);
     });
@@ -397,7 +408,9 @@
     var t = id && document.getElementById(id);
     if (!t) return;
     if (t.tagName === "DETAILS") t.open = true;
-    if (scroll) t.scrollIntoView();
+    var parent = t.closest && t.closest("details");   /* una tarjeta dentro de una sección colapsada */
+    if (parent) parent.open = true;
+    if (scroll) t.scrollIntoView({ behavior: "auto" });   /* al cargar con #ancla: salto directo, sin animación */
   }
   document.querySelectorAll('a[href^="#"]').forEach(function (a) {
     a.addEventListener("click", function () { openFromHash(a.getAttribute("href").slice(1), false); });
