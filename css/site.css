@@ -488,3 +488,17 @@ button.mm-btn { font-family: var(--mm-font-display); }
 .mm-vmodal-close:hover { background: var(--mm-bone); }
 .mm-vmodal-stage { display: flex; justify-content: center; background: #000; }
 .mm-vmodal-stage iframe { display: block; border: 0; max-width: 92vw; }
+/* ===== Reputacion: logos de emprendimientos y clientes (5 por fila) ===== */
+.mm-logos { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--mm-space-3); margin-top: var(--mm-space-6); }
+@media (min-width: 600px) { .mm-logos { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 900px) { .mm-logos { grid-template-columns: repeat(5, 1fr); gap: var(--mm-space-4); } }
+.mm-logos[hidden] { display: none; }
+.mm-logo-cell {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  aspect-ratio: 3 / 2; padding: var(--mm-space-4); background: var(--mm-white); border: var(--mm-rule) solid var(--mm-black);
+}
+.mm-logo-cell img { max-width: 80%; max-height: 70%; object-fit: contain; }
+a.mm-logo-cell:hover { border-color: var(--mm-gold); }
+.mm-logo-cell.is-placeholder { background: transparent; border-style: dashed; border-color: var(--mm-stone-ink); color: var(--mm-stone-ink); }
+.mm-logo-ph { font-family: var(--mm-font-display); font-weight: 800; font-size: 18px; letter-spacing: var(--mm-track-label); text-transform: uppercase; }
+.mm-logo-ph-name { font-family: var(--mm-font-body); font-size: 13px; }

@@ -1,0 +1,1 @@
+Guarda aqui los logos de Emprendimientos y Clientes (PNG con fondo transparente o SVG) y registralos en js/logos.js.
