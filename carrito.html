@@ -40,7 +40,7 @@
       <p class="mm-breadcrumb"><a href="descargables.html">Descargables</a> / Carrito</p>
       <h1 class="mm-display" style="font-size:clamp(30px,5vw,56px); color:var(--mm-black)">CARRITO</h1>
 
-      <p class="mm-demo-note">Modo demostración: el carrito, el inicio de sesión y el pago son simulados; no se hace ningún cargo.</p>
+      <p class="mm-demo-note" id="demo-note">Modo demostración: el carrito, el inicio de sesión y el pago son simulados; no se hace ningún cargo.</p>
 
       <div id="cart-empty" hidden>
         <p class="mm-body">Tu carrito está vacío.</p>
@@ -207,9 +207,16 @@
       tips.appendChild(box);
     });
 
-    var pay = $("pay-btn"), u = S.user();
-    pay.textContent = u ? "Pagar " + M.money(total) + " (demo)" : "Inicia sesión para pagar";
-    $("pay-note").textContent = u ? "Comprando como " + u.email + ". Modo demostración: sin cargo real." : "Necesitas una cuenta para que tus descargas queden guardadas.";
+    var pay = $("pay-btn"), u = S.user(), live = S.live();
+    var dn = $("demo-note");
+    if (live) {
+      dn.hidden = S.stripeMode() !== "test";
+      dn.textContent = "Modo de prueba: los pagos no cobran dinero real (tarjeta 4242 4242 4242 4242, cualquier fecha futura y cualquier CVC).";
+    }
+    pay.textContent = u ? "Pagar " + M.money(total) + (live ? "" : " (demo)") : "Inicia sesión para pagar";
+    $("pay-note").textContent = u
+      ? "Comprando como " + u.email + (live ? ". Pago seguro con Stripe." : ". Modo demostración: sin cargo real.")
+      : "Necesitas una cuenta para que tus descargas queden guardadas.";
   }
 
   $("cart-lines").addEventListener("click", function (e) {
@@ -220,6 +227,18 @@
   $("pay-btn").addEventListener("click", function () {
     if (!S.user()) { location.href = "cuenta.html?next=carrito.html"; return; }
     if (!$("terms").checked) { $("terms-msg").hidden = false; return; }
+    if (S.live()) {
+      var b = $("pay-btn"), msg = $("terms-msg");
+      b.disabled = true; b.textContent = "Abriendo el pago…";
+      S.checkout().then(function (d) {
+        if (d && d.ok && d.url) { location.href = d.url; return; }
+        b.disabled = false; render();
+        var E = { empty_cart: "Tu carrito no tiene nada por cobrar (¿ya lo tienes en tu cuenta?).", not_logged_in: "Tu sesión expiró. Inicia sesión de nuevo.", stripe_error: "No pudimos abrir el pago. Intenta de nuevo.", stripe_unreachable: "No pudimos conectar con Stripe. Intenta de nuevo.", network: "No pudimos conectar con el servidor. Intenta de nuevo." };
+        msg.textContent = E[d && d.error] || "No pudimos iniciar el pago. Intenta de nuevo.";
+        msg.hidden = false;
+      });
+      return;
+    }
     var o = S.placeOrder();
     if (o) location.href = "cuenta.html?pedido=" + encodeURIComponent(o.id) + "#compras";
   });

@@ -469,11 +469,16 @@
   });
 
   /* ---------- botones de descarga de lo comprado (cuenta.html) ---------- */
+  /* con el servidor real, los archivos salen de api/download.php (solo si el cliente los compró) */
+  function dlHref(file) {
+    var C2 = window.MM_CONFIG || {};
+    return C2.useApi ? C2.api + "download.php?p=" + encodeURIComponent(file) : file;
+  }
   function dlRow(label, file, name) {
     var li = el("li", "mm-dl-item");
     li.appendChild(el("span", null, esc(label)));
     var a = el("a", "mm-btn mm-btn-secondary", "Descargar");
-    a.href = file;
+    a.href = dlHref(file);
     a.setAttribute("download", name);
     li.appendChild(a);
     return li;
@@ -502,7 +507,7 @@
         all.forEach(function (f, n) {
           setTimeout(function () {
             var a = document.createElement("a");
-            a.href = f.file; a.download = niceName(f.t);
+            a.href = dlHref(f.file); a.download = niceName(f.t);
             document.body.appendChild(a); a.click(); a.remove();
           }, n * 700);
         });

@@ -45,8 +45,46 @@
   S.toggle = function (id) { if (S.has(id)) S.remove(id); else S.add(id); };
   S.clear = function () { write(K_CART, []); changed(null, "clear"); };
 
+  /* ---------- modo real: cuentas y pagos en el servidor (carpeta api/) ----------
+     Se activa solo cuando js/config.js lo permite (useApi). La sesión vive en una cookie del servidor;
+     aquí solo se guarda una copia para pintar rápido y se vuelve a pedir al cargar cada página. */
+  function live() { return !!(window.MM_CONFIG && window.MM_CONFIG.useApi); }
+  S.live = live;
+  var LIVE = read("mm_live", { user: null, orders: [], mode: "test" });
+  function api(path, body) {
+    var opt = { credentials: "same-origin", headers: {} };
+    if (body !== undefined) { opt.method = "POST"; opt.headers["Content-Type"] = "application/json"; opt.body = JSON.stringify(body); }
+    return fetch(window.MM_CONFIG.api + path, opt)
+      .then(function (r) { return r.json().catch(function () { return { ok: false, error: "server" }; }); })
+      .catch(function () { return { ok: false, error: "network" }; });
+  }
+  S.refresh = function () {
+    if (!live()) return Promise.resolve(null);
+    return api("me.php").then(function (d) {
+      if (d && d.ok) { LIVE = { user: d.user, orders: d.orders || [], mode: d.stripe_mode || "test" }; write("mm_live", LIVE); }
+      changed(null, "sync");
+      return d;
+    });
+  };
+  S.apiRegister = function (name, email, password) {
+    return api("register.php", { name: name, email: email, password: password })
+      .then(function (d) { return d.ok ? S.refresh().then(function () { changed(null, "login"); return d; }) : d; });
+  };
+  S.apiLogin = function (email, password) {
+    return api("login.php", { email: email, password: password })
+      .then(function (d) { return d.ok ? S.refresh().then(function () { changed(null, "login"); return d; }) : d; });
+  };
+  S.apiLogout = function () {
+    return api("logout.php", {}).then(function () {
+      LIVE = { user: null, orders: [], mode: LIVE.mode }; write("mm_live", LIVE); changed(null, "logout");
+    });
+  };
+  S.checkout = function () { return api("checkout.php", { ids: S.cart() }); };
+  S.confirm = function (sessionId) { return api("confirm.php?session_id=" + encodeURIComponent(sessionId)); };
+  S.stripeMode = function () { return LIVE.mode; };
+
   /* ---------- cuenta (demo: sin contraseña) ---------- */
-  S.user = function () { return read(K_USER, null); };
+  S.user = function () { return live() ? LIVE.user : read(K_USER, null); };
   S.login = function (email, name) {
     email = String(email || "").trim().toLowerCase();
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return { ok: false, error: "Escribe un correo válido." };
@@ -64,6 +102,7 @@
   S.orders = function () {
     var u = S.user();
     if (!u) return [];
+    if (live()) return LIVE.orders.slice();                            /* el servidor ya las manda de la más reciente a la más antigua */
     return (read(K_ORDERS, {})[u.email] || []).slice().reverse();   /* la más reciente primero */
   };
   /* precio del carrito: los manuales sueltos se cobran por volumen (paquetes de 1, 3, 5, 7, 10, 15 y 20);
@@ -184,10 +223,12 @@
   document.addEventListener("DOMContentLoaded", function () {
     injectHeader();
     document.dispatchEvent(new CustomEvent("mmstore", { detail: { what: "ready" } }));
+    if (live() && !window.__mmNoAutoRefresh) S.refresh();
   });
   if (document.readyState !== "loading") {
     injectHeader();
     document.dispatchEvent(new CustomEvent("mmstore", { detail: { what: "ready" } }));
+    if (live() && !window.__mmNoAutoRefresh) S.refresh();
   }
   /* si el carrito cambia en otra pestaña */
   window.addEventListener("storage", function () { paintHeader(); document.dispatchEvent(new CustomEvent("mmstore", { detail: { what: "sync" } })); });

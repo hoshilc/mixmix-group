@@ -56,6 +56,9 @@
             <label class="mm-field">Correo
               <input class="mm-search" type="email" id="in-email" autocomplete="email" placeholder="tu@correo.com" required>
             </label>
+            <label class="mm-field" id="f-pass" hidden>Contraseña
+              <input class="mm-search" type="password" id="in-pass" autocomplete="current-password" minlength="8" placeholder="Mínimo 8 caracteres">
+            </label>
             <p id="auth-error" class="mm-cart-warn" role="alert" hidden></p>
             <button type="submit" class="mm-btn" id="auth-btn">Entrar</button>
           </form>
@@ -134,18 +137,39 @@
       $("auth-btn").textContent = mode === "new" ? "Crear cuenta" : "Entrar";
     });
   });
+  var MSG = {
+    bad_credentials: "Correo o contraseña incorrectos.",
+    email_taken: "Ya existe una cuenta con ese correo. Prueba entrar.",
+    weak_password: "La contraseña debe tener al menos 8 caracteres.",
+    invalid_email: "Escribe un correo válido.",
+    network: "No pudimos conectar con el servidor. Intenta de nuevo.",
+    server: "El servidor no está listo todavía. Intenta más tarde.",
+    config_missing: "El servidor no está listo todavía. Intenta más tarde."
+  };
   $("auth-form").addEventListener("submit", function (e) {
     e.preventDefault();
-    var r = S.login($("in-email").value, mode === "new" ? $("in-name").value : "");
     var err = $("auth-error");
-    if (!r.ok) { err.textContent = r.error; err.hidden = false; return; }
-    err.hidden = true;
-    var next = params.get("next");
-    if (next === "carrito.html" || next === "descargables.html") { location.href = next; return; }
-    render();
+    function bad(msg) { err.textContent = msg; err.hidden = false; }
+    function done() {
+      err.hidden = true;
+      var next = params.get("next");
+      if (next === "carrito.html" || next === "descargables.html") { location.href = next; return; }
+      render();
+    }
+    if (S.live()) {
+      var btn = $("auth-btn");
+      btn.disabled = true;
+      var pr = mode === "new"
+        ? S.apiRegister($("in-name").value, $("in-email").value, $("in-pass").value)
+        : S.apiLogin($("in-email").value, $("in-pass").value);
+      pr.then(function (d) { btn.disabled = false; if (d && d.ok) done(); else bad(MSG[d && d.error] || MSG.server); });
+      return;
+    }
+    var r = S.login($("in-email").value, mode === "new" ? $("in-name").value : "");
+    if (!r.ok) { bad(r.error); return; }
+    done();
   });
-  $("logout-btn").addEventListener("click", function () { S.logout(); });
-
+  $("logout-btn").addEventListener("click", function () { if (S.live()) S.apiLogout(); else S.logout(); });
   /* ---------- paneles ---------- */
   function showPanel(name) {
     document.querySelectorAll("[data-panel]").forEach(function (b) { b.classList.toggle("active", b.getAttribute("data-panel") === name); });
@@ -205,6 +229,15 @@
 
   function render() {
     var u = S.user();
+    var live = S.live();
+    $("f-pass").hidden = !live;
+    $("in-pass").required = live;
+    var noteL = document.querySelector("#view-login .mm-demo-note"), noteA = document.querySelector("#view-account .mm-demo-note");
+    if (live) {
+      noteL.hidden = true;
+      noteA.hidden = S.stripeMode() !== "test";
+      noteA.textContent = "Modo de prueba: los pagos no cobran dinero real (usa la tarjeta 4242 4242 4242 4242, cualquier fecha futura y cualquier CVC).";
+    }
     $("view-login").hidden = !!u;
     $("view-account").hidden = !u;
     if (!u) return;
@@ -223,6 +256,18 @@
 
   document.addEventListener("mmstore", function (e) { if (e.detail && (e.detail.what === "login" || e.detail.what === "logout" || e.detail.what === "ready" || e.detail.what === "sync")) render(); });
   window.addEventListener("hashchange", function () { if (S.user()) showPanel(location.hash === "#descargas" ? "descargas" : "compras"); });
+  /* de regreso de Stripe: se confirma el pago (el aviso automático puede tardar unos segundos) y se vacía el carrito */
+  var sid = params.get("session_id");
+  if (S.live() && sid) {
+    var tries = 0;
+    (function check() {
+      S.confirm(sid).then(function (d) {
+        if (d && d.ok && d.status === "paid") { S.clear(); return S.refresh(); }
+        if (++tries < 8 && !(d && d.ok === false && d.error === "not_logged_in")) setTimeout(check, 2000);
+        else S.refresh();
+      });
+    })();
+  }
   render();
 })();
 </script>
