@@ -8,6 +8,7 @@ try {
     $st = db()->prepare('SELECT id, email, name, pass_hash FROM users WHERE email = ?');
     $st->execute(array($email));
     $u = $st->fetch();
+    if ($u && empty($u['pass_hash'])) fail('use_google', 401);   /* cuenta creada con Google: sin contraseña todavía */
     if (!$u || !password_verify($pass, $u['pass_hash'])) { usleep(700000); fail('bad_credentials', 401); }
     start_session();
     session_regenerate_id(true);

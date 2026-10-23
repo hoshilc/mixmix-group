@@ -28,11 +28,14 @@ if ($out['config']) {
     $sk = isset($cfg['stripe_secret']) ? (string)$cfg['stripe_secret'] : '';
     $out['stripe_key_length'] = strlen($sk);
     $out['stripe_key_ok'] = (bool)preg_match('/^sk_test_[A-Za-z0-9]{40,}$/', $sk) || (bool)preg_match('/^sk_live_[A-Za-z0-9]{40,}$/', $sk);
-    $out['stripe_key_has_whitespace'] = (bool)preg_match('/\s/', $sk);    $out['webhook_secret'] = !empty($cfg['stripe_webhook_secret']) && strpos($cfg['stripe_webhook_secret'], 'whsec_') === 0 && $cfg['stripe_webhook_secret'] !== 'whsec_CAMBIAR';
+    $out['stripe_key_has_whitespace'] = (bool)preg_match('/\s/', $sk);    $out['google_client_id'] = !empty($cfg['google_client_id']);
+    $out['mail_mode'] = !empty($cfg['smtp']) ? 'smtp' : 'mail()';    $out['webhook_secret'] = !empty($cfg['stripe_webhook_secret']) && strpos($cfg['stripe_webhook_secret'], 'whsec_') === 0 && $cfg['stripe_webhook_secret'] !== 'whsec_CAMBIAR';
     try {
         $pdo = db();
         $out['db'] = true;
         $out['tables'] = array('users' => (bool)$pdo->query("SHOW TABLES LIKE 'users'")->fetch(), 'orders' => (bool)$pdo->query("SHOW TABLES LIKE 'orders'")->fetch());
+        $out['tables']['password_resets'] = (bool)$pdo->query("SHOW TABLES LIKE 'password_resets'")->fetch();
+        $out['users_google_column'] = (bool)$pdo->query("SHOW COLUMNS FROM users LIKE 'google_sub'")->fetch();
     } catch (Exception $e) { $out['db'] = false; }
 }
 json_out($out);

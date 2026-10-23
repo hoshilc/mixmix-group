@@ -286,3 +286,66 @@ function product_files($p) {
     }
     return $out;
 }
+
+/* ---------- correo (recuperar contraseña) ----------
+   Por defecto usa mail() del hosting. Si en privado/config.php hay 'smtp', usa ese buzón (más confiable). */
+function mail_send($to, $subject, $html, $text) {
+    $cfg = config();
+    $from = isset($cfg['mail_from']) ? $cfg['mail_from'] : 'no-reply@' . preg_replace('/^www\./', '', parse_url($cfg['site_url'], PHP_URL_HOST));
+    $name = 'Grupo MixMix';
+    $boundary = 'mm_' . bin2hex(random_bytes(8));
+    $subj = '=?UTF-8?B?' . base64_encode($subject) . '?=';
+    $headers = array(
+        'From: =?UTF-8?B?' . base64_encode($name) . '?= <' . $from . '>',
+        'Reply-To: ' . (isset($cfg['reply_to']) ? $cfg['reply_to'] : $from),
+        'MIME-Version: 1.0',
+        'Content-Type: multipart/alternative; boundary="' . $boundary . '"',
+    );
+    $body = '--' . $boundary . "\r\n" . "Content-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n" . chunk_split(base64_encode($text)) .
+            '--' . $boundary . "\r\n" . "Content-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n" . chunk_split(base64_encode($html)) .
+            '--' . $boundary . "--\r\n";
+    if (!empty($cfg['smtp']) && is_array($cfg['smtp'])) {
+        return smtp_send($cfg['smtp'], $from, $to, $subj, $headers, $body);
+    }
+    return @mail($to, $subj, $body, implode("\r\n", $headers), '-f' . $from);
+}
+function smtp_send($s, $from, $to, $subj, $headers, $body) {
+    $secure = isset($s['secure']) ? $s['secure'] : 'ssl';
+    $fp = @stream_socket_client(($secure === 'ssl' ? 'ssl://' : 'tcp://') . $s['host'] . ':' . $s['port'], $errno, $errstr, 15);
+    if (!$fp) { error_log('smtp connect: ' . $errstr); return false; }
+    stream_set_timeout($fp, 15);
+    $read = function () use ($fp) { $r = ''; while (($l = fgets($fp, 515)) !== false) { $r .= $l; if (strlen($l) < 4 || $l[3] === ' ') break; } return $r; };
+    $cmd = function ($c) use ($fp, $read) { fwrite($fp, $c . "\r\n"); return $read(); };
+    $read();
+    $cmd('EHLO ' . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost'));
+    if ($secure === 'tls') {
+        $cmd('STARTTLS');
+        stream_socket_enable_crypto($fp, true, STREAM_CRYPTO_METHOD_TLS_CLIENT);
+        $cmd('EHLO ' . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost'));
+    }
+    $cmd('AUTH LOGIN');
+    $cmd(base64_encode($s['user']));
+    $r = $cmd(base64_encode($s['pass']));
+    if (strpos($r, '235') !== 0) { error_log('smtp auth failed'); fclose($fp); return false; }
+    $cmd('MAIL FROM:<' . $from . '>');
+    $cmd('RCPT TO:<' . $to . '>');
+    $cmd('DATA');
+    $msg = 'To: <' . $to . ">\r\nSubject: " . $subj . "\r\nDate: " . date('r') . "\r\n" . implode("\r\n", $headers) . "\r\n\r\n" . $body;
+    $msg = preg_replace('/^\./m', '..', $msg);
+    fwrite($fp, $msg . "\r\n.\r\n");
+    $r = $read();
+    $cmd('QUIT');
+    fclose($fp);
+    return strpos($r, '250') === 0;
+}
+/* GET sencillo con cURL (para verificar el token de Google) */
+function http_get_json($url) {
+    $ch = curl_init($url);
+    curl_setopt_array($ch, array(CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 15));
+    $body = curl_exec($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    $d = json_decode((string)$body, true);
+    return array($code, is_array($d) ? $d : array());
+}
+function stripe_is_test() { $c = config(); return strpos($c['stripe_secret'], 'sk_live') !== 0; }

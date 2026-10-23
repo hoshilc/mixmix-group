@@ -41,31 +41,68 @@
       <!-- ============ SIN SESIÓN ============ -->
       <div id="view-login" hidden>
         <p class="mm-label mm-label-accent">Mi cuenta</p>
-        <h1 class="mm-display" style="font-size:clamp(30px,5vw,56px); color:var(--mm-black)">ENTRAR</h1>
+        <h1 class="mm-display" style="font-size:clamp(30px,5vw,56px); color:var(--mm-black)" id="login-title">ENTRAR</h1>
         <p class="mm-demo-note">Modo demostración: no hay contraseña ni servidor; tu sesión y tus compras se guardan solo en este navegador.</p>
 
         <div class="mm-auth">
-          <div class="mm-filter-bar" role="tablist" style="margin-top:0">
-            <button type="button" class="mm-filter-btn active" role="tab" data-tab="in">Ya tengo cuenta</button>
-            <button type="button" class="mm-filter-btn" role="tab" data-tab="new">Crear cuenta</button>
+
+          <!-- A: entrar o crear cuenta -->
+          <div id="auth-main">
+            <div class="mm-filter-bar" role="tablist" style="margin-top:0">
+              <button type="button" class="mm-filter-btn active" role="tab" data-tab="in">Ya tengo cuenta</button>
+              <button type="button" class="mm-filter-btn" role="tab" data-tab="new">Crear cuenta</button>
+            </div>
+            <div id="google-box" hidden>
+              <div id="google-btn" style="margin-top:var(--mm-space-4)"></div>
+              <p class="mm-auth-or"><span>o con tu correo</span></p>
+            </div>
+            <form id="auth-form" novalidate>
+              <label class="mm-field" id="f-name" hidden>Nombre
+                <input class="mm-search" type="text" id="in-name" autocomplete="name" placeholder="Tu nombre">
+              </label>
+              <label class="mm-field">Correo
+                <input class="mm-search" type="email" id="in-email" autocomplete="email" placeholder="tu@correo.com" required>
+              </label>
+              <label class="mm-field" id="f-pass" hidden>Contraseña
+                <input class="mm-search" type="password" id="in-pass" autocomplete="current-password" minlength="8" placeholder="Mínimo 8 caracteres">
+              </label>
+              <p id="auth-error" class="mm-cart-warn" role="alert" hidden></p>
+              <button type="submit" class="mm-btn" id="auth-btn">Entrar</button>
+              <button type="button" class="mm-link-btn" id="forgot-link" hidden>¿Olvidaste tu contraseña?</button>
+            </form>
           </div>
-          <form id="auth-form" novalidate>
-            <label class="mm-field" id="f-name" hidden>Nombre
-              <input class="mm-search" type="text" id="in-name" autocomplete="name" placeholder="Tu nombre">
-            </label>
-            <label class="mm-field">Correo
-              <input class="mm-search" type="email" id="in-email" autocomplete="email" placeholder="tu@correo.com" required>
-            </label>
-            <label class="mm-field" id="f-pass" hidden>Contraseña
-              <input class="mm-search" type="password" id="in-pass" autocomplete="current-password" minlength="8" placeholder="Mínimo 8 caracteres">
-            </label>
-            <p id="auth-error" class="mm-cart-warn" role="alert" hidden></p>
-            <button type="submit" class="mm-btn" id="auth-btn">Entrar</button>
-          </form>
+
+          <!-- B: recuperar contraseña -->
+          <div id="auth-forgot" hidden>
+            <p class="mm-body" style="margin-top:0">Escribe tu correo y te enviamos un enlace para elegir una contraseña nueva.</p>
+            <form id="forgot-form" novalidate>
+              <label class="mm-field">Correo
+                <input class="mm-search" type="email" id="fg-email" autocomplete="email" placeholder="tu@correo.com" required>
+              </label>
+              <p id="forgot-msg" class="mm-form-msg" role="status" hidden></p>
+              <button type="submit" class="mm-btn" id="forgot-btn">Enviar enlace</button>
+              <button type="button" class="mm-link-btn" id="forgot-back">Volver a entrar</button>
+            </form>
+          </div>
+
+          <!-- C: contraseña nueva (llega desde el enlace del correo) -->
+          <div id="auth-reset" hidden>
+            <p class="mm-body" style="margin-top:0">Elige tu contraseña nueva.</p>
+            <form id="reset-form" novalidate>
+              <label class="mm-field">Contraseña nueva
+                <input class="mm-search" type="password" id="rs-pass" autocomplete="new-password" minlength="8" placeholder="Mínimo 8 caracteres" required>
+              </label>
+              <label class="mm-field">Repítela
+                <input class="mm-search" type="password" id="rs-pass2" autocomplete="new-password" minlength="8" required>
+              </label>
+              <p id="reset-error" class="mm-cart-warn" role="alert" hidden></p>
+              <button type="submit" class="mm-btn" id="reset-btn">Guardar contraseña</button>
+            </form>
+          </div>
+
           <p class="mm-body" style="font-size:13px">Con tu cuenta, todo lo que compres queda guardado y puedes descargarlo cuando quieras.</p>
         </div>
       </div>
-
       <!-- ============ CON SESIÓN ============ -->
       <div id="view-account" hidden>
         <p class="mm-label mm-label-accent">Mi cuenta</p>
@@ -139,37 +176,124 @@
   });
   var MSG = {
     bad_credentials: "Correo o contraseña incorrectos.",
-    email_taken: "Ya existe una cuenta con ese correo. Prueba entrar.",
+    use_google: "Esta cuenta se creó con Google. Entra con el botón de Google o usa “¿Olvidaste tu contraseña?” para crear una contraseña.",
+    email_taken: "Ya existe una cuenta con ese correo. Prueba entrar (o con Google).",
     weak_password: "La contraseña debe tener al menos 8 caracteres.",
     invalid_email: "Escribe un correo válido.",
+    bad_token: "El enlace no es válido o ya venció. Pide uno nuevo.",
+    google_not_configured: "El inicio con Google todavía no está disponible.",
     network: "No pudimos conectar con el servidor. Intenta de nuevo.",
     server: "El servidor no está listo todavía. Intenta más tarde.",
     config_missing: "El servidor no está listo todavía. Intenta más tarde."
   };
+  var resetToken = params.get("reset") || "";
+  var resetDone = false;
+
+  /* pantallas de la tarjeta de acceso: entrar / recuperar / contraseña nueva */
+  var TITLES = { main: "ENTRAR", forgot: "RECUPERAR", reset: "NUEVA CONTRASEÑA" };
+  function showAuth(which) {
+    ["main", "forgot", "reset"].forEach(function (k) { $("auth-" + k).hidden = k !== which; });
+    $("login-title").textContent = TITLES[which];
+  }
+  function badAuth(msg) { var err = $("auth-error"); err.textContent = msg; err.hidden = false; }
+  function afterAuth() {
+    $("auth-error").hidden = true;
+    var next = params.get("next");
+    if (next === "carrito.html" || next === "descargables.html") { location.href = next; return; }
+    render();
+  }
+
+  var mode = "in";
+  document.querySelectorAll("[data-tab]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      mode = b.getAttribute("data-tab");
+      document.querySelectorAll("[data-tab]").forEach(function (x) { x.classList.toggle("active", x === b); });
+      $("f-name").hidden = mode !== "new";
+      $("auth-btn").textContent = mode === "new" ? "Crear cuenta" : "Entrar";
+      $("in-pass").autocomplete = mode === "new" ? "new-password" : "current-password";
+      $("forgot-link").hidden = !S.live() || mode === "new";
+    });
+  });
   $("auth-form").addEventListener("submit", function (e) {
     e.preventDefault();
-    var err = $("auth-error");
-    function bad(msg) { err.textContent = msg; err.hidden = false; }
-    function done() {
-      err.hidden = true;
-      var next = params.get("next");
-      if (next === "carrito.html" || next === "descargables.html") { location.href = next; return; }
-      render();
-    }
     if (S.live()) {
       var btn = $("auth-btn");
       btn.disabled = true;
       var pr = mode === "new"
         ? S.apiRegister($("in-name").value, $("in-email").value, $("in-pass").value)
         : S.apiLogin($("in-email").value, $("in-pass").value);
-      pr.then(function (d) { btn.disabled = false; if (d && d.ok) done(); else bad(MSG[d && d.error] || MSG.server); });
+      pr.then(function (d) { btn.disabled = false; if (d && d.ok) afterAuth(); else badAuth(MSG[d && d.error] || MSG.server); });
       return;
     }
     var r = S.login($("in-email").value, mode === "new" ? $("in-name").value : "");
-    if (!r.ok) { bad(r.error); return; }
-    done();
+    if (!r.ok) { badAuth(r.error); return; }
+    afterAuth();
   });
   $("logout-btn").addEventListener("click", function () { if (S.live()) S.apiLogout(); else S.logout(); });
+
+  /* ¿olvidaste tu contraseña? */
+  $("forgot-link").addEventListener("click", function () { $("fg-email").value = $("in-email").value; showAuth("forgot"); });
+  $("forgot-back").addEventListener("click", function () { $("forgot-msg").hidden = true; showAuth("main"); });
+  $("forgot-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var msg = $("forgot-msg"), btn = $("forgot-btn");
+    btn.disabled = true;
+    S.apiForgot($("fg-email").value).then(function (d) {
+      btn.disabled = false;
+      msg.hidden = false;
+      if (d && d.ok) {
+        msg.textContent = "Si ese correo tiene una cuenta, ya te enviamos un enlace para elegir una contraseña nueva (vence en 1 hora). Revisa también tu carpeta de spam." +
+          (d.mail_failed ? " [Prueba: el servidor no pudo enviar el correo; revisa la configuración de correo.]" : "");
+      } else {
+        msg.textContent = MSG[d && d.error] || MSG.server;
+      }
+    });
+  });
+
+  /* contraseña nueva (llegó por el enlace del correo) */
+  $("reset-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var err = $("reset-error"), p1 = $("rs-pass").value, p2 = $("rs-pass2").value;
+    err.hidden = false;
+    if (p1.length < 8) { err.textContent = MSG.weak_password; return; }
+    if (p1 !== p2) { err.textContent = "Las contraseñas no coinciden."; return; }
+    var btn = $("reset-btn");
+    btn.disabled = true;
+    S.apiReset(resetToken, p1).then(function (d) {
+      btn.disabled = false;
+      if (d && d.ok) {
+        err.hidden = true;
+        resetDone = true;
+        history.replaceState(null, "", "cuenta.html");
+        render();
+      } else {
+        err.textContent = MSG[d && d.error] || MSG.server;
+      }
+    });
+  });
+
+  /* inicio de sesión con Google (botón oficial de Google Identity Services; solo si el servidor tiene el ID de cliente) */
+  var googleStarted = false;
+  function maybeGoogle() {
+    var id = S.googleId();
+    if (googleStarted || !S.live() || !id) return;
+    googleStarted = true;
+    $("google-box").hidden = false;
+    var s = document.createElement("script");
+    s.src = "https://accounts.google.com/gsi/client";
+    s.async = true;
+    s.onload = function () {
+      window.google.accounts.id.initialize({
+        client_id: id,
+        callback: function (resp) {
+          S.apiGoogle(resp.credential).then(function (d) { if (d && d.ok) afterAuth(); else badAuth(MSG[d && d.error] || MSG.server); });
+        }
+      });
+      window.google.accounts.id.renderButton($("google-btn"), { theme: "outline", size: "large", text: "continue_with", shape: "rectangular", locale: "es", width: 320 });
+    };
+    s.onerror = function () { $("google-box").hidden = true; };
+    document.head.appendChild(s);
+  }
   /* ---------- paneles ---------- */
   function showPanel(name) {
     document.querySelectorAll("[data-panel]").forEach(function (b) { b.classList.toggle("active", b.getAttribute("data-panel") === name); });
@@ -238,8 +362,12 @@
       noteA.hidden = S.stripeMode() !== "test";
       noteA.textContent = "Modo de prueba: los pagos no cobran dinero real (usa la tarjeta 4242 4242 4242 4242, cualquier fecha futura y cualquier CVC).";
     }
-    $("view-login").hidden = !!u;
-    $("view-account").hidden = !u;
+    var resetting = live && !!resetToken && !resetDone;
+    $("view-login").hidden = !!u && !resetting;
+    $("view-account").hidden = !u || resetting;
+    $("forgot-link").hidden = !live || mode === "new";
+    if (live && !u) maybeGoogle();
+    if (resetting) { showAuth("reset"); return; }
     if (!u) return;
     $("acc-name").textContent = ("HOLA, " + u.name).toUpperCase();
     $("acc-email").textContent = u.email;

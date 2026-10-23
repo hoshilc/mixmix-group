@@ -618,3 +618,9 @@ h2.mm-acc-title { margin: 0; }
 .mm-pickbar-actions { display: flex; align-items: center; gap: var(--mm-space-4); }
 .mm-cart-discount { background: var(--mm-marble-deep); padding-left: var(--mm-space-3); padding-right: var(--mm-space-3); }
 .mm-cart-hint { margin: 4px 0 0; font-family: var(--mm-font-body); font-size: 13px; }
+/* ===== Acceso: Google y recuperar contraseña ===== */
+.mm-auth-or { display: flex; align-items: center; gap: var(--mm-space-3); margin: var(--mm-space-4) 0 0; font-family: var(--mm-font-display); font-size: 11px; letter-spacing: var(--mm-track-label); text-transform: uppercase; color: var(--mm-stone-ink); }
+.mm-auth-or::before, .mm-auth-or::after { content: ""; flex: 1; height: 1px; background: var(--mm-marble-line); }
+.mm-form-msg { margin: 0; }
+#forgot-form, #reset-form { margin-top: var(--mm-space-4); display: grid; gap: var(--mm-space-4); }
+#forgot-link, #forgot-back { justify-self: start; font-size: 13px; font-family: var(--mm-font-body); }

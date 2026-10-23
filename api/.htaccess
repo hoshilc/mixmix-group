@@ -1,5 +1,5 @@
 Options -Indexes
 # Archivos internos: no se pueden abrir desde el navegador
-<FilesMatch "^(_lib\.php|config\.sample\.php|schema\.sql|INSTALAR\.md)$">
+<FilesMatch "^(_lib\.php|config\.sample\.php|schema\.sql|migracion-2\.sql|INSTALAR\.md)$">
   Require all denied
 </FilesMatch>

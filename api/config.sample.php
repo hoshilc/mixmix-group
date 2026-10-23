@@ -20,4 +20,11 @@ return array(
 
     /* métodos de pago ofrecidos en Stripe Checkout: 'card' siempre; 'oxxo' y 'customer_balance' (SPEI) requieren activarlos en Stripe */
     'payment_methods' => array('card'),
+    /* Inicio de sesión con Google: ID de cliente OAuth (termina en .apps.googleusercontent.com). Vacío = el botón no aparece. */
+    'google_client_id' => '',
+
+    /* Correo de recuperación de contraseña. Por defecto usa mail() del hosting desde 'no-reply@tudominio'.
+       Si los correos caen en spam, usa un buzón real del dominio con SMTP: */
+    // 'mail_from' => 'no-reply@grupomixmix.com',
+    // 'smtp' => array('host' => 'smtp.hostinger.com', 'port' => 465, 'secure' => 'ssl', 'user' => 'no-reply@grupomixmix.com', 'pass' => 'CAMBIAR'),
 );

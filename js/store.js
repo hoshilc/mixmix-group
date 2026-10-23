@@ -61,7 +61,7 @@
   S.refresh = function () {
     if (!live()) return Promise.resolve(null);
     return api("me.php").then(function (d) {
-      if (d && d.ok) { LIVE = { user: d.user, orders: d.orders || [], mode: d.stripe_mode || "test" }; write("mm_live", LIVE); }
+      if (d && d.ok) { LIVE = { user: d.user, orders: d.orders || [], mode: d.stripe_mode || "test", google: d.google_client_id || "" }; write("mm_live", LIVE); }
       changed(null, "sync");
       return d;
     });
@@ -79,7 +79,16 @@
       LIVE = { user: null, orders: [], mode: LIVE.mode }; write("mm_live", LIVE); changed(null, "logout");
     });
   };
-  S.checkout = function () { return api("checkout.php", { ids: S.cart() }); };
+  S.apiForgot = function (email) { return api("forgot.php", { email: email }); };
+  S.apiReset = function (token, password) {
+    return api("reset.php", { token: token, password: password })
+      .then(function (d) { return d.ok ? S.refresh().then(function () { changed(null, "login"); return d; }) : d; });
+  };
+  S.apiGoogle = function (credential) {
+    return api("google.php", { credential: credential })
+      .then(function (d) { return d.ok ? S.refresh().then(function () { changed(null, "login"); return d; }) : d; });
+  };
+  S.googleId = function () { return LIVE.google || ""; };  S.checkout = function () { return api("checkout.php", { ids: S.cart() }); };
   S.confirm = function (sessionId) { return api("confirm.php?session_id=" + encodeURIComponent(sessionId)); };
   S.stripeMode = function () { return LIVE.mode; };
 
