@@ -7,3 +7,6 @@ descargas/
 .env
 .env.*
 *.key
+
+# Paquetes para subir al hosting
+subir/
