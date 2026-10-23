@@ -234,7 +234,7 @@
         if (d && d.ok && d.url) { location.href = d.url; return; }
         b.disabled = false; render();
         var E = { empty_cart: "Tu carrito no tiene nada por cobrar (¿ya lo tienes en tu cuenta?).", not_logged_in: "Tu sesión expiró. Inicia sesión de nuevo.", stripe_error: "No pudimos abrir el pago. Intenta de nuevo.", stripe_unreachable: "No pudimos conectar con Stripe. Intenta de nuevo.", network: "No pudimos conectar con el servidor. Intenta de nuevo." };
-        msg.textContent = (E[d && d.error] || "No pudimos iniciar el pago. Intenta de nuevo.") + (d && d.detail ? " [" + d.detail + "]" : "");
+        msg.textContent = (E[d && d.error] || "No pudimos iniciar el pago. Intenta de nuevo.") + (d && d.detail && S.stripeMode() === "test" ? " [" + d.detail + "]" : "");
         msg.hidden = false;
       });
       return;
