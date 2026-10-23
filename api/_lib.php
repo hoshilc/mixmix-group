@@ -237,6 +237,29 @@ function mark_paid($sessionId) {
 }
 
 /* ---------- archivos de pago ---------- */
+/* Carpetas donde pueden estar los archivos: privado/ y cualquier subcarpeta directa (d1, d2, d3...),
+   siempre que dentro tengan "descargas/". Así da igual si los zips se extrajeron juntos o por partes. */
+function private_roots() {
+    $base = private_dir();
+    if ($base === '') return array();
+    $roots = array();
+    if (is_dir($base . '/descargas')) $roots[] = $base;
+    $subs = glob($base . '/*', GLOB_ONLYDIR);
+    if ($subs) foreach ($subs as $d) {
+        if (basename($d) === 'sessions') continue;
+        if (is_dir($d . '/descargas')) $roots[] = $d;
+    }
+    return $roots;
+}
+/* ruta real de un archivo del catálogo ("descargas/manuales/x.pdf"), o false si no está */
+function locate_file($rel) {
+    foreach (private_roots() as $root) {
+        $dirReal = realpath($root . '/descargas');
+        $f = realpath($root . '/' . $rel);
+        if ($dirReal && $f && is_file($f) && strpos($f, $dirReal . DIRECTORY_SEPARATOR) === 0) return $f;
+    }
+    return false;
+}
 function nice_name($title, $ext) {
     $n = preg_replace('/[\\\\\/:*?"<>|]+/u', ' - ', $title);
     $n = trim(preg_replace('/\s+/u', ' ', $n));

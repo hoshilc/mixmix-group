@@ -11,9 +11,8 @@ try {
 } catch (PDOException $e) { error_log('download: ' . $e->getMessage()); fail('server', 500); }
 if (!isset($allowed[$p])) fail('not_owned', 403);
 
-$base = realpath(private_dir());
-$file = $base ? realpath($base . '/' . $p) : false;
-if (!$file || strpos($file, $base . DIRECTORY_SEPARATOR . 'descargas' . DIRECTORY_SEPARATOR) !== 0 || !is_file($file)) fail('file_missing', 404);
+$file = locate_file($p);
+if (!$file) fail('file_missing', 404);
 
 $name = $allowed[$p];
 $ascii = preg_replace('/[^\x20-\x7E]/', '_', $name);
