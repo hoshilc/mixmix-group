@@ -24,7 +24,11 @@ if ($cat && $out['descargas_files'] > 0) {
 if ($out['config']) {
     $cfg = require $dir . '/config.php';
     $out['stripe_mode'] = (isset($cfg['stripe_secret']) && strpos($cfg['stripe_secret'], 'sk_live') === 0) ? 'live' : ((isset($cfg['stripe_secret']) && strpos($cfg['stripe_secret'], 'sk_test') === 0) ? 'test' : 'sin_clave');
-    $out['webhook_secret'] = !empty($cfg['stripe_webhook_secret']) && strpos($cfg['stripe_webhook_secret'], 'whsec_') === 0 && $cfg['stripe_webhook_secret'] !== 'whsec_CAMBIAR';
+    /* revisión de formato de la clave (no la muestra): longitud y si tiene espacios, comillas o saltos de línea */
+    $sk = isset($cfg['stripe_secret']) ? (string)$cfg['stripe_secret'] : '';
+    $out['stripe_key_length'] = strlen($sk);
+    $out['stripe_key_ok'] = (bool)preg_match('/^sk_test_[A-Za-z0-9]{40,}$/', $sk) || (bool)preg_match('/^sk_live_[A-Za-z0-9]{40,}$/', $sk);
+    $out['stripe_key_has_whitespace'] = (bool)preg_match('/\s/', $sk);    $out['webhook_secret'] = !empty($cfg['stripe_webhook_secret']) && strpos($cfg['stripe_webhook_secret'], 'whsec_') === 0 && $cfg['stripe_webhook_secret'] !== 'whsec_CAMBIAR';
     try {
         $pdo = db();
         $out['db'] = true;
