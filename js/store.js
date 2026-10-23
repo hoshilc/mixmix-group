@@ -211,23 +211,28 @@
       if (badge) { badge.textContent = n; badge.hidden = !n; }
     }
   }
+  function accountOn() { return !(window.MM_CONFIG) || !!window.MM_CONFIG.account; }
   function injectHeader() {
     var box = document.querySelector(".mm-header .mm-container");
-    if (!box || box.querySelector("[data-mm-account]") || !storeOn()) return;
+    var util = box && box.querySelector(".mm-header-util");
+    if (!box) return;
     var here = location.pathname.split("/").pop();
     function cur(href) { return here === href ? ' aria-current="page"' : ""; }
-    var userSvg = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v2"/></svg>';
-    var bagSvg = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>';
-    var util = document.createElement("div");
-    util.className = "mm-header-util";
-    util.innerHTML =
-      '<a href="cuenta.html" data-mm-account aria-label="Mi cuenta" title="Mi cuenta"' + cur("cuenta.html") + '>' + userSvg + '</a>' +
-      '<a href="carrito.html" data-mm-cartlink aria-label="Carrito"' + cur("carrito.html") + '>' + bagSvg + '<span class="mm-cart-count" hidden>0</span></a>';
-    var btn = box.querySelector(".mm-menu-btn");
-    box.insertBefore(util, btn || null);
+    if (!util) {                                   /* página sin el icono en su HTML: se crea */
+      util = document.createElement("div");
+      util.className = "mm-header-util";
+      util.innerHTML = '<a href="cuenta.html" data-mm-account aria-label="Mi cuenta" title="Mi cuenta"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v2"/></svg></a>';
+      box.insertBefore(util, box.querySelector(".mm-menu-btn") || null);
+    }
+    util.hidden = !accountOn();                    /* fuera del sitio real (vista previa, local) el icono solo sale con ?demo=1 */
+    var acct = util.querySelector("[data-mm-account]");
+    if (acct && here === "cuenta.html") acct.setAttribute("aria-current", "page");
+    if (storeOn() && !util.querySelector("[data-mm-cartlink]")) {
+      var bagSvg = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>';
+      util.insertAdjacentHTML("beforeend", '<a href="carrito.html" data-mm-cartlink aria-label="Carrito"' + cur("carrito.html") + '>' + bagSvg + '<span class="mm-cart-count" hidden>0</span></a>');
+    }
     paintHeader();
   }
-
   window.MMStore = S;
   document.addEventListener("DOMContentLoaded", function () {
     injectHeader();

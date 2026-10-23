@@ -42,5 +42,7 @@ window.MM_CONFIG = {
   C.preview = on;
   C.store = !!C.storeLive || on;     /* ¿se muestran carrito, cuenta y botones "Agregar"? */
   C.showPlaceholders = (C.showPlaceholders !== false) || on;   /* ¿se muestran recuadros de ejemplo? */
-  C.useApi = !!(C.store && C.api && (C.apiHosts || []).indexOf(location.hostname) > -1);   /* ¿cuentas y pagos reales (servidor) en vez de demostración? */
+  var hostOk = !!(C.api && (C.apiHosts || []).indexOf(location.hostname) > -1);
+  C.useApi = hostOk;                    /* ¿hay servidor real (cuentas y pagos) en este dominio? */
+  C.account = hostOk || C.store;        /* ¿se muestra el icono de iniciar sesión? (siempre en el sitio real; en otros lugares solo con ?demo=1) */
 })();

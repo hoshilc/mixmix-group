@@ -624,3 +624,4 @@ h2.mm-acc-title { margin: 0; }
 .mm-form-msg { margin: 0; }
 #forgot-form, #reset-form { margin-top: var(--mm-space-4); display: grid; gap: var(--mm-space-4); }
 #forgot-link, #forgot-back { justify-self: start; font-size: 13px; font-family: var(--mm-font-body); }
+.mm-header-util[hidden] { display: none; }
