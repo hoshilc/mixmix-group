@@ -11,7 +11,7 @@
    VISTA PREVIA: agrega ?demo=1 a cualquier dirección del sitio (p. ej. index.html?demo=1) para ver
    la tienda de demostración y todos los recuadros de ejemplo. ?demo=0 lo apaga. */
 window.MM_CONFIG = {
-  siteUrl: "https://mixmixgroup.netlify.app",
+  siteUrl: "https://grupomixmix.com",
   storeLive: false,
   email: "contacto@grupomixmix.com",
   whatsapp: "",

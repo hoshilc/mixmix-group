@@ -23,3 +23,8 @@ RedirectMatch 404 ^/(tools|partials)(/|$)
 # Direcciones del sitio anterior (WordPress) que ahora viven en paginas nuevas
 RedirectMatch 301 ^/contact/?$ /contacto.html
 RedirectMatch 301 ^/tienda/?$ /descargables.html
+
+# Una sola direccion oficial: www.grupomixmix.com -> grupomixmix.com
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^www\.grupomixmix\.com$ [NC]
+RewriteRule ^(.*)$ https://grupomixmix.com/$1 [R=301,L]
