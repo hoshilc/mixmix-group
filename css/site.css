@@ -625,3 +625,14 @@ h2.mm-acc-title { margin: 0; }
 #forgot-form, #reset-form { margin-top: var(--mm-space-4); display: grid; gap: var(--mm-space-4); }
 #forgot-link, #forgot-back { justify-self: start; font-size: 13px; font-family: var(--mm-font-body); }
 .mm-header-util[hidden] { display: none; }
+
+/* ===== Header: el icono de cuenta (y el carrito) va hasta el extremo derecho ===== */
+.mm-header .mm-logo { order: 1; }
+.mm-header nav { order: 2; }
+.mm-header .mm-header-util { order: 3; margin-left: var(--mm-space-4); }
+.mm-header .mm-menu-btn { order: 2; }
+@media (max-width: 760px) {
+  .mm-header .mm-menu-btn { order: 2; margin-left: auto; }
+  .mm-header .mm-header-util { order: 3; margin-left: 0; }
+  .mm-header nav { order: 9; }
+}
