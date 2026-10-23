@@ -1,0 +1,8 @@
+# Netlify (mixmixgroup.netlify.app): este sitio ya vive en https://grupomixmix.com
+# Todo lo que llegue aqui se redirige (301) al dominio oficial para no duplicar contenido.
+# Hostinger ignora este archivo.
+[[redirects]]
+  from = "/*"
+  to = "https://grupomixmix.com/:splat"
+  status = 301
+  force = true

@@ -4,7 +4,7 @@ Options -Indexes
 
 # Herramientas internas y documentacion: no se sirven al publico
 RedirectMatch 404 ^/(tools|partials)(/|$)
-<FilesMatch "^(README\.md|\.gitignore)$">
+<FilesMatch "^(README\.md|\.gitignore|netlify\.toml)$">
   Require all denied
 </FilesMatch>
 
