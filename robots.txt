@@ -3,5 +3,6 @@ Allow: /
 Disallow: /carrito.html
 Disallow: /cuenta.html
 Disallow: /gracias.html
+Disallow: /api/
 
 Sitemap: https://mixmixgroup.netlify.app/sitemap.xml

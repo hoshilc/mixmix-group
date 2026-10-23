@@ -94,6 +94,6 @@ $sm = New-Object System.Text.StringBuilder
 foreach ($u in ($sitemapPages | Sort-Object)) { [void]$sm.AppendLine("  <url><loc>$u</loc><lastmod>$today</lastmod></url>") }
 [void]$sm.AppendLine('</urlset>')
 WriteU (Join-Path $root "sitemap.xml") $sm.ToString()
-$rb = "User-agent: *`nAllow: /`nDisallow: /carrito.html`nDisallow: /cuenta.html`nDisallow: /gracias.html`n`nSitemap: $site/sitemap.xml`n"
+$rb = "User-agent: *`nAllow: /`nDisallow: /carrito.html`nDisallow: /cuenta.html`nDisallow: /gracias.html`nDisallow: /api/`n`nSitemap: $site/sitemap.xml`n"
 WriteU (Join-Path $root "robots.txt") $rb
 Write-Host ("sitemap.xml y robots.txt  (sitio: " + $site + ")")
