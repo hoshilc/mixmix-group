@@ -19,3 +19,7 @@ RedirectMatch 404 ^/(tools|partials)(/|$)
   SetEnvIfNoCase Host "hostingersite\.com$" MM_NOINDEX=1
   Header set X-Robots-Tag "noindex, nofollow" env=MM_NOINDEX
 </IfModule>
+
+# Direcciones del sitio anterior (WordPress) que ahora viven en paginas nuevas
+RedirectMatch 301 ^/contact/?$ /contacto.html
+RedirectMatch 301 ^/tienda/?$ /descargables.html
