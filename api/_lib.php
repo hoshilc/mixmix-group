@@ -214,7 +214,14 @@ function stripe_request($method, $path, $params = array()) {
     curl_close($ch);
     if ($body === false) { error_log('stripe curl: ' . $err); fail('stripe_unreachable', 502); }
     $d = json_decode($body, true);
-    if ($code >= 400 || !is_array($d)) { error_log('stripe http ' . $code . ': ' . $body); fail('stripe_error', 502); }
+    if ($code >= 400 || !is_array($d)) {
+        error_log('stripe http ' . $code . ': ' . $body);
+        $e = (is_array($d) && isset($d['error']) && is_array($d['error'])) ? $d['error'] : array();
+        $parts = array();
+        foreach (array('type', 'code', 'param', 'message') as $k) if (!empty($e[$k])) $parts[] = $k . '=' . $e[$k];
+        $detail = preg_replace('/(sk|rk|pk)_(test|live)_[A-Za-z0-9*_]+/', '$1_$2_***', 'http ' . $code . ' ' . implode(' | ', $parts));
+        json_out(array('ok' => false, 'error' => 'stripe_error', 'detail' => mb_substr($detail, 0, 400)), 502);
+    }
     return $d;
 }
 function verify_stripe_signature($payload, $header, $secret, $tolerance = 300) {
