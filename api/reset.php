@@ -20,7 +20,9 @@ try {
     $_SESSION['uid'] = (int)$row['user_id'];
     $st = $pdo->prepare('SELECT name, email FROM users WHERE id = ?');
     $st->execute(array($row['user_id']));
-    ok(array('user' => $st->fetch()));
+    $usr = $st->fetch();
+    adopt_guest_orders($row['user_id'], $usr['email']);   /* recibió el enlace en su correo: hereda lo que compró sin cuenta */
+    ok(array('user' => $usr));
 } catch (PDOException $e) {
     error_log('reset: ' . $e->getMessage());
     fail('server', 500);

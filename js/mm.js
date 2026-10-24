@@ -470,9 +470,13 @@
 
   /* ---------- botones de descarga de lo comprado (cuenta.html) ---------- */
   /* con el servidor real, los archivos salen de api/download.php (solo si el cliente los compró) */
+  /* compra sin cuenta: las descargas llevan el número de pedido y el código del enlace (MM.setDownloadAuth) */
+  var dlAuth = null;
+  window.MM.setDownloadAuth = function (ref, t) { dlAuth = ref && t ? { o: ref, t: t } : null; };
   function dlHref(file) {
     var C2 = window.MM_CONFIG || {};
-    return C2.useApi ? C2.api + "download.php?p=" + encodeURIComponent(file) : file;
+    if (!C2.useApi) return file;
+    return C2.api + "download.php?p=" + encodeURIComponent(file) + (dlAuth ? "&o=" + encodeURIComponent(dlAuth.o) + "&t=" + encodeURIComponent(dlAuth.t) : "");
   }
   function dlRow(label, file, name) {
     var li = el("li", "mm-dl-item");

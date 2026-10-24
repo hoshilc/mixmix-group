@@ -243,6 +243,69 @@ function mark_paid($sessionId) {
     return $st->rowCount();
 }
 
+/* ---------- compras sin cuenta (invitado) ----------
+   El comprador sin cuenta recibe un enlace con un código que solo el servidor puede calcular
+   (HMAC del número de pedido con un secreto de privado/config.php). No se guarda en la base de datos. */
+function guest_token($ref) {
+    $c = config();
+    $key = isset($c['stripe_webhook_secret']) && $c['stripe_webhook_secret'] !== '' ? $c['stripe_webhook_secret'] : $c['stripe_secret'];
+    return substr(hash_hmac('sha256', 'guest-order|' . $ref, $key), 0, 48);
+}
+/* pedido por número + código; null si no coincide */
+function guest_order($ref, $token) {
+    if (!is_string($ref) || !preg_match('/^MM-[A-F0-9]{8}$/', $ref)) return null;
+    if (!is_string($token) || !preg_match('/^[a-f0-9]{48}$/', $token) || !hash_equals(guest_token($ref), $token)) return null;
+    $st = db()->prepare('SELECT id, ref, user_id, guest_email, status, lines_json, discount, total, paid_at, mailed_at FROM orders WHERE ref = ?');
+    $st->execute(array($ref));
+    $o = $st->fetch();
+    return $o ? $o : null;
+}
+function guest_link($ref) {
+    $c = config();
+    return $c['site_url'] . '/pedido.html?pedido=' . $ref . '&t=' . guest_token($ref);
+}
+/* productos (del catálogo) de un pedido */
+function order_products($o) {
+    $cat = catalog();
+    $out = array();
+    $lines = json_decode($o['lines_json'], true);
+    if (is_array($lines)) foreach ($lines as $l) if (isset($cat['byId'][$l['id']])) $out[$l['id']] = $cat['byId'][$l['id']];
+    return $out;
+}
+/* después de confirmar un pago: manda UNA vez el correo con el enlace a los archivos si fue compra sin cuenta */
+function after_paid($sessionId) {
+    $pdo = db();
+    try {
+        $st = $pdo->prepare("SELECT id, ref, guest_email, total FROM orders WHERE stripe_session_id = ? AND status = 'paid' AND guest_email IS NOT NULL AND mailed_at IS NULL");
+        $st->execute(array($sessionId));
+        $o = $st->fetch();
+    } catch (PDOException $e) { error_log('after_paid (¿falta migracion-3?): ' . $e->getMessage()); return; }   /* nunca debe romper la confirmación del pago */
+    if (!$o) return;
+    $claim = $pdo->prepare('UPDATE orders SET mailed_at = UTC_TIMESTAMP() WHERE id = ? AND mailed_at IS NULL');
+    $claim->execute(array($o['id']));
+    if ($claim->rowCount() !== 1) return;
+    $link = guest_link($o['ref']);
+    $html = '<div style="font-family:Arial,sans-serif;max-width:520px;margin:auto;color:#111110">' .
+        '<p style="font-size:12px;letter-spacing:2px;color:#8A6D2F">GRUPO MIXMIX</p>' .
+        '<h2 style="margin:0 0 12px">Gracias por tu compra, chef</h2>' .
+        '<p>Tu pedido <strong>' . htmlspecialchars($o['ref'], ENT_QUOTES, 'UTF-8') . '</strong> está confirmado. Descarga tus archivos aquí:</p>' .
+        '<p><a href="' . $link . '" style="display:inline-block;background:#111110;color:#F0EFF4;padding:12px 20px;text-decoration:none;font-weight:bold">Descargar mis archivos</a></p>' .
+        '<p style="font-size:13px;color:#555">Guarda este correo: el enlace es personal y es tu acceso a lo que compraste. Si creas una cuenta con este correo en grupomixmix.com, todas tus compras quedan guardadas y podrás descargarlas siempre.</p>' .
+        '</div>';
+    $text = "Gracias por tu compra, chef.\n\nTu pedido " . $o['ref'] . " está confirmado. Descarga tus archivos aquí (enlace personal, guárdalo):\n" . $link .
+        "\n\nSi creas una cuenta en grupomixmix.com con este correo, tus compras quedan guardadas y podrás descargarlas siempre.\n\nGrupo MixMix";
+    if (!mail_send($o['guest_email'], 'Tus archivos de Grupo MixMix — pedido ' . $o['ref'], $html, $text)) {
+        error_log('after_paid: no se pudo enviar el correo del pedido ' . $o['ref']);
+        $pdo->prepare('UPDATE orders SET mailed_at = NULL WHERE id = ?')->execute(array($o['id']));   /* se reintenta en la siguiente consulta */
+    }
+}
+/* una cuenta con correo VERIFICADO (Google o enlace de recuperación) hereda sus compras como invitado */
+function adopt_guest_orders($userId, $email) {
+    try {
+        db()->prepare("UPDATE orders SET user_id = ? WHERE user_id IS NULL AND guest_email = ?")->execute(array($userId, strtolower($email)));
+    } catch (PDOException $e) { error_log('adopt_guest_orders (¿falta migracion-3?): ' . $e->getMessage()); }   /* nunca debe impedir entrar */
+}
+
 /* ---------- archivos de pago ---------- */
 /* Carpetas donde pueden estar los archivos: privado/ y cualquier subcarpeta directa (d1, d2, d3...),
    siempre que dentro tengan "descargas/". Así da igual si los zips se extrajeron juntos o por partes. */

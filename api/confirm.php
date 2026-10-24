@@ -12,7 +12,7 @@ try {
     if (!$o) fail('order_not_found', 404);
     if ($o['status'] !== 'paid') {
         $s = stripe_request('GET', '/checkout/sessions/' . $sid);
-        if (isset($s['payment_status']) && $s['payment_status'] === 'paid') mark_paid($sid);
+        if (isset($s['payment_status']) && $s['payment_status'] === 'paid') { mark_paid($sid); after_paid($sid); }
     }
     $st->execute(array($sid, $u['id']));
     $o = $st->fetch();

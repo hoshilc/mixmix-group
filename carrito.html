@@ -62,6 +62,17 @@
             <div class="mm-cart-total"><dt>Total</dt><dd id="sum-total">$0 MXN</dd></div>
           </dl>
           <p id="sum-owned" class="mm-body" style="font-size:13px" hidden></p>
+          <div id="guest-box" hidden>
+            <div class="mm-guest-note">
+              <p><strong>Crea tu cuenta y tendrás acceso siempre a tus contenidos.</strong> Todo lo que compres queda guardado y lo descargas cuando quieras, desde cualquier dispositivo.</p>
+              <a class="mm-btn mm-btn-secondary" href="cuenta.html?next=carrito.html">Iniciar sesión o crear cuenta</a>
+            </div>
+            <p class="mm-auth-or"><span>o compra sin cuenta</span></p>
+            <label class="mm-field">Tu correo (aquí te mandamos tus archivos)
+              <input class="mm-search" type="email" id="guest-email" autocomplete="email" placeholder="tu@correo.com">
+            </label>
+            <p id="guest-msg" class="mm-cart-warn" role="alert" hidden>Escribe un correo válido para enviarte tus archivos.</p>
+          </div>
           <label class="mm-check"><input type="checkbox" id="terms"> <span>Acepto los <a href="terminos.html" target="_blank">términos de venta y la política de reembolsos</a> y el <a href="privacidad.html" target="_blank">aviso de privacidad</a>.</span></label>
           <p id="terms-msg" class="mm-cart-warn" role="alert" hidden>Para continuar, acepta los términos.</p>
           <button type="button" class="mm-btn" id="pay-btn" style="margin-top:var(--mm-space-4)">Pagar</button>
@@ -214,10 +225,11 @@
       dn.hidden = S.stripeMode() !== "test";
       dn.textContent = "Modo de prueba: los pagos no cobran dinero real (tarjeta 4242 4242 4242 4242, cualquier fecha futura y cualquier CVC).";
     }
-    pay.textContent = u ? "Pagar " + M.money(total) + (live ? "" : " (demo)") : "Inicia sesión para pagar";
+    $("guest-box").hidden = !!u;
+    pay.textContent = "Pagar " + M.money(total) + (u && !live ? " (demo)" : "") + (u ? "" : " sin cuenta");
     $("pay-note").textContent = u
       ? "Comprando como " + u.email + (live ? ". Pago seguro con Stripe." : ". Modo demostración: sin cargo real.")
-      : "Necesitas una cuenta para que tus descargas queden guardadas.";
+      : "Al terminar descargas tus archivos en esa misma página y te mandamos el enlace por correo. Ahí mismo podrás crear tu cuenta con un clic para guardar esta compra" + (live ? ". Pago seguro con Stripe." : ". Modo demostración: sin cargo real.");
   }
 
   $("cart-lines").addEventListener("click", function (e) {
@@ -226,22 +238,29 @@
   });
   $("clear-btn").addEventListener("click", function () { S.clear(); });
   $("pay-btn").addEventListener("click", function () {
-    if (!S.user()) { location.href = "cuenta.html?next=carrito.html"; return; }
+    var guest = !S.user(), email = "";
+    if (guest) {
+      email = $("guest-email").value.trim();
+      var bad = !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
+      $("guest-msg").hidden = !bad;
+      if (bad) { $("guest-email").focus(); return; }
+    }
     if (!$("terms").checked) { $("terms-msg").hidden = false; return; }
+    $("terms-msg").hidden = true;
     if (S.live()) {
       var b = $("pay-btn"), msg = $("terms-msg");
       b.disabled = true; b.textContent = "Abriendo el pago…";
-      S.checkout().then(function (d) {
+      S.checkout(email).then(function (d) {
         if (d && d.ok && d.url) { location.href = d.url; return; }
         b.disabled = false; render();
-        var E = { empty_cart: "Tu carrito no tiene nada por cobrar (¿ya lo tienes en tu cuenta?).", not_logged_in: "Tu sesión expiró. Inicia sesión de nuevo.", stripe_error: "No pudimos abrir el pago. Intenta de nuevo.", stripe_unreachable: "No pudimos conectar con Stripe. Intenta de nuevo.", network: "No pudimos conectar con el servidor. Intenta de nuevo." };
+        var E = { empty_cart: "Tu carrito no tiene nada por cobrar (¿ya lo tienes en tu cuenta?).", invalid_email: "Escribe un correo válido para enviarte tus archivos.", migration_needed: "La tienda necesita una actualización de la base de datos (migración 3). Avísanos por favor.", stripe_error: "No pudimos abrir el pago. Intenta de nuevo.", stripe_unreachable: "No pudimos conectar con Stripe. Intenta de nuevo.", network: "No pudimos conectar con el servidor. Intenta de nuevo." };
         msg.textContent = (E[d && d.error] || "No pudimos iniciar el pago. Intenta de nuevo.") + (d && d.detail && S.stripeMode() === "test" ? " [" + d.detail + "]" : "");
         msg.hidden = false;
       });
       return;
     }
-    var o = S.placeOrder();
-    if (o) location.href = "cuenta.html?pedido=" + encodeURIComponent(o.id) + "#compras";
+    var o = S.placeOrder(email);
+    if (o) location.href = guest ? "pedido.html?pedido=" + encodeURIComponent(o.id) : "cuenta.html?pedido=" + encodeURIComponent(o.id) + "#compras";
   });
   document.addEventListener("mmstore", render);
   render();

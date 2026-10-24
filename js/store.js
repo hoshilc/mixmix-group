@@ -88,8 +88,18 @@
     return api("google.php", { credential: credential })
       .then(function (d) { return d.ok ? S.refresh().then(function () { changed(null, "login"); return d; }) : d; });
   };
-  S.googleId = function () { return LIVE.google || ""; };  S.checkout = function () { return api("checkout.php", { ids: S.cart() }); };
+  S.googleId = function () { return LIVE.google || ""; };
+  /* con sesión paga a nombre de la cuenta; sin sesión hace falta el correo (compra como invitado) */
+  S.checkout = function (email) { return api("checkout.php", { ids: S.cart(), email: email || "" }); };
   S.confirm = function (sessionId) { return api("confirm.php?session_id=" + encodeURIComponent(sessionId)); };
+  /* compra sin cuenta: estado del pedido (número + código del enlace) y guardarlo en una cuenta */
+  S.guestOrder = function (ref, t, sessionId) {
+    return api("pedido.php?pedido=" + encodeURIComponent(ref) + "&t=" + encodeURIComponent(t) + (sessionId ? "&session_id=" + encodeURIComponent(sessionId) : ""));
+  };
+  S.claim = function (ref, t, name, password) {
+    return api("claim.php", { pedido: ref, t: t, name: name || "", password: password || "" })
+      .then(function (d) { return d.ok ? S.refresh().then(function () { changed(null, "login"); return d; }) : d; });
+  };
   S.stripeMode = function () { return LIVE.mode; };
 
   /* ---------- cuenta (demo: sin contraseña) ---------- */
@@ -127,11 +137,14 @@
     return { manuals: man.length, manualsBase: base, manualsCost: cost, discount: base - cost, other: other, total: other + cost,
              extra: (M() && man.length) ? M().volumeExtra(man.length) : 0, plan: vc.plan };
   };
-  S.placeOrder = function () {
+  /* demo: compra sin cuenta (guardada bajo el correo, sin abrir sesión); con sesión usa la cuenta */
+  S.placeOrder = function (guestEmail) {
     var u = S.user(), c = S.cart();
-    if (!u || !c.length || !M()) return null;
+    var email = u ? u.email : String(guestEmail || "").trim().toLowerCase();
+    if (!email || !c.length || !M()) return null;
+    if (!u && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return null;
     var all = read(K_ORDERS, {});
-    var list = all[u.email] || [];
+    var list = all[email] || [];
     var lines = c.map(function (id) { var p = product(id); return { id: id, title: p.title, price: p.price }; });
     var pr = S.pricing(c);
     var order = {
@@ -142,11 +155,20 @@
       total: pr.total
     };
     list.push(order);
-    all[u.email] = list;
+    all[email] = list;
     write(K_ORDERS, all);
     write(K_CART, []);
     changed(null, "order");
     return order;
+  };
+  /* demo: busca un pedido por número entre todos los correos (para pedido.html) */
+  S.demoOrder = function (ref) {
+    var all = read(K_ORDERS, {});
+    for (var email in all) {
+      var hit = (all[email] || []).filter(function (o) { return o.id === ref; })[0];
+      if (hit) return { email: email, order: hit };
+    }
+    return null;
   };
   /* ids de documentos que ya compró el usuario (incluye lo que trae cada paquete) */
   S.ownedItems = function () {
@@ -229,7 +251,7 @@
   }
   function injectFab() {
     var here = location.pathname.split("/").pop();
-    if (!storeOn() || document.querySelector(".mm-cart-fab") || here === "carrito.html" || here === "gracias.html") return;
+    if (!storeOn() || document.querySelector(".mm-cart-fab") || here === "carrito.html" || here === "gracias.html" || here === "pedido.html") return;
     var a = document.createElement("a");
     a.className = "mm-cart-fab";
     a.href = "carrito.html";

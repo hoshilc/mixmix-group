@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tu compra — Grupo MixMix</title>
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<link rel="stylesheet" href="css/mixmix-brand/mixmix.css">
+<link rel="stylesheet" href="css/site.css">
+<!--#meta-->
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="img/favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<meta name="theme-color" content="#111110">
+<!--/#meta-->
+</head>
+<body>
+<a class="mm-skip" href="#content">Ir al contenido</a>
+
+<!--#header-->
+<header class="mm-header">
+  <div class="mm-container">
+    <a class="mm-logo" href="index.html"><img class="mm-logo-img" src="img/logo.png" alt="MixMix, inicio"></a>
+    <div class="mm-header-util"><a href="cuenta.html" data-mm-account aria-label="Mi cuenta" title="Mi cuenta"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v2"/></svg></a></div>
+    <button type="button" class="mm-menu-btn" aria-expanded="false" aria-controls="mm-nav">Menú</button>
+    <nav id="mm-nav" aria-label="Principal">
+      <ul class="mm-navlinks">
+        <li><a href="index.html">Nosotros</a></li>
+        <li><a href="descargables.html">Descargables</a></li>
+        <li><a href="consultoria.html">Consultoría</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<!--/#header-->
+
+<main id="content">
+  <section class="mm-section">
+    <div class="mm-container">
+
+      <div id="ped-wait">
+        <p class="mm-label mm-label-accent">Tu compra</p>
+        <h1 class="mm-display" style="font-size:clamp(30px,5vw,56px); color:var(--mm-black)">CONFIRMANDO…</h1>
+        <p class="mm-body" id="ped-wait-msg">Estamos confirmando tu pago. Esto toma unos segundos.</p>
+      </div>
+
+      <div id="ped-bad" hidden>
+        <p class="mm-label mm-label-accent">Tu compra</p>
+        <h1 class="mm-display" style="font-size:clamp(30px,5vw,56px); color:var(--mm-black)">ENLACE NO VÁLIDO</h1>
+        <p class="mm-body" id="ped-bad-msg">Este enlace no corresponde a ninguna compra. Revisa que esté completo o escríbenos.</p>
+        <p class="mm-hero-actions"><a class="mm-btn" href="contacto.html">Escríbenos</a> <a class="mm-btn mm-btn-secondary" href="cuenta.html">Entrar a mi cuenta</a></p>
+      </div>
+
+      <div id="ped-ok" hidden>
+        <p class="mm-label mm-label-accent">Compra confirmada</p>
+        <h1 class="mm-display" style="font-size:clamp(30px,5vw,56px); color:var(--mm-black)">GRACIAS, CHEF.</h1>
+        <p class="mm-body">Pedido <strong id="ped-ref"></strong> · <span id="ped-total"></span>. Descarga tus archivos aquí abajo; también te mandamos el enlace a <strong id="ped-email"></strong> (revisa spam si no lo ves).</p>
+
+        <div class="mm-guest-save" id="ped-save"></div>
+
+        <h2 class="mm-h2" style="margin-top:var(--mm-space-8)">Tus archivos</h2>
+        <div id="ped-files" style="margin-top:var(--mm-space-4)"></div>
+        <p class="mm-body" style="font-size:13px; margin-top:var(--mm-space-6)">Guarda esta página o el correo: este enlace es tu acceso mientras no tengas cuenta. ¿Problemas con tu descarga? <a href="contacto.html">Escríbenos</a>.</p>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<!--#footer-->
+<footer class="mm-footer">
+  <div class="mm-container">
+    <ul class="mm-navlinks">
+      <li><a href="index.html">Nosotros</a></li>
+      <li><a href="descargables.html">Descargables</a></li>
+      <li><a href="consultoria.html">Consultoría</a></li>
+      <li><a href="contacto.html">Contacto</a></li>
+    </ul>
+    <ul class="mm-navlinks mm-footer-legal-links">
+      <li><a href="privacidad.html">Aviso de privacidad</a></li>
+      <li><a href="terminos.html">Términos y reembolsos</a></li>
+    </ul>
+    <p class="mm-social" data-mm-social hidden></p>
+    <p class="mm-footer-legal">Copyright © <span data-mm-year>2026</span> Grupo MixMix. Todos los derechos reservados.</p>
+  </div>
+</footer>
+<!--/#footer-->
+
+<script src="js/config.js"></script>
+<script src="js/catalog.js"></script>
+<script src="js/mm.js"></script>
+<script src="js/store.js"></script>
+<script src="js/site.js"></script>
+<script>
+(function () {
+  if (window.MM_CONFIG && !window.MM_CONFIG.store) { location.replace("descargables.html"); return; }
+  var S = window.MMStore, M = window.MM;
+  var params = new URLSearchParams(location.search);
+  var ref = params.get("pedido") || "", tok = params.get("t") || "", sid = params.get("session_id") || "";
+  var live = S.live();
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+  function show(which) { ["wait", "bad", "ok"].forEach(function (k) { $("ped-" + k).hidden = k !== which; }); }
+  var MSG = {
+    weak_password: "La contraseña debe tener al menos 8 caracteres.",
+    account_exists: "Ya hay una cuenta con ese correo: inicia sesión para guardar esta compra.",
+    already_saved: "Esta compra ya está guardada en otra cuenta.",
+    network: "No pudimos conectar con el servidor. Intenta de nuevo.",
+    server: "El servidor no está listo todavía. Intenta más tarde."
+  };
+
+  /* caja "guarda esta compra en tu cuenta" */
+  function renderSave(d) {
+    var box = $("ped-save");
+    var next = "pedido.html?pedido=" + encodeURIComponent(ref) + "&t=" + encodeURIComponent(tok);
+    var head = '<p class="mm-label" style="color:var(--mm-stone-onblack)">Acceso para siempre</p>' +
+      '<h2 class="mm-h2" style="color:var(--mm-bone); margin:4px 0">Crea tu cuenta y vuelve a descargar cuando quieras</h2>';
+    if (d.saved) {
+      box.innerHTML = '<p class="mm-label" style="color:var(--mm-stone-onblack)">Guardada</p><h2 class="mm-h2" style="color:var(--mm-bone); margin:4px 0">Esta compra ya está en tu cuenta</h2>' +
+        '<p class="mm-body" style="color:var(--mm-stone-onblack)">La encuentras siempre en «Mis compras».</p><a class="mm-btn" href="cuenta.html#compras">Ir a mi cuenta</a>';
+      return;
+    }
+    if (d.logged_in) {
+      box.innerHTML = head + '<p class="mm-body" style="color:var(--mm-stone-onblack)">Ya iniciaste sesión como <strong>' + esc(d.logged_in.email) + '</strong>. Guarda esta compra en tu cuenta para tenerla siempre a la mano.</p>' +
+        '<p id="ped-err" class="mm-cart-warn" role="alert" hidden></p><button type="button" class="mm-btn" id="ped-claim">Guardar esta compra en mi cuenta</button>';
+      $("ped-claim").addEventListener("click", function () { doClaim(this, "", ""); });
+      return;
+    }
+    if (d.account_exists) {
+      box.innerHTML = head + '<p class="mm-body" style="color:var(--mm-stone-onblack)">Ya existe una cuenta con <strong>' + esc(d.email) + '</strong>. Inicia sesión y vuelve aquí para guardar esta compra en ella.</p>' +
+        '<a class="mm-btn" href="cuenta.html?next=' + encodeURIComponent(next) + '">Iniciar sesión</a>';
+      return;
+    }
+    box.innerHTML = head + '<p class="mm-body" style="color:var(--mm-stone-onblack)">Con una cuenta (con tu correo <strong>' + esc(d.email) + '</strong>) esta compra y las que hagas después quedan guardadas y puedes descargarlas siempre, desde cualquier dispositivo.</p>' +
+      '<form id="ped-form" novalidate class="mm-guest-form">' +
+      '<label class="mm-field">Nombre<input class="mm-search" type="text" id="ped-name" autocomplete="name" placeholder="Tu nombre"></label>' +
+      (live ? '<label class="mm-field">Contraseña<input class="mm-search" type="password" id="ped-pass" autocomplete="new-password" minlength="8" placeholder="Mínimo 8 caracteres"></label>' : '') +
+      '<p id="ped-err" class="mm-cart-warn" role="alert" hidden></p>' +
+      '<button type="submit" class="mm-btn" id="ped-create">Crear mi cuenta y guardar esta compra</button></form>' +
+      '<p class="mm-body" style="color:var(--mm-stone-onblack); font-size:13px">Si prefieres, ignora esto: tus archivos siguen disponibles en esta página y en el correo.</p>';
+    $("ped-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      doClaim($("ped-create"), $("ped-name").value, live ? $("ped-pass").value : "");
+    });
+  }
+  function bad(msg) { var e = $("ped-err"); if (e) { e.textContent = msg; e.hidden = false; } }
+  function doClaim(btn, name, pass) {
+    if (live && pass !== undefined && !$("ped-claim") && pass.length < 8) { bad(MSG.weak_password); return; }
+    btn.disabled = true;
+    if (!live) {   /* demo: la compra ya está guardada bajo ese correo; solo se abre la sesión */
+      var r = S.login(demo.email, name);
+      location.href = "cuenta.html?pedido=" + encodeURIComponent(ref) + "#compras";
+      return;
+    }
+    S.claim(ref, tok, name, pass).then(function (d) {
+      btn.disabled = false;
+      if (d && d.ok) { location.href = "cuenta.html?pedido=" + encodeURIComponent(ref) + "#compras"; return; }
+      bad(MSG[d && d.error] || MSG.server);
+    });
+  }
+
+  function renderOrder(d) {
+    $("ped-ref").textContent = d.ref;
+    $("ped-total").textContent = M.money(d.total);
+    $("ped-email").textContent = d.email;
+    M.setDownloadAuth(live ? d.ref : "", live ? tok : "");
+    var box = $("ped-files");
+    box.innerHTML = "";
+    d.lines.forEach(function (l) {
+      var p = M.byId[l.id];
+      if (!(p && p.cat && M.filesOf(p).length === 1)) {
+        var h = document.createElement("p");
+        h.className = "mm-order-line";
+        h.innerHTML = '<strong>' + esc(l.title) + '</strong> <span class="mm-cart-kind">' + M.money(l.price) + '</span>';
+        box.appendChild(h);
+      }
+      if (p) box.appendChild(M.downloadsFor(p));
+      else box.appendChild(Object.assign(document.createElement("p"), { className: "mm-body", textContent: "Este producto ya no está en el catálogo; escríbenos y te lo enviamos." }));
+    });
+    renderSave(d);
+    show("ok");
+  }
+
+  var demo = null;
+  if (!live) {
+    demo = S.demoOrder(ref);
+    if (!demo) { show("bad"); return; }
+    renderOrder({ ref: demo.order.id, email: demo.email, total: demo.order.total, lines: demo.order.lines, saved: false, account_exists: false, logged_in: S.user() });
+    return;
+  }
+
+  if (!/^MM-[A-F0-9]{8}$/.test(ref) || !/^[a-f0-9]{48}$/.test(tok)) { show("bad"); return; }
+  var tries = 0;
+  (function check() {
+    S.guestOrder(ref, tok, sid).then(function (d) {
+      if (d && d.ok && d.status === "paid") { S.clear(); renderOrder(d); return; }
+      if (d && d.ok === false && d.error === "order_not_found") { show("bad"); return; }
+      if (++tries < 10) { setTimeout(check, 2000); return; }
+      $("ped-wait-msg").innerHTML = 'Todavía no vemos tu pago. Si ya pagaste, espera un minuto y <a href="">recarga esta página</a>; si no se resuelve, <a href="contacto.html">escríbenos</a> con tu número de pedido <strong>' + esc(ref) + '</strong>.';
+    });
+  })();
+})();
+</script>
+</body>
+</html>

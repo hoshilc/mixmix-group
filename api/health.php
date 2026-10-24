@@ -36,6 +36,7 @@ if ($out['config']) {
         $out['tables'] = array('users' => (bool)$pdo->query("SHOW TABLES LIKE 'users'")->fetch(), 'orders' => (bool)$pdo->query("SHOW TABLES LIKE 'orders'")->fetch());
         $out['tables']['password_resets'] = (bool)$pdo->query("SHOW TABLES LIKE 'password_resets'")->fetch();
         $out['users_google_column'] = (bool)$pdo->query("SHOW COLUMNS FROM users LIKE 'google_sub'")->fetch();
+        $out['orders_guest_columns'] = (bool)$pdo->query("SHOW COLUMNS FROM orders LIKE 'guest_email'")->fetch() && (bool)$pdo->query("SHOW COLUMNS FROM orders LIKE 'mailed_at'")->fetch();
     } catch (Exception $e) { $out['db'] = false; }
 }
 json_out($out);

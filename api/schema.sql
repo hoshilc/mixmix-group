@@ -12,7 +12,8 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS orders (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   ref VARCHAR(20) NOT NULL UNIQUE,
-  user_id INT UNSIGNED NOT NULL,
+  user_id INT UNSIGNED NULL,              -- NULL = compra sin cuenta (invitado), identificada por guest_email
+  guest_email VARCHAR(190) NULL,
   status ENUM('pending','paid','expired') NOT NULL DEFAULT 'pending',
   lines_json MEDIUMTEXT NOT NULL,
   discount INT NOT NULL DEFAULT 0,
@@ -20,6 +21,8 @@ CREATE TABLE IF NOT EXISTS orders (
   stripe_session_id VARCHAR(255) NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   paid_at DATETIME NULL,
+  mailed_at DATETIME NULL,
+  KEY idx_orders_guest (guest_email),
   KEY idx_orders_user (user_id),
   KEY idx_orders_session (stripe_session_id),
   CONSTRAINT fk_orders_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE

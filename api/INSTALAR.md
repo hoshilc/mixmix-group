@@ -38,3 +38,8 @@ Cambia `sk_test_…` por la clave real, crea el webhook en el modo real (nuevo `
    - Pantalla de consentimiento: nombre "Grupo MixMix", correo de soporte y dominio `grupomixmix.com`.
    - Copia el **ID de cliente** (termina en `.apps.googleusercontent.com`; no es secreto) en `privado/config.php` → `'google_client_id'`.
 4. Comprobar en `api/health.php`: `tables.password_resets: true`, `users_google_column: true`, `google_client_id: true`.
+## 8. Comprar sin iniciar sesión (migración 3)
+1. phpMyAdmin (base de la tienda) → **Importar** → `api/migracion-3.sql`. **Una sola vez** (si la base se creó con el `schema.sql` más reciente, ya trae todo). Sin esto, el pago como invitado responde "migration_needed".
+2. Comprobar en `api/health.php`: `orders_guest_columns: true`.
+3. Cómo funciona: el invitado solo da su correo. Al volver de Stripe cae en `pedido.html` (con un código personal en el enlace, calculado con el secreto del webhook; no se guarda en la base) donde descarga sus archivos, y se le manda el mismo enlace por correo. Ahí mismo puede crear su cuenta con ese correo y la compra queda guardada. Si entra con Google o restablece su contraseña con ese correo, sus compras como invitado se agregan solas.
+4. Si cambias `stripe_webhook_secret` (p. ej. al pasar a modo real), los enlaces de compras anteriores como invitado dejan de funcionar; esas personas pueden entrar con Google o recuperar contraseña para recibirlas en su cuenta.

@@ -666,3 +666,14 @@ h2.mm-acc-title { margin: 0; }
   .mm-toast { bottom: 82px; left: 14px; right: 14px; max-width: none; transform: translate(0, 220%); }
   .mm-toast.is-on { transform: translate(0, 0); }
 }
+/* ===== Compra sin cuenta ===== */
+.mm-guest-note { margin: var(--mm-space-4) 0 0; padding: var(--mm-space-4); background: var(--mm-marble-deep); border-left: 4px solid var(--mm-gold); }
+.mm-guest-note p { margin: 0 0 var(--mm-space-3); font-family: var(--mm-font-body); font-size: 14px; line-height: 1.5; }
+.mm-guest-note .mm-btn { width: 100%; }
+#guest-box .mm-field { margin-top: var(--mm-space-4); }
+#guest-box .mm-cart-warn { margin: var(--mm-space-2) 0 0; }
+.mm-guest-save { margin-top: var(--mm-space-6); padding: clamp(20px,3vw,32px); background: var(--mm-black); border: var(--mm-rule) solid var(--mm-gold); max-width: 640px; }
+.mm-guest-save .mm-btn { background: var(--mm-gold); border-color: var(--mm-gold); color: var(--mm-black); }
+.mm-guest-save .mm-btn:hover { background: var(--mm-gold-soft); border-color: var(--mm-gold-soft); }
+.mm-guest-save .mm-field { color: var(--mm-bone); }
+.mm-guest-form { display: grid; gap: var(--mm-space-4); margin: var(--mm-space-4) 0; }

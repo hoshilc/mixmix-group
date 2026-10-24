@@ -200,7 +200,7 @@
   function afterAuth() {
     $("auth-error").hidden = true;
     var next = params.get("next");
-    if (next === "carrito.html" || next === "descargables.html") { location.href = next; return; }
+    if (next === "carrito.html" || next === "descargables.html" || /^pedido\.html\?pedido=MM-[A-F0-9]{8}&t=[a-f0-9]{48}$/.test(next || "")) { location.href = next; return; }
     render();
   }
 

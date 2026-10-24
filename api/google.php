@@ -33,6 +33,7 @@ try {
             $usr = array('id' => (int)$pdo->lastInsertId(), 'name' => $name, 'email' => $email);
         }
     }
+    adopt_guest_orders($usr['id'], $email);   /* el correo lo verificó Google: hereda lo que compró sin cuenta */
     start_session();
     session_regenerate_id(true);
     $_SESSION['uid'] = (int)$usr['id'];
