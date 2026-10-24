@@ -646,3 +646,8 @@ h2.mm-acc-title { margin: 0; }
 .mm-audit-grid .mm-tag { align-self: flex-start; margin: var(--mm-space-3) 0 0; }
 
 .mm-expert-bio { margin: var(--mm-space-3) 0 0; font-family: var(--mm-font-body); font-size: 14px; line-height: 1.55; color: var(--mm-ink-soft); }
+
+/* ===== Expertos: foto cuadrada ===== */
+.mm-expert-photo { display: block; width: 132px; height: 132px; object-fit: cover; object-position: 50% 20%; border: var(--mm-rule) solid var(--mm-black); margin: 0 0 var(--mm-space-4); background: var(--mm-marble-deep); }
+.mm-expert-photo-ph { display: flex; align-items: center; justify-content: center; background: var(--mm-black); border-color: var(--mm-black); }
+.mm-expert-photo-ph span { font-family: var(--mm-font-logo); font-size: 44px; color: var(--mm-gold); line-height: 1; letter-spacing: 0.04em; }
