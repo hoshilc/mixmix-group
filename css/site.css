@@ -644,3 +644,5 @@ h2.mm-acc-title { margin: 0; }
   .mm-header .mm-header-util { margin-left: 0; }
 }
 .mm-audit-grid .mm-tag { align-self: flex-start; margin: var(--mm-space-3) 0 0; }
+
+.mm-expert-bio { margin: var(--mm-space-3) 0 0; font-family: var(--mm-font-body); font-size: 14px; line-height: 1.55; color: var(--mm-ink-soft); }
