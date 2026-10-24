@@ -636,3 +636,10 @@ h2.mm-acc-title { margin: 0; }
   .mm-header .mm-header-util { order: 3; margin-left: 0; }
   .mm-header nav { order: 9; }
 }
+/* ===== Header: el icono queda pegado a "Contacto", como un enlace más del menú, al final de la fila ===== */
+.mm-header .mm-header-util { margin-left: var(--mm-space-2); gap: var(--mm-space-3); }   /* + 16 px de separación del contenedor = 24 px, igual que entre enlaces */
+.mm-header .mm-header-util a { width: 24px; height: 40px; }
+.mm-header .mm-header-util .mm-cart-count { right: -6px; }
+@media (max-width: 760px) {
+  .mm-header .mm-header-util { margin-left: 0; }
+}
