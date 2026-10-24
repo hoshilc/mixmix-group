@@ -176,7 +176,7 @@
   function changed(id, what) {
     paintHeader();
     document.dispatchEvent(new CustomEvent("mmstore", { detail: { id: id, what: what } }));
-    if (what === "add") toast(id);
+    if (what === "add") { toast(id); bumpFab(); }
   }
 
   var toastTimer;
@@ -210,9 +210,36 @@
       var badge = cart.querySelector(".mm-cart-count");
       if (badge) { badge.textContent = n; badge.hidden = !n; }
     }
+    fabPaint();
   }
-  function accountOn() { return !(window.MM_CONFIG) || !!window.MM_CONFIG.account; }
+  function fabPaint() {
+    var fab = document.querySelector(".mm-cart-fab");
+    if (!fab) return;
+    var n = read(K_CART, []).length;
+    fab.setAttribute("aria-label", "Carrito" + (n ? ", " + n + (n === 1 ? " producto" : " productos") : ""));
+    var b = fab.querySelector(".mm-cart-count");
+    if (b) { b.textContent = n; b.hidden = !n; }
+  }
+  function bumpFab() {
+    var fab = document.querySelector(".mm-cart-fab");
+    if (!fab) return;
+    fab.classList.remove("is-bump");
+    void fab.offsetWidth;
+    fab.classList.add("is-bump");
+  }
+  function injectFab() {
+    var here = location.pathname.split("/").pop();
+    if (!storeOn() || document.querySelector(".mm-cart-fab") || here === "carrito.html" || here === "gracias.html") return;
+    var a = document.createElement("a");
+    a.className = "mm-cart-fab";
+    a.href = "carrito.html";
+    a.setAttribute("aria-label", "Carrito");
+    a.innerHTML = '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span class="mm-cart-count" hidden>0</span>';
+    document.body.appendChild(a);
+    fabPaint();
+  }  function accountOn() { return !(window.MM_CONFIG) || !!window.MM_CONFIG.account; }
   function injectHeader() {
+    injectFab();
     var box = document.querySelector(".mm-header .mm-container");
     var util = box && box.querySelector(".mm-header-util");
     if (!box) return;
@@ -227,10 +254,6 @@
     util.hidden = !accountOn();                    /* fuera del sitio real (vista previa, local) el icono solo sale con ?demo=1 */
     var acct = util.querySelector("[data-mm-account]");
     if (acct && here === "cuenta.html") acct.setAttribute("aria-current", "page");
-    if (storeOn() && !util.querySelector("[data-mm-cartlink]")) {
-      var bagSvg = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>';
-      util.insertAdjacentHTML("beforeend", '<a href="carrito.html" data-mm-cartlink aria-label="Carrito"' + cur("carrito.html") + '>' + bagSvg + '<span class="mm-cart-count" hidden>0</span></a>');
-    }
     paintHeader();
   }
   window.MMStore = S;
