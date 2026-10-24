@@ -643,3 +643,4 @@ h2.mm-acc-title { margin: 0; }
 @media (max-width: 760px) {
   .mm-header .mm-header-util { margin-left: 0; }
 }
+.mm-audit-grid .mm-tag { align-self: flex-start; margin: var(--mm-space-3) 0 0; }
