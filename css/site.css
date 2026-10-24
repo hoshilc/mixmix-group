@@ -677,3 +677,16 @@ h2.mm-acc-title { margin: 0; }
 .mm-guest-save .mm-btn:hover { background: var(--mm-gold-soft); border-color: var(--mm-gold-soft); }
 .mm-guest-save .mm-field { color: var(--mm-bone); }
 .mm-guest-form { display: grid; gap: var(--mm-space-4); margin: var(--mm-space-4) 0; }
+/* Expertos: siempre los tres en una fila, completos dentro de la pantalla (en móvil, foto arriba y texto centrado) */
+.mm-experts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 899px) {
+  .mm-experts .mm-cell { flex-direction: column; align-items: center; text-align: center; gap: var(--mm-space-3); padding: var(--mm-space-3); }
+  .mm-experts .mm-expert-photo { width: min(96px, 100%); height: auto; aspect-ratio: 1; }
+  .mm-experts .mm-expert-bio { display: none; }
+}
+@media (max-width: 599px) {
+  .mm-experts .mm-cell { padding: var(--mm-space-3) 6px; gap: 8px; }
+  .mm-experts .mm-expert-photo { width: min(72px, 100%); }
+  .mm-experts .mm-mentor-name { font-size: 12.5px; line-height: 1.2; overflow-wrap: anywhere; }
+  .mm-experts .mm-mentor-role { font-size: 11px; line-height: 1.25; }
+}
