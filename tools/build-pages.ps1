@@ -21,7 +21,7 @@ $footerTpl = (ReadU (Join-Path $root "partials\footer.html")).Trim()
 # que enlace del menu se marca como pagina actual
 $navKey = @{
   "index.html" = "index.html"; "descargables.html" = "descargables.html"; "consultoria.html" = "consultoria.html";
-  "asesoria-intensiva.html" = "consultoria.html"; "reingenieria-360.html" = "consultoria.html"; "contacto.html" = "contacto.html"
+  "asesoria-intensiva.html" = "consultoria.html"; "chef-adrian.html" = "index.html"; "reingenieria-360.html" = "consultoria.html"; "contacto.html" = "contacto.html"
 }
 $noindex = @("carrito.html", "cuenta.html", "gracias.html", "pedido.html")
 $sitemapPages = @()

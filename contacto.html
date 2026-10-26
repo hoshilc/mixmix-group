@@ -6,7 +6,7 @@
 <title>Contacto — Grupo MixMix</title>
 <meta name="description" content="Escríbenos o agenda una llamada gratis: consultoría, auditorías y descargables para tu restaurante.">
 <link rel="stylesheet" href="css/mixmix-brand/mixmix.css?v=3393207f">
-<link rel="stylesheet" href="css/site.css?v=de12f2ad">
+<link rel="stylesheet" href="css/site.css?v=24f2b714">
 <!--#meta-->
 <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="img/favicon-48.png" sizes="48x48" type="image/png">
@@ -161,6 +161,12 @@
       var m = document.getElementById("mensaje");
       if (!m.value) m.value = "Me interesa: " + q;
     }
+  }
+
+  /* ?con=adrian: llega desde la pagina del chef */
+  if (new URLSearchParams(location.search).get("con") === "adrian") {
+    var mm = document.getElementById("mensaje");
+    if (!mm.value) mm.value = "Me interesa trabajar con el chef Adrián Noverola (cocina).";
   }
 
   /* mensaje preparado desde la seleccion de manuales (descargables.html) */
