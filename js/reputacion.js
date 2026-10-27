@@ -27,6 +27,15 @@
     { name: "Emprendimiento 5", logo: "", url: "" }
   ];
 
+  /* logos de clientes: se muestran como una barra que se desplaza sola en bucle (data-mm="logos" data-set="clientes") */
+  var CLIENTES_LOGOS = [
+    { name: "Rostizados Sinaloa", logo: "img/logos/rostizados-sinaloa.png" },
+    { name: "Restaurante y Bar El Mesón de Don Jorge", logo: "img/logos/el-meson-de-don-jorge.png" },
+    { name: "El Ranchito Restaurante", logo: "img/logos/el-ranchito.png" },
+    { name: "RB To Go", logo: "img/logos/rb-to-go.png" },
+    { name: "El Playense Mariscos", logo: "img/logos/el-playense.png" }
+  ];
+
   var CLIENTES = [
     { name: "Nombre del cliente", role: "Cargo, Restaurante 1", logo: "", quote: "" },
     { name: "Nombre del cliente", role: "Cargo, Restaurante 2", logo: "", quote: "" },
@@ -61,11 +70,37 @@
   function toggleSection(root, show) {
     root.hidden = !show;
     var sec = root.closest("section[data-hide-empty]");
-    if (sec) sec.hidden = !show;
+    if (sec) sec.hidden = !sec.querySelector("[data-mm]:not([hidden])");   /* la sección se oculta solo si ninguno de sus bloques tiene contenido */
+  }
+
+  /* ---- barra de logos en bucle: la lista se repite varias veces y la pista se mueve el ancho de una copia ---- */
+  function marquee(root, list) {
+    root.innerHTML = "";
+    root.className = "mm-marquee";
+    var track = document.createElement("div");
+    track.className = "mm-marquee-track";
+    var COPIES = 4;   /* con 4 copias la pista siempre es más ancha que cualquier pantalla y el bucle no deja huecos */
+    track.style.setProperty("--mm-copies", COPIES);
+    for (var copy = 0; copy < COPIES; copy++) (function (copy) {
+      var group = document.createElement("ul");
+      group.className = "mm-marquee-group";
+      if (copy === 1) group.setAttribute("aria-hidden", "true");
+      list.forEach(function (item) {
+        var li = document.createElement("li");
+        var img = document.createElement("img");
+        img.src = item.logo; img.alt = copy === 0 ? item.name : ""; img.loading = "lazy"; img.width = 400; img.height = 240;
+        li.appendChild(img);
+        group.appendChild(li);
+      });
+      track.appendChild(group);
+    })(copy);
+    root.appendChild(track);
+    toggleSection(root, list.length > 0);
   }
 
   /* ---- emprendimientos: fila de logos ---- */
   document.querySelectorAll('[data-mm="logos"]').forEach(function (root) {
+    if (root.getAttribute("data-set") === "clientes") { marquee(root, CLIENTES_LOGOS.filter(function (i) { return has(i.logo); })); return; }
     var list = EMPRENDIMIENTOS.filter(function (i) { return SHOW_PH || has(i.logo); });
     root.className = "mm-logos";
     list.forEach(function (item) { root.appendChild(logoBox(item, "mm-logo-cell")); });

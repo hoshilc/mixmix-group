@@ -746,3 +746,19 @@ h2.mm-acc-title { margin: 0; }
 .mm-area-name { font-family: var(--mm-font-display); font-weight: 600; font-size: 11px; letter-spacing: var(--mm-track-label); text-transform: uppercase; color: var(--mm-stone-ink); }
 .mm-area-map a { font-family: var(--mm-font-display); font-weight: 800; font-size: 16px; color: var(--mm-black); text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
 .mm-area-map a:hover, .mm-area-map a:focus-visible { color: var(--mm-wine); }
+
+/* ===== Clientes: barra de logos que se desplaza sola en bucle ===== */
+.mm-marquee { margin-top: var(--mm-space-6); overflow: hidden; border-block: var(--mm-rule) solid var(--mm-black); background: var(--mm-white);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+.mm-marquee[hidden] { display: none; }
+.mm-marquee-track { display: flex; width: max-content; animation: mm-marquee 36s linear infinite; }
+.mm-marquee:hover .mm-marquee-track { animation-play-state: paused; }
+.mm-marquee-group { display: flex; flex: none; align-items: center; gap: clamp(24px, 5vw, 64px); margin: 0; padding: var(--mm-space-4) clamp(12px, 2.5vw, 32px); list-style: none; }
+.mm-marquee-group li { flex: none; }
+.mm-marquee-group img { display: block; height: clamp(64px, 9vw, 96px); width: auto; }
+@keyframes mm-marquee { from { transform: translateX(0); } to { transform: translateX(calc(-100% / var(--mm-copies, 2))); } }
+@media (prefers-reduced-motion: reduce) {
+  .mm-marquee { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
+  .mm-marquee-track { animation: none; }
+  .mm-marquee-group[aria-hidden="true"] { display: none; }
+}
