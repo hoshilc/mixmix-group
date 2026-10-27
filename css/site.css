@@ -775,3 +775,6 @@ h2.mm-acc-title { margin: 0; }
 .mm-logos .mm-logo-cell:not(.is-placeholder) img { width: 100%; height: auto; max-width: 100%; max-height: none; }
 /* Emprendimientos: logos sin recuadro, directamente sobre el fondo */
 .mm-logos .mm-logo-cell:not(.is-placeholder) { border: 0; background: transparent; aspect-ratio: auto; padding: var(--mm-space-3) var(--mm-space-4); }
+
+/* Lema destacado bajo el título de una sección (Mentores) */
+.mm-slogan { margin: var(--mm-space-2) 0 var(--mm-space-4); font-family: var(--mm-font-logo); font-weight: 400; font-size: clamp(30px, 5vw, 54px); line-height: 1; letter-spacing: 0.04em; text-transform: uppercase; color: var(--mm-wine); text-wrap: balance; }

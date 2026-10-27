@@ -60,7 +60,7 @@
     if (has(item.logo)) {
       /* logo a color desde el inicio (los de clientes, en cambio, van en la barra de un solo tono) */
       var img = document.createElement("img");
-      img.src = item.logo; img.alt = item.name; img.loading = "lazy"; img.width = 480; img.height = 300;
+      img.src = item.logo; img.alt = item.name; img.loading = "lazy"; img.width = 480; img.height = 340;
       wrap.appendChild(img);
     } else {
       wrap.innerHTML = '<span class="mm-logo-ph">Logo</span><span class="mm-logo-ph-name"></span>';
