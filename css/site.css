@@ -737,3 +737,12 @@ h2.mm-acc-title { margin: 0; }
 .mm-founder-sign { font-family: var(--mm-font-display) !important; font-weight: 600; font-size: 12px !important; letter-spacing: var(--mm-track-label); text-transform: uppercase; color: var(--mm-stone-ink); margin-top: var(--mm-space-4) !important; }
 .mm-founder-sign a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
 .mm-founder-sign a:hover, .mm-founder-sign a:focus-visible { color: var(--mm-black); }
+
+/* Expertos: bloque propio y mapa de quién trabaja cada área */
+.mm-experts-section { background: var(--mm-white); }
+.mm-experts-section .mm-cell { background: var(--mm-bone); }
+.mm-area-map { list-style: none; margin: var(--mm-space-3) 0 0; padding: var(--mm-rule); display: flex; flex-wrap: wrap; gap: var(--mm-rule); background: var(--mm-black); }
+.mm-area-map li { flex: 1 1 170px; display: grid; gap: 4px; padding: var(--mm-space-4); background: var(--mm-white); min-width: 0; }
+.mm-area-name { font-family: var(--mm-font-display); font-weight: 600; font-size: 11px; letter-spacing: var(--mm-track-label); text-transform: uppercase; color: var(--mm-stone-ink); }
+.mm-area-map a { font-family: var(--mm-font-display); font-weight: 800; font-size: 16px; color: var(--mm-black); text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+.mm-area-map a:hover, .mm-area-map a:focus-visible { color: var(--mm-wine); }
