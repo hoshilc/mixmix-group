@@ -20,11 +20,10 @@
   var SHOW_PH = !!C.showPlaceholders;
 
   var EMPRENDIMIENTOS = [
-    { name: "Emprendimiento 1", logo: "", url: "" },
-    { name: "Emprendimiento 2", logo: "", url: "" },
-    { name: "Emprendimiento 3", logo: "", url: "" },
-    { name: "Emprendimiento 4", logo: "", url: "" },
-    { name: "Emprendimiento 5", logo: "", url: "" }
+    { name: "Reyna Sabor Mexicano", logo: "img/logos/reyna-sabor-mexicano.png", url: "" },
+    { name: "Kruji Fiesta", logo: "img/logos/kruji-fiesta.png", url: "" },
+    { name: "El Rey Elote", logo: "img/logos/el-rey-elote.png", url: "" },
+    { name: "Las Tremendonas", logo: "img/logos/las-tremendonas.png", url: "" }
   ];
 
   /* logos de clientes: se muestran como una barra que se desplaza sola en bucle (data-mm="logos" data-set="clientes") */
@@ -59,9 +58,15 @@
     wrap.className = cls + (has(item.logo) ? "" : " is-placeholder");
     if (has(item.logo) && item.url) { wrap.href = item.url; wrap.target = "_blank"; wrap.rel = "noopener"; }
     if (has(item.logo)) {
-      var img = document.createElement("img");
-      img.src = item.logo; img.alt = item.name; img.loading = "lazy";
-      wrap.appendChild(img);
+      /* dos capas, igual que la barra de clientes: un solo tono por defecto y color al pasar el cursor */
+      var stack = document.createElement("span");
+      stack.className = "mm-logo-stack";
+      var mono = document.createElement("img");
+      mono.className = "mm-logo-mono"; mono.src = item.logo.replace(/.png$/, "-mono.png"); mono.alt = item.name; mono.loading = "lazy";
+      var color = document.createElement("img");
+      color.className = "mm-logo-color"; color.src = item.logo; color.alt = ""; color.loading = "lazy";
+      stack.appendChild(mono); stack.appendChild(color);
+      wrap.appendChild(stack);
     } else {
       wrap.innerHTML = '<span class="mm-logo-ph">Logo</span><span class="mm-logo-ph-name"></span>';
       wrap.querySelector(".mm-logo-ph-name").textContent = item.name;
@@ -109,7 +114,7 @@
   document.querySelectorAll('[data-mm="logos"]').forEach(function (root) {
     if (root.getAttribute("data-set") === "clientes") { marquee(root, CLIENTES_LOGOS.filter(function (i) { return has(i.logo); })); return; }
     var list = EMPRENDIMIENTOS.filter(function (i) { return SHOW_PH || has(i.logo); });
-    root.className = "mm-logos";
+    root.className = "mm-logos" + (list.length === 4 ? " mm-logos-4" : "");
     list.forEach(function (item) { root.appendChild(logoBox(item, "mm-logo-cell")); });
     toggleSection(root, list.length > 0);
   });
