@@ -30,6 +30,7 @@
   var CLIENTES_LOGOS = [
     { name: "Rostizados Sinaloa", logo: "img/logos/rostizados-sinaloa.png" },
     { name: "Las Piñas de Cholula", logo: "img/logos/las-pinas-de-cholula.png" },
+    { name: "DOBA 33", logo: "img/logos/doba-33.png" },
     { name: "Restaurante y Bar El Mesón de Don Jorge", logo: "img/logos/el-meson-de-don-jorge.png" },
     { name: "Iván Aguilera Eventos", logo: "img/logos/ivan-aguilera-eventos.png" },
     { name: "El Ranchito Restaurante", logo: "img/logos/el-ranchito.png" },
@@ -52,7 +53,7 @@
   ];
 
   /* versión de los logos: súbela cuando cambies una imagen sin cambiarle el nombre, para que los navegadores la descarguen de nuevo */
-  var LOGOS_V = "20261027b";
+  var LOGOS_V = "20261027c";
   function asset(p) { return p + "?v=" + LOGOS_V; }
 
   function has(s) { return !!(s && String(s).trim()); }
