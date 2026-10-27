@@ -58,15 +58,10 @@
     wrap.className = cls + (has(item.logo) ? "" : " is-placeholder");
     if (has(item.logo) && item.url) { wrap.href = item.url; wrap.target = "_blank"; wrap.rel = "noopener"; }
     if (has(item.logo)) {
-      /* dos capas, igual que la barra de clientes: un solo tono por defecto y color al pasar el cursor */
-      var stack = document.createElement("span");
-      stack.className = "mm-logo-stack";
-      var mono = document.createElement("img");
-      mono.className = "mm-logo-mono"; mono.src = item.logo.replace(/.png$/, "-mono.png"); mono.alt = item.name; mono.loading = "lazy";
-      var color = document.createElement("img");
-      color.className = "mm-logo-color"; color.src = item.logo; color.alt = ""; color.loading = "lazy";
-      stack.appendChild(mono); stack.appendChild(color);
-      wrap.appendChild(stack);
+      /* logo a color desde el inicio (los de clientes, en cambio, van en la barra de un solo tono) */
+      var img = document.createElement("img");
+      img.src = item.logo; img.alt = item.name; img.loading = "lazy"; img.width = 480; img.height = 300;
+      wrap.appendChild(img);
     } else {
       wrap.innerHTML = '<span class="mm-logo-ph">Logo</span><span class="mm-logo-ph-name"></span>';
       wrap.querySelector(".mm-logo-ph-name").textContent = item.name;

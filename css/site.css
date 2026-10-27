@@ -770,12 +770,8 @@ h2.mm-acc-title { margin: 0; }
 .mm-marquee-group li:hover .mm-logo-mono, .mm-marquee-group li:focus-within .mm-logo-mono { opacity: 0; }
 @media (prefers-reduced-motion: reduce) { .mm-marquee-group .mm-logo-mono, .mm-marquee-group .mm-logo-color { transition: none; } }
 
-/* Emprendimientos: cuatro logos por fila; mismo efecto de un solo tono y color al pasar el cursor */
+/* Emprendimientos: cuatro logos por fila, a color y sin recuadro */
 @media (min-width: 900px) { .mm-logos-4 { grid-template-columns: repeat(4, 1fr); } }
-.mm-logo-stack { display: grid; width: 100%; place-items: center; }
-.mm-logo-stack img { grid-area: 1 / 1; width: 100%; height: auto; max-width: 100%; max-height: none; transition: opacity 0.25s ease; }
-.mm-logo-stack .mm-logo-mono { opacity: 0.8; }
-.mm-logo-stack .mm-logo-color { opacity: 0; }
-.mm-logo-cell:hover .mm-logo-color, .mm-logo-cell:focus-within .mm-logo-color { opacity: 1; }
-.mm-logo-cell:hover .mm-logo-mono, .mm-logo-cell:focus-within .mm-logo-mono { opacity: 0; }
-@media (prefers-reduced-motion: reduce) { .mm-logo-stack img { transition: none; } }
+.mm-logos .mm-logo-cell:not(.is-placeholder) img { width: 100%; height: auto; max-width: 100%; max-height: none; }
+/* Emprendimientos: logos sin recuadro, directamente sobre el fondo */
+.mm-logos .mm-logo-cell:not(.is-placeholder) { border: 0; background: transparent; aspect-ratio: auto; padding: var(--mm-space-3) var(--mm-space-4); }
