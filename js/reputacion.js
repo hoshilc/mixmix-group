@@ -23,7 +23,8 @@
     { name: "Reyna Sabor Mexicano", logo: "img/logos/reyna-sabor-mexicano.png", url: "" },
     { name: "Kruji Fiesta", logo: "img/logos/kruji-fiesta.png", url: "" },
     { name: "El Rey Elote", logo: "img/logos/el-rey-elote.png", url: "" },
-    { name: "Las Tremendonas", logo: "img/logos/las-tremendonas.png", url: "" }
+    { name: "Las Tremendonas", logo: "img/logos/las-tremendonas.png", url: "" },
+    { name: "Los Frescos", logo: "img/logos/los-frescos.png", url: "" }
   ];
 
   /* logos de clientes: se muestran como una barra que se desplaza sola en bucle (data-mm="logos" data-set="clientes") */
@@ -53,7 +54,7 @@
   ];
 
   /* versión de los logos: súbela cuando cambies una imagen sin cambiarle el nombre, para que los navegadores la descarguen de nuevo */
-  var LOGOS_V = "20261027c";
+  var LOGOS_V = "20261027d";
   function asset(p) { return p + "?v=" + LOGOS_V; }
 
   function has(s) { return !!(s && String(s).trim()); }
@@ -114,7 +115,7 @@
   document.querySelectorAll('[data-mm="logos"]').forEach(function (root) {
     if (root.getAttribute("data-set") === "clientes") { marquee(root, CLIENTES_LOGOS.filter(function (i) { return has(i.logo); })); return; }
     var list = EMPRENDIMIENTOS.filter(function (i) { return SHOW_PH || has(i.logo); });
-    root.className = "mm-logos" + (list.length === 4 ? " mm-logos-4" : "");
+    root.className = "mm-logos" + (list.length === 4 || list.length === 5 ? " mm-logos-" + list.length : "");
     list.forEach(function (item) { root.appendChild(logoBox(item, "mm-logo-cell")); });
     toggleSection(root, list.length > 0);
   });

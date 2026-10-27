@@ -771,7 +771,8 @@ h2.mm-acc-title { margin: 0; }
 @media (prefers-reduced-motion: reduce) { .mm-marquee-group .mm-logo-mono, .mm-marquee-group .mm-logo-color { transition: none; } }
 
 /* Emprendimientos: cuatro logos por fila, a color y sin recuadro */
-@media (min-width: 900px) { .mm-logos-4 { grid-template-columns: repeat(4, 1fr); } }
+@media (min-width: 900px) { .mm-logos-4 { grid-template-columns: repeat(4, 1fr); } .mm-logos-5 { grid-template-columns: repeat(5, 1fr); } }
+@media (max-width: 899px) { .mm-logos-5 .mm-logo-cell:last-child { grid-column: 1 / -1; justify-self: center; width: 50%; } }
 .mm-logos .mm-logo-cell:not(.is-placeholder) img { width: 100%; height: auto; max-width: 100%; max-height: none; }
 /* Emprendimientos: logos sin recuadro, directamente sobre el fondo */
 .mm-logos .mm-logo-cell:not(.is-placeholder) { border: 0; background: transparent; aspect-ratio: auto; padding: var(--mm-space-3) var(--mm-space-4); }
