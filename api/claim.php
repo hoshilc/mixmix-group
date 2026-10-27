@@ -16,6 +16,7 @@ try {
 
     $u = current_user();
     if (!$u) {
+        if (!rate_limit('claim-ip|' . client_ip(), 20, 3600)) fail('too_many', 429);
         $pass = isset($in['password']) ? (string)$in['password'] : '';
         if (strlen($pass) < 8) fail('weak_password');
         $name = mb_substr(trim(isset($in['name']) ? (string)$in['name'] : ''), 0, 120);

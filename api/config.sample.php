@@ -23,6 +23,9 @@ return array(
     /* Inicio de sesión con Google: ID de cliente OAuth (termina en .apps.googleusercontent.com). Vacío = el botón no aparece. */
     'google_client_id' => '',
 
+    /* Clave para ver los pedidos en admin-pedidos.html (16 caracteres o mas, solo para ti). Vacia = la vista de pedidos queda apagada. */
+    'admin_key' => '',
+
     /* Correo de recuperación de contraseña. Por defecto usa mail() del hosting desde 'no-reply@tudominio'.
        Si los correos caen en spam, usa un buzón real del dominio con SMTP: */
     // 'mail_from' => 'no-reply@grupomixmix.com',

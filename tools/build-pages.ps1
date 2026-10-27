@@ -23,7 +23,7 @@ $navKey = @{
   "index.html" = "index.html"; "descargables.html" = "descargables.html"; "consultoria.html" = "consultoria.html";
   "asesoria-intensiva.html" = "consultoria.html"; "chef-adrian.html" = "index.html"; "reingenieria-360.html" = "consultoria.html"; "contacto.html" = "contacto.html"
 }
-$noindex = @("carrito.html", "cuenta.html", "gracias.html", "pedido.html")
+$noindex = @("carrito.html", "cuenta.html", "gracias.html", "pedido.html", "admin-pedidos.html")
 $sitemapPages = @()
 
 function Wrap($html, $name, $pattern, $fresh) {
@@ -104,6 +104,6 @@ $sm = New-Object System.Text.StringBuilder
 foreach ($u in ($sitemapPages | Sort-Object)) { [void]$sm.AppendLine("  <url><loc>$u</loc><lastmod>$today</lastmod></url>") }
 [void]$sm.AppendLine('</urlset>')
 WriteU (Join-Path $root "sitemap.xml") $sm.ToString()
-$rb = "User-agent: *`nAllow: /`nDisallow: /carrito.html`nDisallow: /cuenta.html`nDisallow: /gracias.html`nDisallow: /pedido.html`nDisallow: /api/`n`nSitemap: $site/sitemap.xml`n"
+$rb = "User-agent: *`nAllow: /`nDisallow: /carrito.html`nDisallow: /cuenta.html`nDisallow: /gracias.html`nDisallow: /pedido.html`nDisallow: /admin-pedidos.html`nDisallow: /api/`n`nSitemap: $site/sitemap.xml`n"
 WriteU (Join-Path $root "robots.txt") $rb
 Write-Host ("sitemap.xml y robots.txt  (sitio: " + $site + ")")

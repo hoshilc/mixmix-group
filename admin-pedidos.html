@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pedidos — Grupo MixMix</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<link rel="stylesheet" href="css/mixmix-brand/mixmix.css?v=3393207f">
+<link rel="stylesheet" href="css/site.css?v=0607c61b">
+<!--#meta-->
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="img/favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<meta name="theme-color" content="#111110">
+<!--/#meta-->
+</head>
+<body>
+<a class="mm-skip" href="#content">Ir al contenido</a>
+
+<!--#header-->
+<header class="mm-header">
+  <div class="mm-container">
+    <a class="mm-logo" href="index.html"><img class="mm-logo-img" src="img/logo.png" alt="MixMix, inicio"></a>
+    <div class="mm-header-util"><a href="cuenta.html" data-mm-account aria-label="Mi cuenta" title="Mi cuenta"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v2"/></svg></a></div>
+    <button type="button" class="mm-menu-btn" aria-expanded="false" aria-controls="mm-nav">Menú</button>
+    <nav id="mm-nav" aria-label="Principal">
+      <ul class="mm-navlinks">
+        <li><a href="index.html">Nosotros</a></li>
+        <li><a href="descargables.html">Descargables</a></li>
+        <li><a href="consultoria.html">Consultoría</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<!--/#header-->
+
+<main id="content">
+  <section class="mm-section">
+    <div class="mm-container">
+      <p class="mm-label mm-label-accent">Solo para el dueño</p>
+      <h1 class="mm-display" style="font-size:clamp(30px,5vw,56px); color:var(--mm-black)">PEDIDOS</h1>
+
+      <form id="key-form" class="mm-adm-key" novalidate>
+        <label class="mm-field">Clave de administrador
+          <input class="mm-search" type="password" id="key" autocomplete="off" placeholder="La clave admin_key de privado/config.php">
+        </label>
+        <button type="submit" class="mm-btn" id="key-btn">Ver pedidos</button>
+      </form>
+      <p id="adm-err" class="mm-cart-warn" role="alert" hidden></p>
+
+      <div id="adm" hidden>
+        <p class="mm-demo-note" id="adm-mode"></p>
+        <div class="mm-adm-stats" id="adm-stats"></div>
+
+        <div class="mm-adm-tools">
+          <input class="mm-search" type="search" id="adm-q" placeholder="Buscar por correo, nombre, pedido o producto" aria-label="Buscar pedidos">
+          <div class="mm-filter-bar" id="adm-filter" style="margin:0">
+            <button type="button" class="mm-filter-btn active" data-st="all">Todos</button>
+            <button type="button" class="mm-filter-btn" data-st="paid">Pagados</button>
+            <button type="button" class="mm-filter-btn" data-st="pending">Pendientes</button>
+            <button type="button" class="mm-filter-btn" data-st="expired">Vencidos</button>
+          </div>
+          <button type="button" class="mm-link-btn" id="adm-refresh">Actualizar</button>
+        </div>
+
+        <div class="mm-adm-wrap"><table class="mm-adm-table" id="adm-table"><thead><tr>
+          <th>Pedido</th><th>Fecha</th><th>Cliente</th><th>Compra</th><th>Total</th><th>Estado</th>
+        </tr></thead><tbody></tbody></table></div>
+        <p class="mm-body" id="adm-empty" style="font-size:14px" hidden>No hay pedidos con ese filtro.</p>
+        <p class="mm-body" style="font-size:13px">Se muestran los últimos 300 pedidos. Los pendientes que llevan más de 2 días sin pagarse se marcan como vencidos solos.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!--#footer-->
+<footer class="mm-footer">
+  <div class="mm-container">
+    <ul class="mm-navlinks">
+      <li><a href="index.html">Nosotros</a></li>
+      <li><a href="descargables.html">Descargables</a></li>
+      <li><a href="consultoria.html">Consultoría</a></li>
+      <li><a href="contacto.html">Contacto</a></li>
+    </ul>
+    <ul class="mm-navlinks mm-footer-legal-links">
+      <li><a href="privacidad.html">Aviso de privacidad</a></li>
+      <li><a href="terminos.html">Términos y reembolsos</a></li>
+    </ul>
+    <p class="mm-social" data-mm-social hidden></p>
+    <p class="mm-footer-legal">Copyright © <span data-mm-year>2026</span> Grupo MixMix. Todos los derechos reservados.</p>
+  </div>
+</footer>
+<!--/#footer-->
+
+<script src="js/config.js?v=c84df2de"></script>
+<script>
+(function () {
+  var C = window.MM_CONFIG || {};
+  var KEY_STORE = "mm_adm_key";
+  var data = null, filter = "all", q = "";
+  function $(id) { return document.getElementById(id); }
+  function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
+  function money(n) { return "$" + Number(n).toLocaleString("es-MX") + " MXN"; }
+  function fmt(ts) { return new Date(ts * 1000).toLocaleString("es-MX", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }); }
+  var ERR = {
+    bad_key: "Esa clave no es correcta.",
+    admin_not_configured: "Falta la clave: agrega 'admin_key' (de 16 caracteres o más) en privado/config.php.",
+    too_many: "Demasiados intentos. Espera unos minutos.",
+    network: "No pudimos conectar con el servidor.",
+    server: "El servidor no respondió bien. Revisa que la base de datos esté lista."
+  };
+  function getKey() { try { return sessionStorage.getItem(KEY_STORE) || ""; } catch (e) { return ""; } }
+  function setKey(k) { try { if (k) sessionStorage.setItem(KEY_STORE, k); else sessionStorage.removeItem(KEY_STORE); } catch (e) { /* sin almacenamiento */ } }
+
+  function load(key) {
+    var btn = $("key-btn"); btn.disabled = true;
+    return fetch((C.api || "api/") + "admin_orders.php", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ key: key }) })
+      .then(function (r) { return r.json().catch(function () { return { ok: false, error: "server" }; }); })
+      .catch(function () { return { ok: false, error: "network" }; })
+      .then(function (d) {
+        btn.disabled = false;
+        var err = $("adm-err");
+        if (!d || !d.ok) {
+          err.textContent = ERR[d && d.error] || ERR.server; err.hidden = false;
+          if (d && d.error === "bad_key") setKey("");
+          $("adm").hidden = true; $("key-form").hidden = false;
+          return;
+        }
+        err.hidden = true; setKey(key); data = d;
+        $("key-form").hidden = true; $("adm").hidden = false;
+        render();
+      });
+  }
+
+  function render() {
+    $("adm-mode").textContent = data.mode === "test" ? "Stripe en modo de prueba: estos pedidos no son cobros reales." : "Stripe en modo real.";
+    var s = data.summary, st = $("adm-stats"); st.textContent = "";
+    [["Ventas pagadas", money(s.paid_total), s.paid + (s.paid === 1 ? " pedido" : " pedidos")],
+     ["Últimos 30 días", money(s.last30), "pagado"],
+     ["Pendientes de pago", String(s.pending), "sin cobrar todavía"],
+     ["Cuentas registradas", String(data.users), "clientes con cuenta"]].forEach(function (x) {
+      var b = el("div", "mm-adm-stat"); b.appendChild(el("b", null, x[1])); b.appendChild(el("span", null, x[0])); b.appendChild(el("small", null, x[2])); st.appendChild(b);
+    });
+    var body = $("adm-table").tBodies[0]; body.textContent = "";
+    var list = data.orders.filter(function (o) {
+      if (filter !== "all" && o.status !== filter) return false;
+      if (q) { var hay = (o.ref + " " + o.who + " " + o.name + " " + o.items.join(" ")).toLowerCase(); if (hay.indexOf(q) < 0) return false; }
+      return true;
+    });
+    $("adm-empty").hidden = list.length > 0;
+    list.forEach(function (o) {
+      var tr = document.createElement("tr");
+      tr.appendChild(el("td", null, o.ref));
+      tr.appendChild(el("td", null, fmt(o.paid || o.created)));
+      var who = el("td"); who.appendChild(el("span", null, o.who || "—"));
+      who.appendChild(el("small", "mm-adm-sub", (o.name ? o.name + " · " : "") + o.kind));
+      tr.appendChild(who);
+      var it = el("td"); o.items.forEach(function (t) { it.appendChild(el("div", null, t)); });
+      if (o.discount > 0) it.appendChild(el("small", "mm-adm-sub", "Incluye descuento por volumen de " + money(o.discount)));
+      tr.appendChild(it);
+      tr.appendChild(el("td", "mm-adm-num", money(o.total)));
+      var stc = el("td"); stc.appendChild(el("span", "mm-adm-pill is-" + o.status, { paid: "Pagado", pending: "Pendiente", expired: "Vencido" }[o.status] || o.status));
+      tr.appendChild(stc);
+      body.appendChild(tr);
+    });
+  }
+
+  $("key-form").addEventListener("submit", function (e) { e.preventDefault(); var k = $("key").value.trim(); if (k) load(k); });
+  $("adm-refresh").addEventListener("click", function () { load(getKey()); });
+  $("adm-q").addEventListener("input", function () { q = this.value.trim().toLowerCase(); if (data) render(); });
+  $("adm-filter").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-st]"); if (!b) return;
+    filter = b.getAttribute("data-st");
+    document.querySelectorAll("#adm-filter [data-st]").forEach(function (x) { x.classList.toggle("active", x === b); });
+    if (data) render();
+  });
+  var saved = getKey();
+  if (saved) load(saved);
+})();
+</script>
+</body>
+</html>

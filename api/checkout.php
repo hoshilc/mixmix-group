@@ -10,6 +10,13 @@ if (!$u) {
     if (!filter_var($guestEmail, FILTER_VALIDATE_EMAIL) || strlen($guestEmail) > 190) fail('invalid_email');
 }
 $ids = (isset($in['ids']) && is_array($in['ids'])) ? array_slice($in['ids'], 0, 200) : array();
+/* límites: cada pago abre una sesión en Stripe, así que se frena a quien intente muchos seguidos */
+if ($u) {
+    if (!rate_limit('co-user|' . $u['id'], 20, 3600)) fail('too_many', 429);
+} else {
+    if (!rate_limit('co-ip|' . client_ip(), 30, 3600) || !rate_limit('co-mail|' . $guestEmail, 6, 3600)) fail('too_many', 429);
+}
+expire_old_pending();
 try {
     $pdo = db();
     $cfg = config();

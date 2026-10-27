@@ -272,29 +272,51 @@ function order_products($o) {
     if (is_array($lines)) foreach ($lines as $l) if (isset($cat['byId'][$l['id']])) $out[$l['id']] = $cat['byId'][$l['id']];
     return $out;
 }
-/* después de confirmar un pago: manda UNA vez el correo con el enlace a los archivos si fue compra sin cuenta */
+/* después de confirmar un pago: manda UNA vez el correo de confirmación.
+   Compra sin cuenta: con el enlace personal a los archivos. Compra con cuenta: con la liga a «Mis compras». */
 function after_paid($sessionId) {
     $pdo = db();
     try {
-        $st = $pdo->prepare("SELECT id, ref, guest_email, total FROM orders WHERE stripe_session_id = ? AND status = 'paid' AND guest_email IS NOT NULL AND mailed_at IS NULL");
+        $st = $pdo->prepare("SELECT o.id, o.ref, o.user_id, o.guest_email, o.total, o.lines_json, u.email AS user_email, u.name AS user_name FROM orders o LEFT JOIN users u ON u.id = o.user_id WHERE o.stripe_session_id = ? AND o.status = 'paid' AND o.mailed_at IS NULL");
         $st->execute(array($sessionId));
         $o = $st->fetch();
     } catch (PDOException $e) { error_log('after_paid (¿falta migracion-3?): ' . $e->getMessage()); return; }   /* nunca debe romper la confirmación del pago */
     if (!$o) return;
+    $to = $o['user_id'] !== null ? $o['user_email'] : $o['guest_email'];
+    if (!$to) return;
     $claim = $pdo->prepare('UPDATE orders SET mailed_at = UTC_TIMESTAMP() WHERE id = ? AND mailed_at IS NULL');
     $claim->execute(array($o['id']));
     if ($claim->rowCount() !== 1) return;
-    $link = guest_link($o['ref']);
+    $cfg = config();
+    $esc = function ($s) { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); };
+    /* resumen de lo comprado */
+    $items = ''; $itemsText = '';
+    $lines = json_decode($o['lines_json'], true);
+    if (is_array($lines)) foreach ($lines as $l) {
+        if (!isset($l['title'])) continue;
+        $items .= '<li>' . $esc($l['title']) . '</li>';
+        $itemsText .= '- ' . $l['title'] . "\n";
+    }
+    $total = '$' . number_format((int)$o['total']) . ' MXN';
+    $isGuest = $o['user_id'] === null;
+    $link = $isGuest ? guest_link($o['ref']) : $cfg['site_url'] . '/cuenta.html#compras';
+    $btn = $isGuest ? 'Descargar mis archivos' : 'Ir a mis compras';
+    $intro = $isGuest ? 'Descarga tus archivos aquí:' : 'Tus archivos ya están en tu cuenta. Entra y descárgalos aquí:';
+    $foot = $isGuest
+        ? 'Guarda este correo: el enlace es personal y es tu acceso a lo que compraste. Si creas una cuenta con este correo en grupomixmix.com, todas tus compras quedan guardadas y podrás descargarlas siempre.'
+        : 'Tus compras quedan guardadas en tu cuenta y puedes descargarlas siempre que quieras.';
     $html = '<div style="font-family:Arial,sans-serif;max-width:520px;margin:auto;color:#111110">' .
         '<p style="font-size:12px;letter-spacing:2px;color:#8A6D2F">GRUPO MIXMIX</p>' .
         '<h2 style="margin:0 0 12px">Gracias por tu compra, chef</h2>' .
-        '<p>Tu pedido <strong>' . htmlspecialchars($o['ref'], ENT_QUOTES, 'UTF-8') . '</strong> está confirmado. Descarga tus archivos aquí:</p>' .
-        '<p><a href="' . $link . '" style="display:inline-block;background:#111110;color:#F0EFF4;padding:12px 20px;text-decoration:none;font-weight:bold">Descargar mis archivos</a></p>' .
-        '<p style="font-size:13px;color:#555">Guarda este correo: el enlace es personal y es tu acceso a lo que compraste. Si creas una cuenta con este correo en grupomixmix.com, todas tus compras quedan guardadas y podrás descargarlas siempre.</p>' .
+        '<p>Tu pedido <strong>' . $esc($o['ref']) . '</strong> está confirmado. ' . $intro . '</p>' .
+        '<p><a href="' . $link . '" style="display:inline-block;background:#111110;color:#F0EFF4;padding:12px 20px;text-decoration:none;font-weight:bold">' . $btn . '</a></p>' .
+        ($items !== '' ? '<p style="margin:16px 0 4px;font-weight:bold">Tu compra</p><ul style="margin:0;padding-left:20px">' . $items . '</ul><p style="margin:8px 0 0">Total: <strong>' . $total . '</strong></p>' : '') .
+        '<p style="font-size:13px;color:#555;margin-top:16px">' . $foot . '</p>' .
         '</div>';
-    $text = "Gracias por tu compra, chef.\n\nTu pedido " . $o['ref'] . " está confirmado. Descarga tus archivos aquí (enlace personal, guárdalo):\n" . $link .
-        "\n\nSi creas una cuenta en grupomixmix.com con este correo, tus compras quedan guardadas y podrás descargarlas siempre.\n\nGrupo MixMix";
-    if (!mail_send($o['guest_email'], 'Tus archivos de Grupo MixMix — pedido ' . $o['ref'], $html, $text)) {
+    $text = "Gracias por tu compra, chef.\n\nTu pedido " . $o['ref'] . " está confirmado. " . $intro . "\n" . $link .
+        ($itemsText !== '' ? "\n\nTu compra:\n" . $itemsText . "Total: " . $total : '') .
+        "\n\n" . $foot . "\n\nGrupo MixMix";
+    if (!mail_send($to, 'Tu compra en Grupo MixMix — pedido ' . $o['ref'], $html, $text)) {
         error_log('after_paid: no se pudo enviar el correo del pedido ' . $o['ref']);
         $pdo->prepare('UPDATE orders SET mailed_at = NULL WHERE id = ?')->execute(array($o['id']));   /* se reintenta en la siguiente consulta */
     }
@@ -304,6 +326,43 @@ function adopt_guest_orders($userId, $email) {
     try {
         db()->prepare("UPDATE orders SET user_id = ? WHERE user_id IS NULL AND guest_email = ?")->execute(array($userId, strtolower($email)));
     } catch (PDOException $e) { error_log('adopt_guest_orders (¿falta migracion-3?): ' . $e->getMessage()); }   /* nunca debe impedir entrar */
+}
+
+/* ---------- límites de uso y limpieza ---------- */
+function client_ip() { return isset($_SERVER['REMOTE_ADDR']) ? (string)$_SERVER['REMOTE_ADDR'] : '0'; }
+/* ¿puede esta clave hacer otra acción? Máximo $max veces cada $windowSec segundos. Cuenta en archivos de privado/ratelimit
+   (sin base de datos). Si no se puede escribir ahí, no limita: nunca debe romper la tienda. */
+function rate_limit($key, $max, $windowSec) {
+    $base = private_dir();
+    if ($base === '') return true;
+    $d = $base . '/ratelimit';
+    if (!is_dir($d)) @mkdir($d, 0700, true);
+    if (!is_dir($d) || !is_writable($d)) return true;
+    $fh = @fopen($d . '/' . hash('sha256', $key) . '.json', 'c+');
+    if (!$fh) return true;
+    flock($fh, LOCK_EX);
+    $raw = stream_get_contents($fh);
+    $hits = $raw ? json_decode($raw, true) : array();
+    if (!is_array($hits)) $hits = array();
+    $now = time();
+    $hits = array_values(array_filter($hits, function ($t) use ($now, $windowSec) { return $t > $now - $windowSec; }));
+    $allowed = count($hits) < $max;
+    if ($allowed) $hits[] = $now;
+    ftruncate($fh, 0);
+    rewind($fh);
+    fwrite($fh, json_encode($hits));
+    flock($fh, LOCK_UN);
+    fclose($fh);
+    if (mt_rand(1, 50) === 1) {   /* de vez en cuando se borran los contadores de más de un día */
+        foreach ((array)glob($d . '/*.json') as $f) if (@filemtime($f) < $now - 86400) @unlink($f);
+    }
+    return $allowed;
+}
+/* pedidos que nunca se pagaron (Stripe cierra el pago a las 24 h): se marcan como vencidos */
+function expire_old_pending() {
+    try {
+        db()->exec("UPDATE orders SET status = 'expired' WHERE status = 'pending' AND created_at < (NOW() - INTERVAL 2 DAY)");
+    } catch (PDOException $e) { error_log('expire_old_pending: ' . $e->getMessage()); }
 }
 
 /* ---------- archivos de pago ---------- */

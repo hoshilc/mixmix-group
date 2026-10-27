@@ -43,3 +43,13 @@ Cambia `sk_test_…` por la clave real, crea el webhook en el modo real (nuevo `
 2. Comprobar en `api/health.php`: `orders_guest_columns: true`.
 3. Cómo funciona: el invitado solo da su correo. Al volver de Stripe cae en `pedido.html` (con un código personal en el enlace, calculado con el secreto del webhook; no se guarda en la base) donde descarga sus archivos, y se le manda el mismo enlace por correo. Ahí mismo puede crear su cuenta con ese correo y la compra queda guardada. Si entra con Google o restablece su contraseña con ese correo, sus compras como invitado se agregan solas.
 4. Si cambias `stripe_webhook_secret` (p. ej. al pasar a modo real), los enlaces de compras anteriores como invitado dejan de funcionar; esas personas pueden entrar con Google o recuperar contraseña para recibirlas en su cuenta.
+
+## 9. Vista de pedidos (admin-pedidos.html)
+1. En `privado/config.php` agrega una línea `'admin_key' => 'una-clave-larga-y-solo-tuya',` (16 caracteres o más; usa letras y números al azar).
+2. Abre `https://grupomixmix.com/admin-pedidos.html`, escribe esa clave y pulsa **Ver pedidos**. Muestra ventas, pedidos, clientes (con cuenta o invitados) y su estado. Es solo lectura.
+3. La página no aparece en buscadores ni en el sitemap. Sin `admin_key` en la configuración, queda apagada.
+
+## 10. Límites y limpieza (automáticos)
+- El pago como invitado se limita a 30 intentos por hora por conexión y 6 por correo; con cuenta, 20 por hora. Los contadores viven en `privado/ratelimit/` (se crea solo; si no puede, no limita).
+- Los pedidos pendientes que llevan más de 2 días sin pagarse se marcan como vencidos al crear un pago nuevo o al abrir la vista de pedidos.
+- Desde esta versión también las compras **con cuenta** reciben correo de confirmación (necesita la migración 3 para saber cuáles ya se enviaron).

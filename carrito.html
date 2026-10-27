@@ -6,7 +6,7 @@
 <title>Carrito — Grupo MixMix</title>
 <meta name="robots" content="noindex">
 <link rel="stylesheet" href="css/mixmix-brand/mixmix.css?v=3393207f">
-<link rel="stylesheet" href="css/site.css?v=24f2b714">
+<link rel="stylesheet" href="css/site.css?v=0607c61b">
 <!--#meta-->
 <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="img/favicon-48.png" sizes="48x48" type="image/png">
@@ -253,7 +253,7 @@
       S.checkout(email).then(function (d) {
         if (d && d.ok && d.url) { location.href = d.url; return; }
         b.disabled = false; render();
-        var E = { empty_cart: "Tu carrito no tiene nada por cobrar (¿ya lo tienes en tu cuenta?).", invalid_email: "Escribe un correo válido para enviarte tus archivos.", migration_needed: "La tienda necesita una actualización de la base de datos (migración 3). Avísanos por favor.", stripe_error: "No pudimos abrir el pago. Intenta de nuevo.", stripe_unreachable: "No pudimos conectar con Stripe. Intenta de nuevo.", network: "No pudimos conectar con el servidor. Intenta de nuevo." };
+        var E = { empty_cart: "Tu carrito no tiene nada por cobrar (¿ya lo tienes en tu cuenta?).", invalid_email: "Escribe un correo válido para enviarte tus archivos.", too_many: "Hiciste demasiados intentos seguidos. Espera un rato e inténtalo de nuevo.", migration_needed: "La tienda necesita una actualización de la base de datos (migración 3). Avísanos por favor.", stripe_error: "No pudimos abrir el pago. Intenta de nuevo.", stripe_unreachable: "No pudimos conectar con Stripe. Intenta de nuevo.", network: "No pudimos conectar con el servidor. Intenta de nuevo." };
         msg.textContent = (E[d && d.error] || "No pudimos iniciar el pago. Intenta de nuevo.") + (d && d.detail && S.stripeMode() === "test" ? " [" + d.detail + "]" : "");
         msg.hidden = false;
       });

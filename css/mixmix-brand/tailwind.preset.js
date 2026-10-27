@@ -1,4 +1,4 @@
-// Mix Mix Group — preset de Tailwind. tailwind.config.js: { presets: [require('./mixmix-brand/tailwind.preset.js')] }
+// Grupo MixMix — preset de Tailwind. tailwind.config.js: { presets: [require('./mixmix-brand/tailwind.preset.js')] }
 module.exports = {
   theme: {
     extend: {

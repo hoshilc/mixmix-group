@@ -4,6 +4,7 @@ Disallow: /carrito.html
 Disallow: /cuenta.html
 Disallow: /gracias.html
 Disallow: /pedido.html
+Disallow: /admin-pedidos.html
 Disallow: /api/
 
 Sitemap: https://grupomixmix.com/sitemap.xml

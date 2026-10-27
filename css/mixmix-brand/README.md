@@ -1,4 +1,4 @@
-# Mix Mix Group — sistema de diseño v1
+# Grupo MixMix — sistema de diseño v1
 
 Consultoría para restaurantes: herramientas, procesos y controles. Estilo modernista
 institucional — negro y dorado, rejilla visible, filetes de 2 px, cero esquinas redondeadas,
