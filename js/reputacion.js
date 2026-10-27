@@ -30,8 +30,11 @@
   /* logos de clientes: se muestran como una barra que se desplaza sola en bucle (data-mm="logos" data-set="clientes") */
   var CLIENTES_LOGOS = [
     { name: "Rostizados Sinaloa", logo: "img/logos/rostizados-sinaloa.png" },
+    { name: "Las Piñas de Cholula", logo: "img/logos/las-pinas-de-cholula.png" },
     { name: "Restaurante y Bar El Mesón de Don Jorge", logo: "img/logos/el-meson-de-don-jorge.png" },
+    { name: "Iván Aguilera Eventos", logo: "img/logos/ivan-aguilera-eventos.png" },
     { name: "El Ranchito Restaurante", logo: "img/logos/el-ranchito.png" },
+    { name: "Experiencias Líquidas", logo: "img/logos/experiencias-liquidas.png" },
     { name: "RB To Go", logo: "img/logos/rb-to-go.png" },
     { name: "El Playense Mariscos", logo: "img/logos/el-playense.png" }
   ];
@@ -81,6 +84,7 @@
     track.className = "mm-marquee-track";
     var COPIES = 4;   /* con 4 copias la pista siempre es más ancha que cualquier pantalla y el bucle no deja huecos */
     track.style.setProperty("--mm-copies", COPIES);
+    track.style.animationDuration = Math.max(24, list.length * 7.5) + "s";   /* misma velocidad sin importar cuántos logos haya */
     for (var copy = 0; copy < COPIES; copy++) (function (copy) {
       var group = document.createElement("ul");
       group.className = "mm-marquee-group";
