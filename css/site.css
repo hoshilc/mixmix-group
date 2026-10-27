@@ -526,6 +526,8 @@ a.mm-logo-cell:hover { border-color: var(--mm-gold); }
 }
 .mm-footer-legal-links { margin-bottom: var(--mm-space-4); gap: var(--mm-space-4); }
 .mm-footer-legal-links a { font-size: 11px; }
+.mm-footer .mm-footer-team { margin-bottom: var(--mm-space-4); gap: var(--mm-space-2) var(--mm-space-4); }
+.mm-footer-team a { font-size: 11px; }
 
 /* secciones del catalogo: el titulo es un encabezado real dentro del summary */
 h2.mm-acc-title { margin: 0; }
