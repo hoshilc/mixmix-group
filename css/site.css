@@ -778,3 +778,8 @@ h2.mm-acc-title { margin: 0; }
 
 /* Lema destacado bajo el título de una sección (Mentores) */
 .mm-slogan { margin: var(--mm-space-2) 0 var(--mm-space-4); font-family: var(--mm-font-logo); font-weight: 400; font-size: clamp(30px, 5vw, 54px); line-height: 1; letter-spacing: 0.04em; text-transform: uppercase; color: var(--mm-wine); text-wrap: balance; }
+
+/* Descargables: imagen de manuales y hojas impresos junto al título */
+.mm-hero-mockup { display: block; width: 100%; max-width: 560px; height: auto; margin: var(--mm-space-6) auto 0; justify-self: center; }
+@media (min-width: 900px) { .mm-hero-mockup { margin-top: 0; max-width: none; } }
+@media (min-width: 900px) { .mm-hero-grid-wide { grid-template-columns: 1fr 1.05fr; } }
