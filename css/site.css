@@ -731,3 +731,9 @@ h2.mm-acc-title { margin: 0; }
 .mm-chef-photo-cut { background: var(--mm-bone); }
 .mm-chef-stats .mm-stat { flex: 1 1 170px; padding: clamp(16px,2vw,24px); }
 .mm-chef-stats .mm-stat-num { font-size: clamp(30px, 3.4vw, 44px); overflow-wrap: anywhere; }
+
+/* Historia: segundo fundador (foto a la derecha en pantallas anchas) y firma bajo cada texto */
+@media (min-width: 641px) { .mm-founder-rev { grid-template-columns: 1fr 300px; } }
+.mm-founder-sign { font-family: var(--mm-font-display) !important; font-weight: 600; font-size: 12px !important; letter-spacing: var(--mm-track-label); text-transform: uppercase; color: var(--mm-stone-ink); margin-top: var(--mm-space-4) !important; }
+.mm-founder-sign a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.mm-founder-sign a:hover, .mm-founder-sign a:focus-visible { color: var(--mm-black); }
