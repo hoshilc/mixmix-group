@@ -524,10 +524,13 @@ a.mm-logo-cell:hover { border-color: var(--mm-gold); }
   .mm-menu-btn { margin-left: auto; }
   .mm-header-util + .mm-menu-btn { margin-left: 0; }
 }
-.mm-footer-legal-links { margin-bottom: var(--mm-space-4); gap: var(--mm-space-4); }
-.mm-footer-legal-links a { font-size: 11px; }
-.mm-footer .mm-footer-team { margin-bottom: var(--mm-space-4); gap: var(--mm-space-2) var(--mm-space-4); }
-.mm-footer-team a { font-size: 11px; }
+/* Pie: tres columnas con listas en vertical (Sitio, Equipo, Legal); en móvil se apilan */
+.mm-footer-cols { display: grid; grid-template-columns: repeat(3, minmax(0, max-content)); gap: var(--mm-space-6) clamp(40px, 8vw, 112px); margin-bottom: var(--mm-space-8); }
+.mm-footer-title { font-family: var(--mm-font-display); font-weight: 700; font-size: 11px; letter-spacing: var(--mm-track-label); text-transform: uppercase; color: var(--mm-gold); margin: 0 0 var(--mm-space-3); }
+.mm-footer-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--mm-space-2); }
+.mm-footer-list a { font-family: var(--mm-font-display); font-weight: 600; font-size: 12px; letter-spacing: var(--mm-track-label); text-transform: uppercase; color: var(--mm-stone-onblack); text-decoration: none; display: inline-block; padding: 3px 0; }
+.mm-footer-list a:hover, .mm-footer-list a:focus-visible, .mm-footer-list a[aria-current="page"] { color: var(--mm-gold); }
+@media (max-width: 640px) { .mm-footer-cols { grid-template-columns: 1fr; gap: var(--mm-space-6); } }
 
 /* secciones del catalogo: el titulo es un encabezado real dentro del summary */
 h2.mm-acc-title { margin: 0; }
