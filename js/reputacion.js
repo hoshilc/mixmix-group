@@ -54,7 +54,7 @@
   ];
 
   /* versión de los logos: súbela cuando cambies una imagen sin cambiarle el nombre, para que los navegadores la descarguen de nuevo */
-  var LOGOS_V = "20261027d";
+  var LOGOS_V = "20261027e";
   function asset(p) { return p + "?v=" + LOGOS_V; }
 
   function has(s) { return !!(s && String(s).trim()); }
