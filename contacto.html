@@ -163,8 +163,8 @@
     }
   }
 
-  /* ?con=adrian|hoshi: llega desde la pagina de un experto */
-  var WITH = { adrian: "Me interesa trabajar con el chef Adrián Noverola (cocina).", hoshi: "Me interesa trabajar con Hoshi López Coeto (finanzas, marketing y sistemas)." };
+  /* ?con=adrian|hoshi|juan: llega desde la pagina de un experto */
+  var WITH = { adrian: "Me interesa trabajar con el chef Adrián Noverola (cocina).", hoshi: "Me interesa trabajar con Hoshi López Coeto (finanzas, marketing y sistemas).", juan: "Me interesa trabajar con Juan Hernández Aparicio (dirección, operación y bar)." };
   var con = new URLSearchParams(location.search).get("con");
   if (con && WITH[con]) {
     var mm = document.getElementById("mensaje");
