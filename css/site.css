@@ -799,3 +799,27 @@ h2.mm-acc-title { margin: 0; }
   .mm-founder-wide .mm-founder-photo { width: 430px; margin-left: -70px; }
 }
 @media (max-width: 640px) { .mm-founder-wide .mm-founder-photo { order: 2; } }
+
+/* MixMix App: maqueta de la app en la portada de la página y lista de "hoy" con marcas rojas */
+.mm-checklist-no li::before { content: "\2715"; color: var(--mm-wine); }
+.mm-app-shot { background: var(--mm-white); color: var(--mm-black); border: 1px solid var(--mm-stone-onblack); box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35); overflow: hidden; font-family: var(--mm-font-display); }
+.mm-app-bar { display: flex; align-items: center; gap: 6px; padding: 9px 12px; background: var(--mm-marble); border-bottom: 1px solid var(--mm-marble-line); }
+.mm-app-bar i { width: 9px; height: 9px; border-radius: 50%; background: var(--mm-stone); display: block; }
+.mm-app-bar span { margin-left: 8px; font-size: 10px; letter-spacing: var(--mm-track-label); text-transform: uppercase; color: var(--mm-stone-ink); }
+.mm-app-body { display: grid; grid-template-columns: 112px minmax(0, 1fr); min-height: 260px; }
+.mm-app-side { background: var(--mm-marble); border-right: 1px solid var(--mm-marble-line); padding: 12px 10px; display: flex; flex-direction: column; gap: 6px; font-size: 10px; color: var(--mm-stone-ink); }
+.mm-app-side b { font-size: 8px; letter-spacing: var(--mm-track-label); text-transform: uppercase; color: var(--mm-wine); margin-top: 4px; }
+.mm-app-side span { padding: 3px 6px; }
+.mm-app-side span.on { background: var(--mm-black); color: var(--mm-bone); font-weight: 700; }
+.mm-app-main { padding: 14px; }
+.mm-app-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.mm-app-card { border: 1px solid var(--mm-marble-line); padding: 8px 10px; }
+.mm-app-card small { display: block; font-size: 8px; letter-spacing: var(--mm-track-label); text-transform: uppercase; color: var(--mm-stone-ink); }
+.mm-app-card strong { display: block; font-size: 17px; font-weight: 800; margin-top: 2px; }
+.mm-app-card.on { background: var(--mm-black); border-color: var(--mm-black); color: var(--mm-bone); }
+.mm-app-card.on small { color: var(--mm-stone-onblack); }
+.mm-app-rows { margin-top: 12px; border: 1px solid var(--mm-marble-line); }
+.mm-app-rows > div { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; padding: 7px 10px; font-size: 10.5px; border-bottom: 1px solid var(--mm-marble-line); }
+.mm-app-rows > div:last-child { border-bottom: 0; }
+.mm-app-rows > .h { background: var(--mm-marble); font-weight: 700; font-size: 8px; letter-spacing: var(--mm-track-label); text-transform: uppercase; color: var(--mm-stone-ink); }
+@media (max-width: 520px) { .mm-app-body { grid-template-columns: 1fr; } .mm-app-side { display: none; } }
