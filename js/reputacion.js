@@ -51,6 +51,10 @@
     /* { num: "120+", label: "restaurantes asesorados" }, */
   ];
 
+  /* versión de los logos: súbela cuando cambies una imagen sin cambiarle el nombre, para que los navegadores la descarguen de nuevo */
+  var LOGOS_V = "20261027b";
+  function asset(p) { return p + "?v=" + LOGOS_V; }
+
   function has(s) { return !!(s && String(s).trim()); }
 
   function logoBox(item, cls) {
@@ -60,7 +64,7 @@
     if (has(item.logo)) {
       /* logo a color desde el inicio (los de clientes, en cambio, van en la barra de un solo tono) */
       var img = document.createElement("img");
-      img.src = item.logo; img.alt = item.name; img.loading = "lazy"; img.width = 480; img.height = 340;
+      img.src = asset(item.logo); img.alt = item.name; img.loading = "lazy"; img.width = 480; img.height = 340;
       wrap.appendChild(img);
     } else {
       wrap.innerHTML = '<span class="mm-logo-ph">Logo</span><span class="mm-logo-ph-name"></span>';
@@ -93,9 +97,9 @@
         var li = document.createElement("li");
         /* dos capas: la versión de un solo tono (por defecto) y la de color (al pasar el cursor) */
         var mono = document.createElement("img");
-        mono.className = "mm-logo-mono"; mono.src = item.logo.replace(/.png$/, "-mono.png"); mono.alt = copy === 0 ? item.name : ""; mono.loading = "lazy"; mono.width = 400; mono.height = 240;
+        mono.className = "mm-logo-mono"; mono.src = asset(item.logo.replace(/.png$/, "-mono.png")); mono.alt = copy === 0 ? item.name : ""; mono.loading = "lazy"; mono.width = 400; mono.height = 240;
         var color = document.createElement("img");
-        color.className = "mm-logo-color"; color.src = item.logo; color.alt = ""; color.loading = "lazy"; color.width = 400; color.height = 240;
+        color.className = "mm-logo-color"; color.src = asset(item.logo); color.alt = ""; color.loading = "lazy"; color.width = 400; color.height = 240;
         li.appendChild(mono); li.appendChild(color);
         group.appendChild(li);
       });
