@@ -783,3 +783,13 @@ h2.mm-acc-title { margin: 0; }
 .mm-hero-mockup { display: block; width: 100%; max-width: 560px; height: auto; margin: var(--mm-space-6) auto 0; justify-self: center; }
 @media (min-width: 900px) { .mm-hero-mockup { margin-top: 0; max-width: none; } }
 @media (min-width: 900px) { .mm-hero-grid-wide { grid-template-columns: 1fr 1.05fr; } }
+
+/* Historia: foto del chef a cuerpo más ancho (con brazos), anclada abajo y con un pequeño desborde a la izquierda en pantallas anchas */
+@media (min-width: 641px) { .mm-founder-wide { grid-template-columns: 340px 1fr; } }
+.mm-founder-wide .mm-founder-photo { display: flex; align-items: flex-end; align-self: end; height: auto; min-height: 0; }
+.mm-founder-wide .mm-founder-photo img { width: 100%; height: auto; object-fit: contain; }
+@media (min-width: 1100px) {
+  .mm-founder-wide { grid-template-columns: 330px 1fr; }
+  .mm-founder-wide .mm-founder-photo { width: 430px; margin-left: -70px; }
+}
+@media (max-width: 640px) { .mm-founder-wide .mm-founder-photo { order: 2; } }
