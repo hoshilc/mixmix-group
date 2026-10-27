@@ -87,9 +87,12 @@
       if (copy === 1) group.setAttribute("aria-hidden", "true");
       list.forEach(function (item) {
         var li = document.createElement("li");
-        var img = document.createElement("img");
-        img.src = item.logo; img.alt = copy === 0 ? item.name : ""; img.loading = "lazy"; img.width = 400; img.height = 240;
-        li.appendChild(img);
+        /* dos capas: la versión de un solo tono (por defecto) y la de color (al pasar el cursor) */
+        var mono = document.createElement("img");
+        mono.className = "mm-logo-mono"; mono.src = item.logo.replace(/.png$/, "-mono.png"); mono.alt = copy === 0 ? item.name : ""; mono.loading = "lazy"; mono.width = 400; mono.height = 240;
+        var color = document.createElement("img");
+        color.className = "mm-logo-color"; color.src = item.logo; color.alt = ""; color.loading = "lazy"; color.width = 400; color.height = 240;
+        li.appendChild(mono); li.appendChild(color);
         group.appendChild(li);
       });
       track.appendChild(group);
