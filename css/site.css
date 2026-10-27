@@ -728,3 +728,6 @@ h2.mm-acc-title { margin: 0; }
 .mm-adm-pill { display: inline-block; padding: 2px 8px; font-family: var(--mm-font-display); font-weight: 700; font-size: 11px; letter-spacing: var(--mm-track-label); text-transform: uppercase; border: 1px solid var(--mm-black); white-space: nowrap; }
 .mm-adm-pill.is-paid { background: var(--mm-black); color: var(--mm-bone); }
 .mm-adm-pill.is-expired { color: var(--mm-stone-ink); border-color: var(--mm-stone-ink); }.mm-adm-key[hidden] { display: none; }
+.mm-chef-photo-cut { background: var(--mm-bone); }
+.mm-chef-stats .mm-stat { flex: 1 1 170px; padding: clamp(16px,2vw,24px); }
+.mm-chef-stats .mm-stat-num { font-size: clamp(30px, 3.4vw, 44px); overflow-wrap: anywhere; }
