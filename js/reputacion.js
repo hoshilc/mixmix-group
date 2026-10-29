@@ -54,7 +54,7 @@
   ];
 
   /* versión de los logos: súbela cuando cambies una imagen sin cambiarle el nombre, para que los navegadores la descarguen de nuevo */
-  var LOGOS_V = "20261027e";
+  var LOGOS_V = "20261029a";
   function asset(p) { return p + "?v=" + LOGOS_V; }
 
   function has(s) { return !!(s && String(s).trim()); }
@@ -97,12 +97,9 @@
       if (copy === 1) group.setAttribute("aria-hidden", "true");
       list.forEach(function (item) {
         var li = document.createElement("li");
-        /* dos capas: la versión de un solo tono (por defecto) y la de color (al pasar el cursor) */
-        var mono = document.createElement("img");
-        mono.className = "mm-logo-mono"; mono.src = asset(item.logo.replace(/.png$/, "-mono.png")); mono.alt = copy === 0 ? item.name : ""; mono.loading = "lazy"; mono.width = 400; mono.height = 240;
-        var color = document.createElement("img");
-        color.className = "mm-logo-color"; color.src = asset(item.logo); color.alt = ""; color.loading = "lazy"; color.width = 400; color.height = 240;
-        li.appendChild(mono); li.appendChild(color);
+        var img = document.createElement("img");
+        img.src = asset(item.logo); img.alt = copy === 0 ? item.name : ""; img.loading = "lazy"; img.width = 400; img.height = 240;
+        li.appendChild(img);
         group.appendChild(li);
       });
       track.appendChild(group);

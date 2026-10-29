@@ -767,14 +767,6 @@ h2.mm-acc-title { margin: 0; }
   .mm-marquee-group[aria-hidden="true"] { display: none; }
 }
 
-/* Logos de clientes: versión de un solo tono (misma escala visual) y, al pasar el cursor o tocar, su color original */
-.mm-marquee-group li { position: relative; }
-.mm-marquee-group .mm-logo-mono { opacity: 0.8; transition: opacity 0.25s ease; }
-.mm-marquee-group .mm-logo-color { position: absolute; inset: 0; opacity: 0; transition: opacity 0.25s ease; }
-.mm-marquee-group li:hover .mm-logo-color, .mm-marquee-group li:focus-within .mm-logo-color { opacity: 1; }
-.mm-marquee-group li:hover .mm-logo-mono, .mm-marquee-group li:focus-within .mm-logo-mono { opacity: 0; }
-@media (prefers-reduced-motion: reduce) { .mm-marquee-group .mm-logo-mono, .mm-marquee-group .mm-logo-color { transition: none; } }
-
 /* Emprendimientos: cuatro logos por fila, a color y sin recuadro */
 @media (min-width: 900px) { .mm-logos-4 { grid-template-columns: repeat(4, 1fr); } .mm-logos-5 { grid-template-columns: repeat(5, 1fr); } }
 @media (max-width: 899px) { .mm-logos-5 .mm-logo-cell:last-child { grid-column: 1 / -1; justify-self: center; width: 50%; } }
