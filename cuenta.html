@@ -322,6 +322,14 @@
     b.addEventListener("click", function () { showPanel(b.getAttribute("data-panel")); history.replaceState(null, "", "#" + b.getAttribute("data-panel")); });
   });
 
+  /* el título de cada compra es lo que compró, no el folio */
+  function orderTitle(o) {
+    var t = o.lines.map(function (l) { return l.title; });
+    if (t.length === 1) return t[0];
+    if (t.length === 2) return t[0] + " y " + t[1];
+    return t[0] + " y " + (t.length - 1) + " más";
+  }
+
   function renderOrders(orders, openId) {
     var box = $("panel-compras");
     box.innerHTML = "";
@@ -333,7 +341,7 @@
       var d = document.createElement("details");
       d.className = "mm-acc mm-order";
       d.open = o.id === openId;
-      d.innerHTML = '<summary><span class="mm-acc-title">Pedido ' + esc(o.id) + '</span>' +
+      d.innerHTML = '<summary><span class="mm-acc-title">' + esc(orderTitle(o)) + '</span>' +
         '<span class="mm-acc-meta">' + esc(fmtDate(o.date)) + ' · ' + o.lines.length + (o.lines.length === 1 ? ' producto' : ' productos') + ' · ' + M.money(o.total) + (o.discount > 0 ? ' (incluye descuento por volumen de ' + M.money(o.discount) + ')' : '') + '</span></summary>';
       var body = document.createElement("div");
       body.className = "mm-acc-body";
@@ -347,6 +355,11 @@
         if (p) body.appendChild(M.downloadsFor(p));
         else body.appendChild(Object.assign(document.createElement("p"), { className: "mm-body", textContent: "Este producto ya no está en el catálogo; escríbenos y te lo enviamos." }));
       });
+      var folio = document.createElement("p");
+      folio.className = "mm-body";
+      folio.style.cssText = "font-size:13px;margin:var(--mm-space-4) 0 0;color:var(--mm-stone-ink)";
+      folio.textContent = "Folio del pedido: " + o.id + " (menciónalo si nos escribes).";
+      body.appendChild(folio);
       d.appendChild(body);
       box.appendChild(d);
     });
