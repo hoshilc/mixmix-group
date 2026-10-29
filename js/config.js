@@ -12,14 +12,14 @@
    la tienda de demostración y todos los recuadros de ejemplo. ?demo=0 lo apaga. */
 window.MM_CONFIG = {
   siteUrl: "https://grupomixmix.com",
-  storeLive: false,
+  storeLive: true,
   email: "contacto@grupomixmix.com",
   whatsapp: "",
   calendarUrl: "",
   plausibleDomain: "",
   /* true = se ven los recuadros de ejemplo (videos, logos, reseñas) mientras llegan los reales.
      Ponlo en false al lanzar para ocultar los que sigan vacíos. */
-  showPlaceholders: true,
+  showPlaceholders: false,
   /* servidor de la tienda (carpeta api/ del hosting con PHP). Solo se usa en los dominios de apiHosts;
      en cualquier otro (Netlify, vista previa) la tienda funciona en modo demostración. */
   api: "api/",
