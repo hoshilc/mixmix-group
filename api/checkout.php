@@ -60,6 +60,7 @@ try {
         'client_reference_id' => $ref,
         'metadata' => array('order_ref' => $ref),
         'locale' => 'es-419',
+        'allow_promotion_codes' => 'true',   /* campo "Agregar código promocional" en la página de pago; los códigos se crean en Stripe */
     );
     foreach ($items as $i => $it) {
         $params['line_items'][$i] = array(
