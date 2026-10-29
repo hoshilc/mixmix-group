@@ -305,14 +305,11 @@ function after_paid($sessionId) {
     $foot = $isGuest
         ? 'Guarda este correo: el enlace es personal y es tu acceso a lo que compraste. Si creas una cuenta con este correo en grupomixmix.com, todas tus compras quedan guardadas y podrás descargarlas siempre.'
         : 'Tus compras quedan guardadas en tu cuenta y puedes descargarlas siempre que quieras.';
-    $html = '<div style="font-family:Arial,sans-serif;max-width:520px;margin:auto;color:#111110">' .
-        '<p style="font-size:12px;letter-spacing:2px;color:#8A6D2F">GRUPO MIXMIX</p>' .
-        '<h2 style="margin:0 0 12px">Gracias por tu compra, chef</h2>' .
-        '<p>Tu pedido <strong>' . $esc($o['ref']) . '</strong> está confirmado. ' . $intro . '</p>' .
-        '<p><a href="' . $link . '" style="display:inline-block;background:#111110;color:#F0EFF4;padding:12px 20px;text-decoration:none;font-weight:bold">' . $btn . '</a></p>' .
+    $html = mail_layout('Gracias por tu compra, chef',
+        '<p style="margin:0 0 8px">Tu pedido <strong>' . $esc($o['ref']) . '</strong> está confirmado. ' . $intro . '</p>' .
+        mail_button($link, $btn) .
         ($items !== '' ? '<p style="margin:16px 0 4px;font-weight:bold">Tu compra</p><ul style="margin:0;padding-left:20px">' . $items . '</ul><p style="margin:8px 0 0">Total: <strong>' . $total . '</strong></p>' : '') .
-        '<p style="font-size:13px;color:#555;margin-top:16px">' . $foot . '</p>' .
-        '</div>';
+        '<p style="font-size:13px;color:#555555;margin:20px 0 16px">' . $foot . '</p>');
     $text = "Gracias por tu compra, chef.\n\nTu pedido " . $o['ref'] . " está confirmado. " . $intro . "\n" . $link .
         ($itemsText !== '' ? "\n\nTu compra:\n" . $itemsText . "Total: " . $total : '') .
         "\n\n" . $foot . "\n\nGrupo MixMix";
@@ -407,6 +404,32 @@ function product_files($p) {
         foreach (contents_of($p) as $it) foreach (product_files($it) as $k => $v) if (!isset($out[$k])) $out[$k] = $v;
     }
     return $out;
+}
+
+/* ---------- plantilla de marca de los correos ----------
+   Franja negra con el logo, filete dorado, contenido sobre blanco y pie con los datos de contacto.
+   Es una tabla con estilos en línea porque los gestores de correo ignoran casi todo el CSS. */
+function mail_button($href, $label) {
+    return '<p style="margin:24px 0"><a href="' . $href . '" style="display:inline-block;background:#111110;color:#F0EFF4;padding:14px 26px;text-decoration:none;font-weight:bold;font-size:15px;border-bottom:3px solid #C6A15B">' . $label . '</a></p>';
+}
+function mail_layout($heading, $inner) {
+    $cfg = config();
+    $site = rtrim($cfg['site_url'], '/');
+    $host = preg_replace('#^https?://#', '', $site);
+    $contact = isset($cfg['reply_to']) && $cfg['reply_to'] !== '' ? $cfg['reply_to'] : 'contacto@' . preg_replace('/^www\./', '', $host);
+    $font = 'font-family:Arial,Helvetica,sans-serif';
+    return '<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' . htmlspecialchars($heading, ENT_QUOTES, 'UTF-8') . '</title></head>' .
+        '<body style="margin:0;padding:0;background:#F0EFF4">' .
+        '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F0EFF4"><tr><td align="center" style="padding:24px 12px">' .
+        '<table role="presentation" width="560" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:560px;background:#FFFFFF">' .
+        '<tr><td align="center" style="background:#111110;padding:18px 24px;border-bottom:3px solid #C6A15B">' .
+            '<a href="' . $site . '" style="text-decoration:none"><img src="' . $site . '/img/logo.png" width="120" alt="MixMix" style="display:block;border:0;width:120px;height:auto"></a></td></tr>' .
+        '<tr><td style="padding:32px 32px 12px;' . $font . ';color:#111110;font-size:16px;line-height:1.55">' .
+            '<h1 style="margin:0 0 16px;font-size:24px;line-height:1.25;color:#111110">' . htmlspecialchars($heading, ENT_QUOTES, 'UTF-8') . '</h1>' . $inner . '</td></tr>' .
+        '<tr><td align="center" style="background:#111110;padding:20px 32px;' . $font . ';font-size:12px;line-height:1.7;color:#B9B7B0">' .
+            '<span style="color:#C6A15B;letter-spacing:2px;font-weight:bold">GRUPO MIXMIX</span><br>Consultoría y herramientas para restaurantes<br>' .
+            '<a href="' . $site . '" style="color:#F0EFF4">' . $host . '</a> · <a href="mailto:' . $contact . '" style="color:#F0EFF4">' . $contact . '</a></td></tr>' .
+        '</table></td></tr></table></body></html>';
 }
 
 /* ---------- correo (recuperar contraseña) ----------

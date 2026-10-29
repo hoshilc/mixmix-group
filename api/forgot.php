@@ -22,13 +22,10 @@ try {
             $cfg = config();
             $link = $cfg['site_url'] . '/cuenta.html?reset=' . $token;
             $nombre = htmlspecialchars($usr['name'], ENT_QUOTES, 'UTF-8');
-            $html = '<div style="font-family:Arial,sans-serif;max-width:520px;margin:auto;color:#111110">' .
-                '<p style="font-size:12px;letter-spacing:2px;color:#8A6D2F">GRUPO MIXMIX</p>' .
-                '<h2 style="margin:0 0 12px">Restablecer tu contraseña</h2>' .
-                '<p>Hola ' . $nombre . ', recibimos una solicitud para cambiar tu contraseña.</p>' .
-                '<p><a href="' . $link . '" style="display:inline-block;background:#111110;color:#F0EFF4;padding:12px 20px;text-decoration:none;font-weight:bold">Elegir una contraseña nueva</a></p>' .
-                '<p style="font-size:13px;color:#555">El enlace funciona una sola vez y vence en 1 hora. Si tú no lo pediste, ignora este correo: tu contraseña no cambia.</p>' .
-                '</div>';
+            $html = mail_layout('Restablecer tu contraseña',
+                '<p style="margin:0 0 8px">Hola ' . $nombre . ', recibimos una solicitud para cambiar tu contraseña.</p>' .
+                mail_button($link, 'Elegir una contraseña nueva') .
+                '<p style="font-size:13px;color:#555555;margin:20px 0 16px">El enlace funciona una sola vez y vence en 1 hora. Si tú no lo pediste, ignora este correo: tu contraseña no cambia.</p>');
             $text = "Hola " . $usr['name'] . ",\n\nPara elegir una contraseña nueva abre este enlace (funciona una sola vez y vence en 1 hora):\n" . $link . "\n\nSi tú no lo pediste, ignora este correo.\n\nGrupo MixMix";
             $sent = mail_send($email, 'Restablece tu contraseña de Grupo MixMix', $html, $text);
             if (!$sent) error_log('forgot: no se pudo enviar el correo');
