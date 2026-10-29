@@ -291,29 +291,47 @@ function after_paid($sessionId) {
     $esc = function ($s) { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); };
     /* resumen de lo comprado */
     $items = ''; $itemsText = '';
+    $cat = catalog();
+    $catNames = array();
+    foreach ($cat['categories'] as $c) $catNames[$c['id']] = $c['name'];
     $lines = json_decode($o['lines_json'], true);
     if (is_array($lines)) foreach ($lines as $l) {
         if (!isset($l['title'])) continue;
-        $items .= '<li>' . $esc($l['title']) . '</li>';
-        $itemsText .= '- ' . $l['title'] . "\n";
+        /* nombre del archivo como lo recibe el cliente y categoría de descargable a la que pertenece */
+        $p = isset($l['id']) && isset($cat['byId'][$l['id']]) ? $cat['byId'][$l['id']] : null;
+        $name = $l['title']; $kind = '';
+        if ($p && isset($p['cat'])) {
+            $kind = isset($catNames[$p['cat']]) ? $catNames[$p['cat']] : 'Descargable';
+            $fn = array_values(product_files($p));
+            if (count($fn) === 1) $name = $fn[0];
+            elseif (count($fn) > 1) $kind .= ' · ' . count($fn) . ' archivos';
+        } elseif ($p) {
+            $n = count(contents_of($p));
+            $kind = ($p['id'] === 'catalogo' ? 'Catálogo completo' : 'Paquete') . ($n > 1 ? ' · ' . $n . ' documentos' : '');
+        }
+        $items .= '<li style="margin:0 0 10px"><strong>' . $esc($name) . '</strong>' .
+            ($kind !== '' ? '<br><span style="font-size:13px;color:#555555">' . $esc($kind) . '</span>' : '') . '</li>';
+        $itemsText .= '- ' . $name . ($kind !== '' ? ' (' . $kind . ')' : '') . "\n";
     }
     $total = '$' . number_format((int)$o['total']) . ' MXN';
     $isGuest = $o['user_id'] === null;
     $link = $isGuest ? guest_link($o['ref']) : $cfg['site_url'] . '/cuenta.html#compras';
     $btn = $isGuest ? 'Descargar mis archivos' : 'Ir a mis compras';
-    $intro = $isGuest ? 'Descarga tus archivos aquí:' : 'Tus archivos ya están en tu cuenta. Entra y descárgalos aquí:';
+    $intro = $isGuest ? 'Tu compra está confirmada y tus archivos ya están listos para descargar.' : 'Tu compra está confirmada y tus archivos ya están en tu cuenta, listos para descargar.';
     $foot = $isGuest
         ? 'Guarda este correo: el enlace es personal y es tu acceso a lo que compraste. Si creas una cuenta con este correo en grupomixmix.com, todas tus compras quedan guardadas y podrás descargarlas siempre.'
         : 'Tus compras quedan guardadas en tu cuenta y puedes descargarlas siempre que quieras.';
+    /* el folio solo va como dato de referencia, discreto y al final */
     $html = mail_layout('Gracias por tu compra, chef',
-        '<p style="margin:0 0 8px">Tu pedido <strong>' . $esc($o['ref']) . '</strong> está confirmado. ' . $intro . '</p>' .
+        '<p style="margin:0 0 8px">' . $intro . '</p>' .
         mail_button($link, $btn) .
-        ($items !== '' ? '<p style="margin:16px 0 4px;font-weight:bold">Tu compra</p><ul style="margin:0;padding-left:20px">' . $items . '</ul><p style="margin:8px 0 0">Total: <strong>' . $total . '</strong></p>' : '') .
-        '<p style="font-size:13px;color:#555555;margin:20px 0 16px">' . $foot . '</p>');
-    $text = "Gracias por tu compra, chef.\n\nTu pedido " . $o['ref'] . " está confirmado. " . $intro . "\n" . $link .
-        ($itemsText !== '' ? "\n\nTu compra:\n" . $itemsText . "Total: " . $total : '') .
-        "\n\n" . $foot . "\n\nGrupo MixMix";
-    if (!mail_send($to, 'Tu compra en Grupo MixMix — pedido ' . $o['ref'], $html, $text)) {
+        ($items !== '' ? '<p style="margin:16px 0 8px;font-weight:bold">Lo que compraste</p><ul style="margin:0;padding-left:20px">' . $items . '</ul><p style="margin:8px 0 0">Total pagado: <strong>' . $total . '</strong></p>' : '') .
+        '<p style="font-size:13px;color:#555555;margin:20px 0 4px">' . $foot . '</p>' .
+        '<p style="font-size:12px;color:#8A8A87;margin:0 0 16px">Pedido ' . $esc($o['ref']) . '</p>');
+    $text = "Gracias por tu compra, chef.\n\n" . $intro . "\n" . $link .
+        ($itemsText !== '' ? "\n\nLo que compraste:\n" . $itemsText . "Total pagado: " . $total : '') .
+        "\n\n" . $foot . "\n\nPedido " . $o['ref'] . "\nGrupo MixMix";
+    if (!mail_send($to, 'Tu compra en Grupo MixMix está lista', $html, $text)) {
         error_log('after_paid: no se pudo enviar el correo del pedido ' . $o['ref']);
         $pdo->prepare('UPDATE orders SET mailed_at = NULL WHERE id = ?')->execute(array($o['id']));   /* se reintenta en la siguiente consulta */
     }
