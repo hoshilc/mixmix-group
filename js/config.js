@@ -40,7 +40,9 @@ window.MM_CONFIG = {
     on = /[?&]demo=1/.test(location.search);
   }
   C.preview = on;
-  C.store = !!C.storeLive || on;     /* ¿se muestran carrito, cuenta y botones "Agregar"? */
+  /* el enlace del correo de compra (pedido.html con folio y clave) siempre debe abrir, aunque la tienda siga oculta al público */
+  var orderLink = /(^|\/)pedido\.html$/.test(location.pathname) && /[?&]pedido=MM-[A-F0-9]{8}(&|$)/.test(location.search) && /[?&]t=[a-f0-9]{48}(&|$)/.test(location.search);
+  C.store = !!C.storeLive || on || orderLink;     /* ¿se muestran carrito, cuenta y botones "Agregar"? */
   C.showPlaceholders = (C.showPlaceholders !== false) || on;   /* ¿se muestran recuadros de ejemplo? */
   var hostOk = !!(C.api && (C.apiHosts || []).indexOf(location.hostname) > -1);
   C.useApi = hostOk;                    /* ¿hay servidor real (cuentas y pagos) en este dominio? */
