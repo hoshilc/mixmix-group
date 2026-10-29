@@ -59,7 +59,7 @@
 
         <div class="mm-cell">
           <h2 class="mm-h2">Escríbenos</h2>
-          <form class="mm-form" id="mm-contact-form" name="contacto" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+          <form class="mm-form" id="mm-contact-form" name="contacto" method="POST">
             <input type="hidden" name="form-name" value="contacto">
             <p class="mm-trap" aria-hidden="true"><label>No llenar este campo <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
             <div class="mm-field">
@@ -201,15 +201,21 @@
     if (!form.reportValidity()) return;
     var data = new FormData(form);
     data.delete("acepto");
-    var body = new URLSearchParams(data).toString();
+    var payload = {};
+    data.forEach(function (v, k) { payload[k] = v; });
     btn.disabled = true;
     btn.textContent = "Enviando…";
     var ctl = (window.AbortController ? new AbortController() : null);
     var timer = setTimeout(function () { if (ctl) ctl.abort(); }, 10000);   /* sin respuesta en 10 s: se usa el correo */
-    fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: body, signal: ctl ? ctl.signal : undefined })
-      .then(function (r) {
+    /* el servidor del sitio (api/contacto.php) manda el mensaje al correo del negocio; sin él, se abre el correo del visitante */
+    var send = C.useApi
+      ? fetch((C.api || "api/") + "contacto.php", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload), signal: ctl ? ctl.signal : undefined })
+          .then(function (r) { return r.json(); })
+          .then(function (d) { if (!d || !d.ok) throw new Error((d && d.error) || "server"); })
+      : Promise.reject(new Error("sin servidor"));
+    send
+      .then(function () {
         clearTimeout(timer);
-        if (!r.ok) throw new Error("http " + r.status);
         form.reset();
         show("¡Gracias! Recibimos tu mensaje y te respondemos pronto.");
         btn.textContent = "Enviado";

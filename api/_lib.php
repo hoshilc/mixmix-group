@@ -452,15 +452,18 @@ function mail_layout($heading, $inner) {
 
 /* ---------- correo (recuperar contraseña) ----------
    Por defecto usa mail() del hosting. Si en privado/config.php hay 'smtp', usa ese buzón (más confiable). */
-function mail_send($to, $subject, $html, $text) {
+function mail_send($to, $subject, $html, $text, $replyTo = null) {
     $cfg = config();
-    $from = isset($cfg['mail_from']) ? $cfg['mail_from'] : 'no-reply@' . preg_replace('/^www\./', '', parse_url($cfg['site_url'], PHP_URL_HOST));
+    $domain = preg_replace('/^www\./', '', parse_url($cfg['site_url'], PHP_URL_HOST));
+    $from = isset($cfg['mail_from']) ? $cfg['mail_from'] : 'no-reply@' . $domain;
+    /* las respuestas de los clientes van a la bandeja de contacto, no al no-reply */
+    if (!$replyTo) $replyTo = !empty($cfg['reply_to']) ? $cfg['reply_to'] : 'contacto@' . $domain;
     $name = 'Grupo MixMix';
     $boundary = 'mm_' . bin2hex(random_bytes(8));
     $subj = '=?UTF-8?B?' . base64_encode($subject) . '?=';
     $headers = array(
         'From: =?UTF-8?B?' . base64_encode($name) . '?= <' . $from . '>',
-        'Reply-To: ' . (isset($cfg['reply_to']) ? $cfg['reply_to'] : $from),
+        'Reply-To: ' . $replyTo,
         'MIME-Version: 1.0',
         'Content-Type: multipart/alternative; boundary="' . $boundary . '"',
     );
