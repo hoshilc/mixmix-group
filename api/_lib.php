@@ -550,3 +550,66 @@ function http_get_json($url) {
     return array($code, is_array($d) ? $d : array());
 }
 function stripe_is_test() { $c = config(); return strpos($c['stripe_secret'], 'sk_live') !== 0; }
+
+/* ---------- Mercado Pago (Checkout Pro, sin librería: API REST con cURL) ----------
+   Un pedido pagado con Mercado Pago guarda 'mp_<folio>' en la columna stripe_session_id, así mark_paid() y after_paid()
+   funcionan igual que con Stripe y no hace falta cambiar la base de datos. */
+function mp_enabled() {
+    $c = config();
+    return isset($c['mp_access_token']) && is_string($c['mp_access_token']) && preg_match('/^(APP_USR|TEST)-[A-Za-z0-9_-]+$/', $c['mp_access_token']) === 1;
+}
+function mp_request($method, $path, $body = null, $soft = false) {
+    $c = config();
+    $ch = curl_init('https://api.mercadopago.com' . $path);
+    $opts = array(
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_HTTPHEADER => array('Authorization: Bearer ' . $c['mp_access_token'], 'Content-Type: application/json'),
+    );
+    if ($method === 'POST') { $opts[CURLOPT_POST] = true; $opts[CURLOPT_POSTFIELDS] = json_encode($body, JSON_UNESCAPED_UNICODE); }
+    curl_setopt_array($ch, $opts);
+    $resp = curl_exec($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $err = curl_error($ch);
+    curl_close($ch);
+    if ($resp === false) {
+        error_log('mp curl: ' . $err);
+        if ($soft) return array('_error' => 'unreachable');
+        fail('mp_unreachable', 502);
+    }
+    $d = json_decode($resp, true);
+    if ($code >= 400 || !is_array($d)) {
+        error_log('mp http ' . $code . ': ' . $resp);
+        $parts = array();
+        if (is_array($d)) foreach (array('error', 'message') as $k) if (!empty($d[$k]) && is_string($d[$k])) $parts[] = $k . '=' . $d[$k];
+        $detail = preg_replace('/(APP_USR|TEST)-[A-Za-z0-9_-]+/', '$1-***', 'http ' . $code . ' ' . implode(' | ', $parts));
+        if ($soft) return array('_error' => mb_substr($detail, 0, 400), '_code' => $code);
+        json_out(array('ok' => false, 'error' => 'mp_error', 'detail' => mb_substr($detail, 0, 400)), 502);
+    }
+    return $d;
+}
+/* Consulta el pago a Mercado Pago (nunca se confía en lo que diga el navegador ni el aviso) y, si está aprobado,
+   por el monto del pedido y en pesos, lo marca como pagado. Devuelve el estado de Mercado Pago, o null si no aplica. */
+function mp_confirm_payment($paymentId) {
+    if (!preg_match('/^[0-9]{1,20}$/', (string)$paymentId)) return null;
+    $p = mp_request('GET', '/v1/payments/' . $paymentId, null, true);
+    if (isset($p['_error'])) return null;
+    $ref = isset($p['external_reference']) ? (string)$p['external_reference'] : '';
+    if (!preg_match('/^MM-[A-F0-9]{8}$/', $ref)) return null;
+    $st = db()->prepare('SELECT total FROM orders WHERE ref = ? AND stripe_session_id = ?');
+    $st->execute(array($ref, 'mp_' . $ref));
+    $o = $st->fetch();
+    if (!$o) return null;
+    $status = isset($p['status']) ? (string)$p['status'] : '';
+    if ($status === 'approved') {
+        $paid = isset($p['transaction_amount']) ? (float)$p['transaction_amount'] : 0.0;
+        $cur = isset($p['currency_id']) ? (string)$p['currency_id'] : '';
+        if ($cur !== 'MXN' || abs($paid - (float)$o['total']) > 0.01) {
+            error_log('mp: el pago ' . $paymentId . ' no coincide con el pedido ' . $ref . ' (' . $paid . ' ' . $cur . ' vs ' . $o['total'] . ' MXN)');
+            return 'mismatch';
+        }
+        mark_paid('mp_' . $ref);
+        after_paid('mp_' . $ref);
+    }
+    return $status;
+}

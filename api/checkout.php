@@ -17,6 +17,9 @@ if ($u) {
     if (!rate_limit('co-ip|' . client_ip(), 30, 3600) || !rate_limit('co-mail|' . $guestEmail, 6, 3600)) fail('too_many', 429);
 }
 expire_old_pending();
+/* pasarela: Stripe por defecto; 'mp' = Mercado Pago (solo si hay mp_access_token en privado/config.php) */
+$gateway = (isset($in['gateway']) && $in['gateway'] === 'mp') ? 'mp' : 'stripe';
+if ($gateway === 'mp' && !mp_enabled()) fail('mp_not_available');
 try {
     $pdo = db();
     $cfg = config();
@@ -48,6 +51,44 @@ try {
     }
     if ($cart['manuals'] > 0) {
         $items[] = array('name' => 'Manuales MixMix (' . $cart['manuals'] . ($cart['manuals'] === 1 ? ' manual' : ' manuales') . ', precio por volumen)', 'amount' => $cart['manualsCost'] * 100);
+    }
+    if ($gateway === 'mp') {
+        /* Mercado Pago agrega sus datos (payment_id, status…) al final de la liga de regreso: por eso va sin #ancla */
+        $back = $u
+            ? $cfg['site_url'] . '/cuenta.html?pedido=' . $ref
+            : $cfg['site_url'] . '/pedido.html?pedido=' . $ref . '&t=' . guest_token($ref);
+        $mpItems = array();
+        foreach ($items as $it) {
+            $mpItems[] = array('title' => mb_substr($it['name'], 0, 250), 'quantity' => 1, 'currency_id' => 'MXN', 'unit_price' => $it['amount'] / 100);
+        }
+        $pref = array(
+            'items' => $mpItems,
+            'payer' => array('email' => $u ? $u['email'] : $guestEmail),
+            'external_reference' => $ref,
+            'metadata' => array('order_ref' => $ref, 'phase' => $cart['phase']),
+            'back_urls' => array('success' => $back, 'pending' => $back, 'failure' => $cfg['site_url'] . '/carrito.html'),
+            'auto_return' => 'approved',
+            'notification_url' => $cfg['site_url'] . '/api/mp-webhook.php',
+            'statement_descriptor' => 'GRUPO MIXMIX',
+        );
+        /* la liga de pago vence a los 2 días o al cerrar la fase de lanzamiento (lo que ocurra primero) */
+        $endTs = time() + 2 * 86400;
+        if ($cart['phase'] !== null) $endTs = min($endTs, max($cart['phaseEnd'], time() + 1800));
+        $pref['expires'] = true;
+        $pref['expiration_date_from'] = gmdate('Y-m-d\TH:i:s') . '.000+00:00';
+        $pref['expiration_date_to'] = gmdate('Y-m-d\TH:i:s', $endTs) . '.000+00:00';
+        $r = mp_request('POST', '/checkout/preferences', $pref, true);
+        if (isset($r['_error']) && !(isset($r['_code']) && $r['_code'] === 401)) {   /* 401 = token inválido: reintentar no sirve */
+            error_log('checkout mp: se reintenta sin vencimiento (' . $r['_error'] . ')');
+            unset($pref['expires'], $pref['expiration_date_from'], $pref['expiration_date_to']);
+            $r = mp_request('POST', '/checkout/preferences', $pref);
+        } elseif (isset($r['_error'])) {
+            fail('mp_error', 502);
+        }
+        $url = (strpos($cfg['mp_access_token'], 'TEST-') === 0 && !empty($r['sandbox_init_point'])) ? $r['sandbox_init_point'] : (isset($r['init_point']) ? $r['init_point'] : '');
+        if ($url === '') { error_log('checkout mp: la respuesta no trae init_point'); fail('mp_error', 502); }
+        $pdo->prepare('UPDATE orders SET stripe_session_id = ? WHERE ref = ?')->execute(array('mp_' . $ref, $ref));
+        ok(array('url' => $url, 'ref' => $ref, 'methods' => array('mercadopago')));
     }
     $success = $u
         ? $cfg['site_url'] . '/cuenta.html?pedido=' . $ref . '&session_id={CHECKOUT_SESSION_ID}#compras'

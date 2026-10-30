@@ -170,7 +170,7 @@
 <script src="js/fases.js?v=f066e5b6"></script>
 <script src="js/catalog.js?v=f76422b3"></script>
 <script src="js/mm.js?v=068d9d58"></script>
-<script src="js/store.js?v=549945e1"></script>
+<script src="js/store.js?v=b9ce29ff"></script>
 <script src="js/site.js?v=343188cb"></script>
 <script>
 (function () {
@@ -417,11 +417,11 @@
   document.addEventListener("mmstore", function (e) { if (e.detail && (e.detail.what === "login" || e.detail.what === "logout" || e.detail.what === "ready" || e.detail.what === "sync")) render(); });
   window.addEventListener("hashchange", function () { if (S.user()) showPanel(location.hash === "#descargas" ? "descargas" : "compras"); });
   /* de regreso de Stripe: se confirma el pago (el aviso automático puede tardar unos segundos) y se vacía el carrito */
-  var sid = params.get("session_id");
-  if (S.live() && sid) {
+  var sid = params.get("session_id"), pid = params.get("payment_id") || params.get("collection_id");   /* pid = regreso de Mercado Pago */
+  if (S.live() && (sid || pid)) {
     var tries = 0;
     (function check() {
-      S.confirm(sid).then(function (d) {
+      S.confirm(sid, params.get("pedido"), pid).then(function (d) {
         if (d && d.ok && d.status === "paid") { S.clear(); return S.refresh(); }
         if (++tries < 8 && !(d && d.ok === false && d.error === "not_logged_in")) setTimeout(check, 2000);
         else S.refresh();

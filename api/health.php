@@ -29,6 +29,7 @@ if ($out['config']) {
     $out['stripe_key_length'] = strlen($sk);
     $out['stripe_key_ok'] = (bool)preg_match('/^sk_test_[A-Za-z0-9]{40,}$/', $sk) || (bool)preg_match('/^sk_live_[A-Za-z0-9]{40,}$/', $sk);
     $out['stripe_key_has_whitespace'] = (bool)preg_match('/\s/', $sk);    $out['google_client_id'] = !empty($cfg['google_client_id']);
+    $out['mercadopago'] = !empty($cfg['mp_access_token']) ? (strpos($cfg['mp_access_token'], 'APP_USR-') === 0 ? 'produccion' : (strpos($cfg['mp_access_token'], 'TEST-') === 0 ? 'prueba' : 'formato_invalido')) : 'sin_token';
     $out['mail_mode'] = !empty($cfg['smtp']) ? 'smtp' : 'mail()';    $out['webhook_secret'] = !empty($cfg['stripe_webhook_secret']) && strpos($cfg['stripe_webhook_secret'], 'whsec_') === 0 && $cfg['stripe_webhook_secret'] !== 'whsec_CAMBIAR';
     try {
         $pdo = db();

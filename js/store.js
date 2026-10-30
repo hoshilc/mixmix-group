@@ -61,7 +61,7 @@
   S.refresh = function () {
     if (!live()) return Promise.resolve(null);
     return api("me.php").then(function (d) {
-      if (d && d.ok) { LIVE = { user: d.user, orders: d.orders || [], mode: d.stripe_mode || "test", google: d.google_client_id || "" }; write("mm_live", LIVE); }
+      if (d && d.ok) { LIVE = { user: d.user, orders: d.orders || [], mode: d.stripe_mode || "test", google: d.google_client_id || "", mp: !!d.mp }; write("mm_live", LIVE); }
       changed(null, "sync");
       return d;
     });
@@ -76,7 +76,7 @@
   };
   S.apiLogout = function () {
     return api("logout.php", {}).then(function () {
-      LIVE = { user: null, orders: [], mode: LIVE.mode }; write("mm_live", LIVE); changed(null, "logout");
+      LIVE = { user: null, orders: [], mode: LIVE.mode, google: LIVE.google, mp: LIVE.mp }; write("mm_live", LIVE); changed(null, "logout");
     });
   };
   S.apiForgot = function (email) { return api("forgot.php", { email: email }); };
@@ -90,11 +90,14 @@
   };
   S.googleId = function () { return LIVE.google || ""; };
   /* con sesión paga a nombre de la cuenta; sin sesión hace falta el correo (compra como invitado) */
-  S.checkout = function (email) { return api("checkout.php", { ids: S.cart(), email: email || "" }); };
-  S.confirm = function (sessionId) { return api("confirm.php?session_id=" + encodeURIComponent(sessionId)); };
+  S.checkout = function (email, gateway) { return api("checkout.php", { ids: S.cart(), email: email || "", gateway: gateway || "" }); };
+  S.mpEnabled = function () { return live() && !!LIVE.mp; };
+  S.confirm = function (sessionId, ref, paymentId) {
+    return api("confirm.php?" + (paymentId ? "pedido=" + encodeURIComponent(ref || "") + "&payment_id=" + encodeURIComponent(paymentId) : "session_id=" + encodeURIComponent(sessionId)));
+  };
   /* compra sin cuenta: estado del pedido (número + código del enlace) y guardarlo en una cuenta */
-  S.guestOrder = function (ref, t, sessionId) {
-    return api("pedido.php?pedido=" + encodeURIComponent(ref) + "&t=" + encodeURIComponent(t) + (sessionId ? "&session_id=" + encodeURIComponent(sessionId) : ""));
+  S.guestOrder = function (ref, t, sessionId, paymentId) {
+    return api("pedido.php?pedido=" + encodeURIComponent(ref) + "&t=" + encodeURIComponent(t) + (sessionId ? "&session_id=" + encodeURIComponent(sessionId) : "") + (paymentId ? "&payment_id=" + encodeURIComponent(paymentId) : ""));
   };
   S.claim = function (ref, t, name, password) {
     return api("claim.php", { pedido: ref, t: t, name: name || "", password: password || "" })

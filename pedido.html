@@ -149,14 +149,14 @@
 <script src="js/fases.js?v=f066e5b6"></script>
 <script src="js/catalog.js?v=f76422b3"></script>
 <script src="js/mm.js?v=068d9d58"></script>
-<script src="js/store.js?v=549945e1"></script>
+<script src="js/store.js?v=b9ce29ff"></script>
 <script src="js/site.js?v=343188cb"></script>
 <script>
 (function () {
   if (window.MM_CONFIG && !window.MM_CONFIG.store) { location.replace("descargables.html"); return; }
   var S = window.MMStore, M = window.MM;
   var params = new URLSearchParams(location.search);
-  var ref = params.get("pedido") || "", tok = params.get("t") || "", sid = params.get("session_id") || "";
+  var ref = params.get("pedido") || "", tok = params.get("t") || "", sid = params.get("session_id") || "", pid = params.get("payment_id") || params.get("collection_id") || "";
   var live = S.live();
   function $(id) { return document.getElementById(id); }
   function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
@@ -279,7 +279,7 @@
   if (!/^MM-[A-F0-9]{8}$/.test(ref) || !/^[a-f0-9]{48}$/.test(tok)) { show("bad"); return; }
   var tries = 0;
   (function check() {
-    S.guestOrder(ref, tok, sid).then(function (d) {
+    S.guestOrder(ref, tok, sid, pid).then(function (d) {
       if (d && d.ok && d.status === "paid") { S.clear(); renderOrder(d); return; }
       if (d && d.ok === false && d.error === "order_not_found") { show("bad"); return; }
       if (++tries < 10) { setTimeout(check, 2000); return; }

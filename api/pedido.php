@@ -19,6 +19,11 @@ try {
         }
         $o = guest_order($ref, $tok);
     }
+    $pid = isset($_GET['payment_id']) ? (string)$_GET['payment_id'] : '';
+    if ($o['status'] !== 'paid' && preg_match('/^[0-9]{1,20}$/', $pid)) {   /* regreso de Mercado Pago */
+        mp_confirm_payment($pid);   /* solo marca el pedido si el pago es de ESTE pedido y por su monto */
+        $o = guest_order($ref, $tok);
+    }
     if ($o['status'] === 'paid') {
         $st = db()->prepare('SELECT stripe_session_id FROM orders WHERE id = ?');
         $st->execute(array($o['id']));

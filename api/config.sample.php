@@ -20,6 +20,8 @@ return array(
 
     /* métodos de pago ofrecidos en Stripe Checkout: 'card' siempre; 'oxxo' y 'customer_balance' (SPEI) requieren activarlos en Stripe */
     'payment_methods' => array('card'),
+    /* Mercado Pago (opcional): Access Token de PRODUCCIÓN de tu aplicación (empieza con APP_USR-). Vacío = el botón "Pagar con Mercado Pago" no aparece. */
+    // 'mp_access_token' => 'APP_USR-CAMBIAR',
     /* Inicio de sesión con Google: ID de cliente OAuth (termina en .apps.googleusercontent.com). Vacío = el botón no aparece. */
     'google_client_id' => '',
 
