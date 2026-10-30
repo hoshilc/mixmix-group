@@ -7,7 +7,7 @@
 <meta name="robots" content="noindex, nofollow">
 <meta name="referrer" content="no-referrer">
 <link rel="stylesheet" href="css/mixmix-brand/mixmix.css?v=3393207f">
-<link rel="stylesheet" href="css/site.css?v=619e7edf">
+<link rel="stylesheet" href="css/site.css?v=24a3fc9d">
 <!--#meta-->
 <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="img/favicon-48.png" sizes="48x48" type="image/png">
@@ -175,7 +175,7 @@
       who.appendChild(el("small", "mm-adm-sub", (o.name ? o.name + " · " : "") + o.kind));
       tr.appendChild(who);
       var it = el("td"); o.items.forEach(function (t) { it.appendChild(el("div", null, t)); });
-      if (o.discount > 0) it.appendChild(el("small", "mm-adm-sub", "Incluye descuento por volumen de " + money(o.discount)));
+      if (o.discount > 0) it.appendChild(el("small", "mm-adm-sub", "Incluye descuento de " + money(o.discount)));
       tr.appendChild(it);
       tr.appendChild(el("td", "mm-adm-num", money(o.total)));
       var stc = el("td"); stc.appendChild(el("span", "mm-adm-pill is-" + o.status, { paid: "Pagado", pending: "Pendiente", expired: "Vencido" }[o.status] || o.status));

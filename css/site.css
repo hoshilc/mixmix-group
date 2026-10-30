@@ -815,3 +815,28 @@ h2.mm-acc-title { margin: 0; }
 .mm-app-rows > div:last-child { border-bottom: 0; }
 .mm-app-rows > .h { background: var(--mm-marble); font-weight: 700; font-size: 8px; letter-spacing: var(--mm-track-label); text-transform: uppercase; color: var(--mm-stone-ink); }
 @media (max-width: 520px) { .mm-app-body { grid-template-columns: 1fr; } .mm-app-side { display: none; } }
+
+/* ===== Barra de precio de lanzamiento (arriba del menú; solo existe mientras haya una fase en curso) ===== */
+.mm-launch {
+  position: sticky; top: 0; z-index: 30; box-sizing: border-box; min-height: 44px;
+  display: flex; align-items: center; flex-wrap: wrap; gap: 2px var(--mm-space-3);
+  padding: 6px clamp(16px, 4vw, 40px); background: var(--mm-black); color: var(--mm-bone);
+  border-bottom: 2px solid var(--mm-gold);
+}
+.mm-launch[hidden] { display: none; }
+html.has-launch .mm-header { top: var(--mm-launch-h, 44px); }
+.mm-launch-text { font-family: var(--mm-font-display); font-weight: 600; font-size: 14px; line-height: 1.3; }
+.mm-launch-timer { margin-left: auto; line-height: 1; font-family: var(--mm-font-logo); font-weight: 400; font-size: 22px; letter-spacing: 0.08em; color: var(--mm-gold); white-space: nowrap; }
+.mm-launch-link { font-family: var(--mm-font-display); font-weight: 600; font-size: 13px; color: var(--mm-bone); text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
+.mm-launch-link:hover, .mm-launch-link:focus-visible { color: var(--mm-gold); }
+.mm-launch .mm-tag { white-space: nowrap; }
+.mm-launch-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (max-width: 640px) {
+  /* celular: línea 1 = el mensaje; línea 2 = etiqueta corta, cuenta regresiva y enlace */
+  .mm-launch { gap: 2px var(--mm-space-3); padding-block: 4px; }
+  .mm-launch-text { order: 1; flex: 1 0 100%; font-size: 12px; }
+  .mm-launch .mm-tag { order: 2; font-size: 9px; padding: 3px 6px; }
+  .mm-launch-long { display: none; }
+  .mm-launch-timer { order: 3; margin-left: 0; font-size: 18px; }
+  .mm-launch-link { order: 4; margin-left: auto; font-size: 12px; }
+}

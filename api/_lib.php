@@ -174,12 +174,39 @@ function owned_products($userId) {
     return $out;
 }
 
-/* precio del carrito, calculado SIEMPRE en el servidor */
+/* ---------- precio de lanzamiento por fases ----------
+   fases.json (raíz del sitio) lo lee también la barra del navegador. Aquí se decide con la hora del SERVIDOR, nunca la
+   del navegador: devuelve la fase en curso (id, fin, % en paquetes y % en documentos sueltos) o null si no hay ninguna. */
+function phase_active() {
+    static $ph = false;
+    if ($ph !== false) return $ph;
+    $ph = null;
+    $raw = @file_get_contents(dirname(__DIR__) . '/fases.json');
+    $d = $raw ? json_decode($raw, true) : null;
+    if (!is_array($d) || empty($d['fases']) || !is_array($d['fases'])) return $ph;
+    $now = time();
+    foreach ($d['fases'] as $f) {
+        if (!is_array($f) || !isset($f['inicio']) || !isset($f['fin'])) continue;
+        $a = strtotime((string)$f['inicio']); $b = strtotime((string)$f['fin']);
+        if ($a === false || $b === false || $now < $a || $now >= $b) continue;
+        $pct = function ($k) use ($f) { return isset($f[$k]) ? max(0, min(90, (int)$f[$k])) : 0; };
+        $ph = array('id' => isset($f['id']) ? (string)$f['id'] : 'fase', 'fin' => $b, 'paquetes' => $pct('paquetes'), 'sueltos' => $pct('sueltos'));
+        break;
+    }
+    return $ph;
+}
+/* precio con el descuento de la fase, redondeado al peso */
+function phase_price($price, $pct) { return (int)round($price * (100 - $pct) / 100); }
+
+/* precio del carrito, calculado SIEMPRE en el servidor.
+   Los manuales siguen el precio por volumen y, encima, el descuento de la fase para documentos; los demás productos llevan
+   el de paquetes (los que traen varios documentos) o el de sueltos. 'discount' es todo lo que se ahorra frente al precio regular. */
 function price_cart($ids, $ownedItems) {
     $cat = catalog();
+    $ph = phase_active();
     $tiers = isset($cat['volume']['manuales']) ? $cat['volume']['manuales'] : array();
     $lines = array();
-    $man = 0; $manBase = 0; $other = 0;
+    $man = 0; $manBase = 0; $other = 0; $otherBase = 0;
     foreach (array_values(array_unique($ids)) as $id) {
         if (!is_string($id) || !isset($cat['byId'][$id])) continue;
         $p = $cat['byId'][$id];
@@ -188,13 +215,20 @@ function price_cart($ids, $ownedItems) {
         $allOwned = count($docs) > 0;
         foreach ($docs as $d) if (empty($ownedItems[$d['id']])) { $allOwned = false; break; }
         if ($allOwned) continue;                                /* ya lo tiene: no se cobra dos veces */
-        $lines[] = array('id' => $id, 'title' => $p['title'], 'price' => (int)$p['price']);
-        if (isset($p['cat']) && $p['cat'] === 'manuales') { $man++; $manBase += (int)$p['price']; }
-        else $other += (int)$p['price'];
+        $isItem = isset($p['cat']);
+        $isManual = $isItem && $p['cat'] === 'manuales';
+        $base = (int)$p['price'];
+        $pct = $ph ? ($isItem ? $ph['sueltos'] : $ph['paquetes']) : 0;
+        $price = ($pct > 0 && !$isManual) ? phase_price($base, $pct) : $base;
+        $lines[] = array('id' => $id, 'title' => $p['title'], 'price' => $price);
+        if ($isManual) { $man++; $manBase += $base; }
+        else { $other += $price; $otherBase += $base; }
     }
     $manCost = $man > 0 ? min($manBase, $tiers ? volume_cost($man, $tiers) : $manBase) : 0;
+    if ($ph && $ph['sueltos'] > 0 && $manCost > 0) $manCost = phase_price($manCost, $ph['sueltos']);
     return array('lines' => $lines, 'manuals' => $man, 'manualsBase' => $manBase, 'manualsCost' => $manCost,
-                 'discount' => $manBase - $manCost, 'other' => $other, 'total' => $other + $manCost);
+                 'discount' => ($manBase + $otherBase) - ($manCost + $other), 'other' => $other, 'total' => $other + $manCost,
+                 'phase' => $ph ? $ph['id'] : null, 'phaseEnd' => $ph ? $ph['fin'] : null);
 }
 
 /* ---------- Stripe (sin librería: API REST con cURL) ---------- */

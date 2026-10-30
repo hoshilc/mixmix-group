@@ -6,7 +6,7 @@
 <title>Mi cuenta — Grupo MixMix</title>
 <meta name="robots" content="noindex">
 <link rel="stylesheet" href="css/mixmix-brand/mixmix.css?v=3393207f">
-<link rel="stylesheet" href="css/site.css?v=619e7edf">
+<link rel="stylesheet" href="css/site.css?v=24a3fc9d">
 <!--#meta-->
 <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="img/favicon-48.png" sizes="48x48" type="image/png">
@@ -170,7 +170,7 @@
 <script src="js/catalog.js?v=f76422b3"></script>
 <script src="js/mm.js?v=65b8dc8c"></script>
 <script src="js/store.js?v=b5c67e9d"></script>
-<script src="js/site.js?v=343188cb"></script>
+<script src="js/site.js?v=22309fe8"></script>
 <script>
 (function () {
   if (window.MM_CONFIG && !window.MM_CONFIG.account) { location.replace("descargables.html"); return; }
@@ -342,7 +342,7 @@
       d.className = "mm-acc mm-order";
       d.open = o.id === openId;
       d.innerHTML = '<summary><span class="mm-acc-title">' + esc(orderTitle(o)) + '</span>' +
-        '<span class="mm-acc-meta">' + esc(fmtDate(o.date)) + ' · ' + o.lines.length + (o.lines.length === 1 ? ' producto' : ' productos') + ' · ' + M.money(o.total) + (o.discount > 0 ? ' (incluye descuento por volumen de ' + M.money(o.discount) + ')' : '') + '</span></summary>';
+        '<span class="mm-acc-meta">' + esc(fmtDate(o.date)) + ' · ' + o.lines.length + (o.lines.length === 1 ? ' producto' : ' productos') + ' · ' + M.money(o.total) + (o.discount > 0 ? ' (incluye descuento de ' + M.money(o.discount) + ')' : '') + '</span></summary>';
       var body = document.createElement("div");
       body.className = "mm-acc-body";
       o.lines.forEach(function (l) {

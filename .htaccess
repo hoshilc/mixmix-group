@@ -16,7 +16,7 @@ RedirectMatch 404 ^/(tools|partials)(/|$)
 
 # Cache: las paginas siempre se revisan (asi un cambio se ve al instante); css/js llevan ?v=huella en el enlace
 <IfModule mod_headers.c>
-  <FilesMatch "\.html$">
+  <FilesMatch "\.(html|json)$">
     Header set Cache-Control "no-cache"
   </FilesMatch>
   <FilesMatch "\.(css|js)$">

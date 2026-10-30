@@ -62,6 +62,14 @@ try {
         'locale' => 'es-419',
         'allow_promotion_codes' => 'true',   /* campo "Agregar código promocional" en la página de pago; los códigos se crean en Stripe */
     );
+    /* precio de lanzamiento: se anota la fase y la sesión de pago vence al cerrar la fase, para que nadie pague un precio ya terminado.
+       Stripe exige que venza entre 30 minutos y 24 horas después de crearse; en los últimos 31 minutos de una fase puede quedar
+       hasta ~30 min abierta después del cierre (límite de Stripe). */
+    if ($cart['phase'] !== null) {
+        $params['metadata']['phase'] = $cart['phase'];
+        $left = $cart['phaseEnd'] - time();
+        if ($left < 86400) $params['expires_at'] = time() + max(1860, $left);
+    }
     foreach ($items as $i => $it) {
         $params['line_items'][$i] = array(
             'quantity' => 1,
