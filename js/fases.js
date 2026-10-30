@@ -21,7 +21,18 @@
       var d = JSON.parse(x.responseText);
       if (d && d.zona) state.zona = d.zona;
       state.fases = (d && d.fases) || [];
-      for (var i = 0; i < state.fases.length; i++) {
+      /* vista previa (solo en este navegador, solo para mirar): ?fase=semana-1 muestra esa fase aunque todavía no empiece; ?fase=0 la apaga.
+         No cambia lo que se cobra: el servidor siempre decide el precio con sus propias fechas. */
+      var sim = null;
+      try {
+        var q = new URLSearchParams(location.search).get("fase");
+        if (q === "0") sessionStorage.removeItem("mm_fase_sim"); else if (q) sessionStorage.setItem("mm_fase_sim", q);
+        sim = sessionStorage.getItem("mm_fase_sim");
+      } catch (e2) {}
+      for (var s = 0; sim && s < state.fases.length; s++) {
+        if (state.fases[s].id === sim && now() < Date.parse(state.fases[s].fin)) { state.fase = state.fases[s]; state.simulada = true; break; }
+      }
+      for (var i = 0; !state.fase && i < state.fases.length; i++) {
         if (now() >= Date.parse(state.fases[i].inicio) && now() < Date.parse(state.fases[i].fin)) { state.fase = state.fases[i]; break; }
       }
     }
@@ -82,6 +93,7 @@
     },
     /* aviso del carrito cuando la fase cambió desde la última vez que se abrió */
     avisoCambio: function () {
+      if (state.simulada) return "";
       var prev = null, cur = state.fase ? state.fase.id : "regular";
       try { prev = localStorage.getItem("mm_cart_fase"); localStorage.setItem("mm_cart_fase", cur); } catch (e) { return ""; }
       if (!prev || prev === cur) return "";
@@ -98,6 +110,12 @@
     document.querySelectorAll('[data-mm-launch="on"]').forEach(function (e) { e.hidden = !f; });
     document.querySelectorAll('[data-mm-launch="off"]').forEach(function (e) { e.hidden = !!f; });
     if (!f) return;
+    if (state.simulada) {
+      var b = document.createElement("div");
+      b.className = "mm-preview-badge";
+      b.innerHTML = 'Vista previa: ' + f.id.replace(/-/g, " ") + ' · solo en este navegador; al pagar se cobra el precio vigente · <a href="' + location.pathname + '?fase=0">salir</a>';
+      document.body.appendChild(b);
+    }
     document.querySelectorAll("[data-mm-launch-fecha]").forEach(function (e) { e.textContent = window.MMFases.campanaFecha(); });
     document.querySelectorAll("[data-mm-launch-pct]").forEach(function (e) { e.textContent = pct(e.getAttribute("data-mm-launch-pct")); });
     document.querySelectorAll("[data-mm-launch-fin]").forEach(function (e) { e.textContent = window.MMFases.finTexto(); });
