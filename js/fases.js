@@ -21,7 +21,7 @@
       var d = JSON.parse(x.responseText);
       if (d && d.zona) state.zona = d.zona;
       state.fases = (d && d.fases) || [];
-      /* vista previa (solo en este navegador, solo para mirar): ?fase=semana-1 muestra esa fase aunque todavía no empiece; ?fase=0 la apaga.
+      /* vista previa (solo en este navegador, solo para mirar): ?fase=etapa-1 muestra esa fase aunque todavía no empiece; ?fase=0 la apaga.
          No cambia lo que se cobra: el servidor siempre decide el precio con sus propias fechas. */
       var sim = null;
       try {
