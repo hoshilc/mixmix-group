@@ -25,7 +25,12 @@ window.MM_CONFIG = {
   api: "api/",
   apiHosts: ["darkslategray-trout-767454.hostingersite.com", "grupomixmix.com", "www.grupomixmix.com"],
   /* redes sociales: pega la dirección completa de cada perfil; las vacías no se muestran */
-  social: { instagram: "", tiktok: "", youtube: "", facebook: "" }
+  social: {
+    instagram: "https://www.instagram.com/mixmix.blog",
+    tiktok: "https://www.tiktok.com/@mixmix.blog",
+    youtube: "https://www.youtube.com/@mixmixblog1899",
+    facebook: "https://www.facebook.com/mixmixblog"
+  }
 };
 
 (function () {
