@@ -76,11 +76,41 @@ try {
             'price_data' => array('currency' => 'mxn', 'unit_amount' => $it['amount'], 'product_data' => array('name' => mb_substr($it['name'], 0, 250))),
         );
     }
-    foreach (isset($cfg['payment_methods']) ? $cfg['payment_methods'] : array('card') as $i => $m) $params['payment_method_types'][$i] = $m;
 
-    $s = stripe_request('POST', '/checkout/sessions', $params);
+    /* métodos de pago: 'payment_methods' de privado/config.php ('card', y si ya están activados en Stripe: 'oxxo' y 'customer_balance' = transferencia SPEI).
+       Si Stripe rechaza alguno (p. ej. todavía no está activado), se reintenta solo con tarjeta: nadie se queda sin poder pagar. */
+    $methods = (isset($cfg['payment_methods']) && is_array($cfg['payment_methods']) && $cfg['payment_methods']) ? array_values($cfg['payment_methods']) : array('card');
+    $payParams = function ($methods) use ($params, $cart, $ref, $u, $guestEmail) {
+        $p = $params;
+        foreach ($methods as $i => $m) $p['payment_method_types'][$i] = $m;
+        if (in_array('oxxo', $methods, true)) {
+            /* la ficha de OXXO no vence con la sesión de pago: se acorta para que no sobreviva mucho al precio de lanzamiento */
+            $days = 2;
+            if ($cart['phase'] !== null) $days = max(1, min(2, (int)ceil(($cart['phaseEnd'] - time()) / 86400)));
+            $p['payment_method_options']['oxxo']['expires_after_days'] = $days;
+        }
+        if (in_array('customer_balance', $methods, true)) {
+            /* la transferencia SPEI necesita un cliente en Stripe (en lugar de solo el correo) */
+            $c = stripe_request('POST', '/customers', array('email' => $u ? $u['email'] : $guestEmail, 'metadata' => array('order_ref' => $ref)), true);
+            if (isset($c['id'])) {
+                unset($p['customer_email']);
+                $p['customer'] = $c['id'];
+                $p['payment_method_options']['customer_balance'] = array('funding_type' => 'bank_transfer', 'bank_transfer' => array('type' => 'mx_bank_transfer'));
+            } else {
+                $p['payment_method_types'] = array_values(array_diff($methods, array('customer_balance')));
+            }
+        }
+        return $p;
+    };
+    $s = stripe_request('POST', '/checkout/sessions', $payParams($methods), count($methods) > 1);
+    $used = $methods;
+    if (isset($s['_error'])) {
+        error_log('checkout: Stripe rechazó los métodos ' . implode(',', $methods) . ' (' . $s['_error'] . '); se reintenta solo con tarjeta');
+        $used = array('card');
+        $s = stripe_request('POST', '/checkout/sessions', $payParams($used));
+    }
     $pdo->prepare('UPDATE orders SET stripe_session_id = ? WHERE ref = ?')->execute(array($s['id'], $ref));
-    ok(array('url' => $s['url'], 'ref' => $ref));
+    ok(array('url' => $s['url'], 'ref' => $ref, 'methods' => $used));
 } catch (PDOException $e) {
     error_log('checkout: ' . $e->getMessage());
     fail('server', 500);

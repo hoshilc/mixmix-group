@@ -232,7 +232,7 @@ function price_cart($ids, $ownedItems) {
 }
 
 /* ---------- Stripe (sin librería: API REST con cURL) ---------- */
-function stripe_request($method, $path, $params = array()) {
+function stripe_request($method, $path, $params = array(), $soft = false) {
     $c = config();
     $ch = curl_init('https://api.stripe.com/v1' . $path . ($method === 'GET' && $params ? '?' . http_build_query($params) : ''));
     $opts = array(
@@ -254,6 +254,7 @@ function stripe_request($method, $path, $params = array()) {
         $parts = array();
         foreach (array('type', 'code', 'param', 'message') as $k) if (!empty($e[$k])) $parts[] = $k . '=' . $e[$k];
         $detail = preg_replace('/(sk|rk|pk)_(test|live)_[A-Za-z0-9*_]+/', '$1_$2_***', 'http ' . $code . ' ' . implode(' | ', $parts));
+        if ($soft) return array('_error' => mb_substr($detail, 0, 400));   /* quien llama decide qué hacer (p. ej. reintentar solo con tarjeta) */
         json_out(array('ok' => false, 'error' => 'stripe_error', 'detail' => mb_substr($detail, 0, 400)), 502);
     }
     return $d;

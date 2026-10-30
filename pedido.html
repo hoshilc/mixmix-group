@@ -283,7 +283,7 @@
       if (d && d.ok && d.status === "paid") { S.clear(); renderOrder(d); return; }
       if (d && d.ok === false && d.error === "order_not_found") { show("bad"); return; }
       if (++tries < 10) { setTimeout(check, 2000); return; }
-      $("ped-wait-msg").innerHTML = 'Todavía no vemos tu pago. Si ya pagaste, espera un minuto y <a href="">recarga esta página</a>; si no se resuelve, <a href="contacto.html">escríbenos</a> con tu número de pedido <strong>' + esc(ref) + '</strong>.';
+      $("ped-wait-msg").innerHTML = 'Todavía no vemos tu pago. Si elegiste pagar en OXXO o por transferencia, tus archivos llegan a tu correo y a esta página en cuanto se confirme el pago (puede tardar de minutos a un par de días). Si ya pagaste con tarjeta, espera un minuto y <a href="">recarga esta página</a>; si no se resuelve, <a href="contacto.html">escríbenos</a> con tu número de pedido <strong>' + esc(ref) + '</strong>.';
     });
   })();
 })();
