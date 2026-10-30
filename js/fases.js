@@ -113,7 +113,7 @@
         '<span class="mm-launch-text" id="mm-launch-text"></span>' +
         '<strong class="mm-launch-timer" id="mm-launch-timer"></strong>' +
         '<a class="mm-launch-link" href="descargables.html?utm_source=sitio&utm_medium=barra&utm_campaign=lanzamiento-descargables">Ver descargables</a>' +
-        '<span class="mm-launch-sr">Termina el ' + window.MMFases.finTexto() + '.</span>';
+        '<span class="mm-launch-sr">Termina el ' + window.MMFases.finTexto().replace(/\.$/, '') + '.</span>';
       header.parentNode.insertBefore(el, header);
       document.documentElement.classList.add("has-launch");
       el.querySelector("a").addEventListener("click", function () { if (window.plausible) window.plausible("clic_barra_timer"); });

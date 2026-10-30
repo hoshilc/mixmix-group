@@ -122,7 +122,7 @@
 <!--/#footer-->
 
 <script src="js/config.js?v=9f2db49e"></script>
-<script src="js/fases.js?v=45d6d199"></script>
+<script src="js/fases.js?v=9735f22c"></script>
 <script src="js/catalog.js?v=f76422b3"></script>
 <script src="js/mm.js?v=068d9d58"></script>
 <script src="js/store.js?v=549945e1"></script>
@@ -221,7 +221,7 @@
           var ll = document.createElement("li");
           ll.className = "mm-cart-line mm-cart-discount";
           ll.innerHTML = '<div><p class="mm-cart-title">Precio de lanzamiento</p>' +
-            '<p class="mm-cart-kind">Tu precio de lanzamiento se mantiene si pagas antes del ' + esc(window.MMFases.finTexto()) + '.</p></div>' +
+            '<p class="mm-cart-kind">Tu precio de lanzamiento se mantiene si pagas antes del ' + esc(window.MMFases.finTexto().replace(/\.$/, '')) + '.</p></div>' +
             '<div class="mm-cart-right"><span class="mm-cart-price">−' + M.money(ahorro) + '</span></div>';
           ul.appendChild(ll);
         }
