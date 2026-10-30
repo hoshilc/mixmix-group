@@ -12,6 +12,7 @@
   "use strict";
   var C = window.MM_CATALOG;
   if (!C) return;
+  if (window.MMFases) window.MMFases.applyTo(C);   /* precio de lanzamiento, si hay una fase en curso */
 
   var items = C.items, bundles = C.bundles, packages = C.packages || [];
   var byId = {}, catById = {}, themeName = {}, areaName = {};
@@ -23,8 +24,8 @@
   C.areas.forEach(function (a) { areaName[a.id] = a.name; });
 
   function byTitle(a, b) { return a.title.localeCompare(b.title, "es"); }
-  function money(n) { return "$" + Number(n).toLocaleString("en-US") + " MXN"; }
-  function short(n) { return "$" + Number(n).toLocaleString("en-US"); }
+  function money(n) { return "$" + Math.round(Number(n)).toLocaleString("en-US") + " MXN"; }
+  function short(n) { return "$" + Math.round(Number(n)).toLocaleString("en-US"); }
   function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
   function el(tag, cls, html) {
     var e = document.createElement(tag);
@@ -41,6 +42,17 @@
   function total(list) { return list.reduce(function (a, i) { return a + i.price; }, 0); }
   /* precio por documento: "$81 c/u" */
   function per(price, n) { return short(Math.round(price / n)) + " c/u"; }
+  /* precio de lanzamiento: etiqueta con el % y línea con el precio que regresa después (sin precio tachado: el regular todavía no ha existido) */
+  function launchTag(x) {
+    if (!x.regular || !window.MMFases) return "";
+    var p = window.MMFases.pct(x.cat ? "suelto" : "paquete");
+    return p > 0 ? '<span class="mm-tag mm-launch-pct">−' + p + '%</span>' : "";
+  }
+  function launchWas(x) {
+    if (!x.regular || !window.MMFases) return "";
+    return '<p class="mm-launch-was">Después del ' + window.MMFases.campanaFecha() + ': ' + money(x.regular) + '</p>';
+  }
+  function launchSub(x) { return x.regular ? '<small class="mm-launch-sub">Después ' + short(x.regular) + '</small>' : ""; }
   /* archivos que se descargan al comprar un documento (los juegos de lotería traen 2) */
   function filesOf(i) { return i.files || [{ t: i.title, file: i.file }]; }
   function buyHref(x) { return x.stripe ? x.stripe : "gracias.html?manual=" + encodeURIComponent(x.id); }
@@ -60,7 +72,7 @@
   function manualBase() { return (catById.manuales && catById.manuales.price) || 299; }
   function volumeCost(n) {
     if (n <= 0) return { cost: 0, slots: 0, plan: [] };
-    if (!VOL.length) return { cost: n * manualBase(), slots: n, plan: [n] };
+    if (!VOL.length) return { cost: Math.round(n * manualBase()), raw: n * manualBase(), slots: n, plan: [n] };
     var maxT = VOL[VOL.length - 1].n, lim = n + maxT, INF = 1e12, dp = [0], from = [0], k, i;
     for (k = 1; k <= lim; k++) {
       dp[k] = INF; from[k] = 0;
@@ -73,12 +85,12 @@
     for (k = n; k <= lim; k++) if (dp[k] < dp[best]) best = k;
     var plan = [];
     for (k = best; k > 0; k -= from[k]) plan.push(from[k]);
-    return { cost: dp[best], slots: best, plan: plan.sort(function (a, b) { return b - a; }) };
+    return { cost: Math.round(dp[best]), raw: dp[best], slots: best, plan: plan.sort(function (a, b) { return b - a; }) };
   }
   /* cuántos manuales más se pueden llevar al mismo precio */
   function volumeExtra(n) {
-    var c = volumeCost(n).cost, e = 0;
-    while (e < 25 && volumeCost(n + e + 1).cost === c) e++;
+    var c = volumeCost(n).raw, e = 0;
+    while (e < 25 && volumeCost(n + e + 1).raw === c) e++;
     return e;
   }
 
@@ -92,7 +104,7 @@
   function norm(s) { return String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); }
   function rowHtml(i, tag) {
     return '<span class="mm-buy-title">' + esc(i.title) + (tag ? ' <span class="mm-row-tag">' + esc(tag) + '</span>' : '') + '</span>' +
-      '<span class="mm-buy-price">' + short(i.price) + '</span>' +
+      '<span class="mm-buy-price">' + short(i.price) + launchSub(i) + '</span>' +
       addBtn(i.id, "Agregar", "mm-btn-secondary");
   }
   /* botón de carrito: refreshButtons() le pone el estado (agregar / en el carrito / ya lo tienes) */
@@ -153,7 +165,7 @@
       var b = by === "theme" && state.g !== "all" ? byId["bundle-m-" + state.g] : null;
       if (!b) { offer.hidden = true; return; }
       var l = contentsOf(b);
-      offer.innerHTML = '<p>¿Toda la categoría? <strong>' + money(b.price) + '</strong><span class="mm-price-old">' + money(total(l)) + '</span>' +
+      offer.innerHTML = '<p>¿Toda la categoría? <strong>' + money(b.price) + '</strong>' + launchTag(b) + '<span class="mm-price-old">' + money(total(l)) + '</span>' +
         ' <span class="mm-per">' + l.length + ' manuales · ' + per(b.price, l.length) + '</span></p>' +
         addBtn(b.id, "Agregar categoría", "mm-btn-secondary");
       offer.hidden = false;
@@ -167,7 +179,7 @@
       var li = picker
         ? el("li", "mm-buy-item", '<label class="mm-pick"><input type="checkbox" value="' + esc(i.id) + '" aria-label="Elegir ' + esc(i.title) + '">' +
             '<span class="mm-buy-title">' + esc(i.title) + (groups ? ' <span class="mm-row-tag">' + esc(gName[i.g]) + '</span>' : '') + '</span></label>' +
-            '<span class="mm-buy-price">' + short(i.price) + '</span>')
+            '<span class="mm-buy-price">' + short(i.price) + launchSub(i) + '</span>')
         : el("li", "mm-buy-item", rowHtml(i, groups ? gName[i.g] : ""));
       li.setAttribute("data-g", i.g || "");
       li.setAttribute("data-q", norm(i.title + " " + (gName ? gName[i.g] || "" : "")));
@@ -331,8 +343,9 @@
       '<h2 class="mm-product-title">Catálogo completo</h2>' +
       '<p class="mm-product-desc">' + list.length + ' documentos: ' + esc(parts.join(", ") + " y " + lastPart) + '. Descarga inmediata, con la marca MixMix lista para imprimir o compartir con tu equipo.</p></div>' +
       '<div class="mm-catalog-offer-buy">' +
+      '<p class="mm-launch-tags"><span class="mm-tag mm-tag-gold">El más completo</span>' + launchTag(b) + '</p>' +
       '<div class="mm-price-row"><span class="mm-price">' + money(b.price) + '</span><span class="mm-price-old">' + money(was) + '</span></div>' +
-      '<p class="mm-per">' + per(b.price, list.length) + ' · ahorras ' + Math.round((1 - b.price / was) * 100) + '%</p>' +
+      '<p class="mm-per">' + per(b.price, list.length) + ' · ahorras ' + Math.round((1 - b.price / was) * 100) + '%</p>' + launchWas(b) +
       addBtn(b.id, "Agregar catálogo completo", "") + '</div>';
   }
 
@@ -361,7 +374,7 @@
         '<p class="mm-tag mm-tag-soft">' + n + (n > 1 ? " archivos" : " archivo") + '</p>' +
         '<h2 class="mm-product-title">' + esc(g.title) + '</h2>' +
         '<p class="mm-product-desc">' + esc(g.desc || "") + '</p>' +
-        '<div class="mm-price-row"><span class="mm-price">' + money(g.price) + '</span></div>' +
+        '<div class="mm-price-row"><span class="mm-price">' + money(g.price) + '</span>' + launchTag(g) + '</div>' + launchWas(g) +
         addBtn(g.id, "Agregar al carrito", "")));
     });
     root.appendChild(grid);
@@ -388,8 +401,8 @@
           }).join("") + '</select></label>';
       }
       inner += '<div class="mm-price-row"><span class="mm-price">' + money(p.price) + '</span>' +
-        '<span class="mm-price-old">' + money(was) + '</span></div>' +
-        '<p class="mm-per">' + per(p.price, count) + ' · ahorras ' + Math.round((1 - p.price / was) * 100) + '%</p>' +
+        '<span class="mm-price-old">' + money(was) + '</span>' + launchTag(p) + '</div>' +
+        '<p class="mm-per">' + per(p.price, count) + ' · ahorras ' + Math.round((1 - p.price / was) * 100) + '%</p>' + launchWas(p) +
         addBtn(variants ? variants[0].id : p.id, "Agregar paquete", "");
 
       var card = el("div", "mm-catalog-card", inner);
@@ -428,7 +441,7 @@
     var list = contentsOf(b), was = total(list);
     root.className = "mm-bundle-offer";
     root.innerHTML = '<p>' + esc(root.getAttribute("data-lead") || "¿Los quieres todos?") +
-      ' <strong>Paquete completo ' + money(b.price) + '</strong><span class="mm-price-old">' + money(was) + '</span>' +
+      ' <strong>Paquete completo ' + money(b.price) + '</strong>' + launchTag(b) + '<span class="mm-price-old">' + money(was) + '</span>' +
       ' <span class="mm-per">' + list.length + ' documentos · ' + per(b.price, list.length) + '</span></p>' +
       addBtn(b.id, "Agregar paquete", "mm-btn-secondary");
   }

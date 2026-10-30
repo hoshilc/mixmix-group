@@ -7,7 +7,7 @@
 <meta name="robots" content="noindex">
 <meta name="referrer" content="no-referrer">
 <link rel="stylesheet" href="css/mixmix-brand/mixmix.css?v=3393207f">
-<link rel="stylesheet" href="css/site.css?v=24a3fc9d">
+<link rel="stylesheet" href="css/site.css?v=d52f838a">
 <!--#meta-->
 <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="img/favicon-48.png" sizes="48x48" type="image/png">
@@ -55,13 +55,53 @@
 
       <div id="ped-ok" hidden>
         <p class="mm-label mm-label-accent">Compra confirmada</p>
-        <h1 class="mm-display" style="font-size:clamp(30px,5vw,56px); color:var(--mm-black)">GRACIAS, CHEF.</h1>
+        <h1 class="mm-display" style="font-size:clamp(30px,5vw,56px); color:var(--mm-black)">LISTO, CHEF. TUS DESCARGABLES YA SON TUYOS.</h1>
         <p class="mm-body">Tu compra por <span id="ped-total"></span> está lista. Descarga tus archivos aquí abajo; también te mandamos el enlace a <strong id="ped-email"></strong> (revisa spam si no lo ves). <span style="font-size:13px;color:var(--mm-stone-ink)">Folio <span id="ped-ref"></span>, por si nos escribes.</span></p>
 
         <div class="mm-guest-save" id="ped-save"></div>
 
         <h2 class="mm-h2" style="margin-top:var(--mm-space-8)">Tus archivos</h2>
         <div id="ped-files" style="margin-top:var(--mm-space-4)"></div>
+        <details class="mm-acc" id="ped-factura" style="margin-top:var(--mm-space-8)">
+          <summary><h2 class="mm-acc-title">¿Necesitas factura?</h2><span class="mm-acc-meta">Déjanos tus datos fiscales y te la mandamos por correo</span></summary>
+          <div class="mm-acc-body">
+            <form id="ped-fact-form" novalidate class="mm-guest-form">
+              <label class="mm-field">RFC<input class="mm-search" type="text" id="pf-rfc" maxlength="13" autocomplete="off" autocapitalize="characters" placeholder="XAXX010101000"></label>
+              <label class="mm-field">Razón social o nombre completo<input class="mm-search" type="text" id="pf-razon" maxlength="200" autocomplete="organization"></label>
+              <label class="mm-field">Régimen fiscal
+                <select class="mm-search" id="pf-regimen">
+                  <option value="">Elige uno</option>
+                  <option>601 · General de Ley Personas Morales</option>
+                  <option>603 · Personas Morales con Fines no Lucrativos</option>
+                  <option>605 · Sueldos y Salarios e Ingresos Asimilados a Salarios</option>
+                  <option>606 · Arrendamiento</option>
+                  <option>612 · Personas Físicas con Actividades Empresariales y Profesionales</option>
+                  <option>616 · Sin obligaciones fiscales</option>
+                  <option>621 · Incorporación Fiscal</option>
+                  <option>626 · Régimen Simplificado de Confianza</option>
+                </select>
+              </label>
+              <label class="mm-field">Código postal fiscal<input class="mm-search" type="text" id="pf-cp" maxlength="5" inputmode="numeric" autocomplete="postal-code"></label>
+              <label class="mm-field">Uso del CFDI
+                <select class="mm-search" id="pf-uso">
+                  <option>G03 · Gastos en general</option>
+                  <option>G01 · Adquisición de mercancías</option>
+                  <option>S01 · Sin efectos fiscales</option>
+                </select>
+              </label>
+              <p id="pf-msg" class="mm-cart-warn" role="status" hidden></p>
+              <button type="submit" class="mm-btn" id="pf-btn">Solicitar factura</button>
+            </form>
+          </div>
+        </details>
+
+        <div class="mm-cell" style="margin-top:var(--mm-space-8)">
+          <p class="mm-label mm-label-accent">¿Y ahora?</p>
+          <h2 class="mm-h2" style="margin-top:4px">¿Quieres que te ayudemos a implementarlo?</h2>
+          <p class="mm-body">Cuéntanos de tu restaurante y vemos por dónde empezar. La llamada es gratis y sin compromiso.</p>
+          <p class="mm-hero-actions"><a class="mm-btn" href="contacto.html?interes=llamada" data-mm-call>Agendar llamada gratis</a></p>
+        </div>
+
         <p class="mm-body" style="font-size:13px; margin-top:var(--mm-space-6)">Guarda esta página o el correo: este enlace es tu acceso mientras no tengas cuenta. ¿Problemas con tu descarga? <a href="contacto.html">Escríbenos</a>.</p>
       </div>
 
@@ -106,10 +146,11 @@
 <!--/#footer-->
 
 <script src="js/config.js?v=9f2db49e"></script>
+<script src="js/fases.js?v=45d6d199"></script>
 <script src="js/catalog.js?v=f76422b3"></script>
-<script src="js/mm.js?v=65b8dc8c"></script>
-<script src="js/store.js?v=b5c67e9d"></script>
-<script src="js/site.js?v=22309fe8"></script>
+<script src="js/mm.js?v=068d9d58"></script>
+<script src="js/store.js?v=549945e1"></script>
+<script src="js/site.js?v=343188cb"></script>
 <script>
 (function () {
   if (window.MM_CONFIG && !window.MM_CONFIG.store) { location.replace("descargables.html"); return; }
@@ -179,7 +220,33 @@
     });
   }
 
+  /* solicitud de factura: los datos fiscales llegan por correo al buzón del negocio */
+  function initFactura() {
+    var form = $("ped-fact-form");
+    if (!form || form.getAttribute("data-ok")) return;
+    form.setAttribute("data-ok", "1");
+    function msg(t, ok) { var e = $("pf-msg"); e.textContent = t; e.hidden = false; e.style.color = ok ? "var(--mm-black)" : ""; }
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var rfc = $("pf-rfc").value.replace(/\s/g, "").toUpperCase();
+      if (!/^[A-ZÑ&]{3,4}[0-9]{6}[A-Z0-9]{3}$/.test(rfc)) { msg("Revisa el RFC: debe tener 12 o 13 caracteres.", false); return; }
+      if (!$("pf-razon").value.trim()) { msg("Escribe la razón social o tu nombre completo.", false); return; }
+      if (!$("pf-regimen").value) { msg("Elige el régimen fiscal.", false); return; }
+      if (!/^[0-9]{5}$/.test($("pf-cp").value.trim())) { msg("El código postal debe tener 5 dígitos.", false); return; }
+      var btn = $("pf-btn"); btn.disabled = true; btn.textContent = "Enviando…";
+      fetch(((window.MM_CONFIG && window.MM_CONFIG.api) || "api/") + "factura.php", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pedido: ref, t: tok, rfc: rfc, razon: $("pf-razon").value, regimen: $("pf-regimen").value, cp: $("pf-cp").value.trim(), uso: $("pf-uso").value })
+      }).then(function (r) { return r.json(); }).then(function (d) {
+        if (d && d.ok) { msg("Listo. Recibimos tus datos y te mandamos la factura al correo de tu compra.", true); btn.textContent = "Enviado"; return; }
+        btn.disabled = false; btn.textContent = "Solicitar factura";
+        msg("No pudimos enviar tus datos. Escríbenos desde Contacto y te ayudamos.", false);
+      }).catch(function () { btn.disabled = false; btn.textContent = "Solicitar factura"; msg("No pudimos conectar con el servidor. Intenta de nuevo.", false); });
+    });
+  }
+
   function renderOrder(d) {
+    initFactura();
     $("ped-ref").textContent = d.ref;
     $("ped-total").textContent = M.money(d.total);
     $("ped-email").textContent = d.email;

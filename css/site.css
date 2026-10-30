@@ -840,3 +840,12 @@ html.has-launch .mm-header { top: var(--mm-launch-h, 44px); }
   .mm-launch-timer { order: 3; margin-left: 0; font-size: 18px; }
   .mm-launch-link { order: 4; margin-left: auto; font-size: 12px; }
 }
+
+/* ===== Precio de lanzamiento en tarjetas, filas y hero ===== */
+.mm-launch-was { margin: 4px 0 0; font-family: var(--mm-font-display); font-weight: 500; font-size: 13px; color: var(--mm-stone-ink); }
+.mm-launch-sub { display: block; font-family: var(--mm-font-display); font-weight: 500; font-size: 11px; color: var(--mm-stone-ink); white-space: nowrap; }
+.mm-buy-price { text-align: right; }
+.mm-price-row .mm-launch-pct, .mm-bundle-offer .mm-launch-pct { align-self: center; margin-left: var(--mm-space-2); }
+.mm-launch-tags { display: flex; flex-wrap: wrap; gap: var(--mm-space-2); margin: 0 0 var(--mm-space-3); }
+.mm-launch-big { margin: var(--mm-space-6) 0 0; font-family: var(--mm-font-logo); font-size: clamp(36px, 6vw, 64px); line-height: 1; letter-spacing: 0.06em; color: var(--mm-gold); }
+.mm-launch-bigsub { margin: var(--mm-space-2) 0 0; font-family: var(--mm-font-display); font-weight: 600; font-size: 14px; color: var(--mm-stone-onblack); }

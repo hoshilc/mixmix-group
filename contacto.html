@@ -6,7 +6,7 @@
 <title>Contacto — Grupo MixMix</title>
 <meta name="description" content="Escríbenos o agenda una llamada gratis: consultoría, auditorías y descargables para tu restaurante.">
 <link rel="stylesheet" href="css/mixmix-brand/mixmix.css?v=3393207f">
-<link rel="stylesheet" href="css/site.css?v=24a3fc9d">
+<link rel="stylesheet" href="css/site.css?v=d52f838a">
 <!--#meta-->
 <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="img/favicon-48.png" sizes="48x48" type="image/png">
@@ -71,7 +71,7 @@
                 <option value="integral">Auditoría integral (restaurantes)</option>
                 <option value="intensiva">MixMix Intensiva</option>
                 <option value="reingenieria">Reingeniería 360</option>
-                <option value="descargables">Descargables (manuales, formatos, paquetes)</option>
+                <option value="factura">Factura de una compra</option>
                 <option value="otro">Otro / no estoy seguro</option>
               </select>
             </div>
@@ -158,8 +158,9 @@
 <!--/#footer-->
 
 <script src="js/config.js?v=9f2db49e"></script>
-<script src="js/store.js?v=b5c67e9d"></script>
-<script src="js/site.js?v=22309fe8"></script>
+<script src="js/fases.js?v=45d6d199"></script>
+<script src="js/store.js?v=549945e1"></script>
+<script src="js/site.js?v=343188cb"></script>
 <script>
 (function () {
   var form = document.getElementById("mm-contact-form");
@@ -174,7 +175,7 @@
     var known = Array.prototype.some.call(sel.options, function (o) { return o.value === q; });
     if (known) sel.value = q;
     else {
-      sel.value = "descargables";
+      sel.value = "otro";
       var m = document.getElementById("mensaje");
       if (!m.value) m.value = "Me interesa: " + q;
     }

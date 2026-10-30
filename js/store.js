@@ -132,9 +132,9 @@
     var man = prods.filter(function (p) { return p.cat === "manuales"; });
     var other = prods.filter(function (p) { return p.cat !== "manuales"; }).reduce(function (a, p) { return a + p.price; }, 0);
     var base = man.reduce(function (a, p) { return a + p.price; }, 0);
-    var vc = (M() && man.length) ? M().volumeCost(man.length) : { cost: base, slots: man.length, plan: [] };
-    var cost = man.length ? Math.min(vc.cost, base) : 0;
-    return { manuals: man.length, manualsBase: base, manualsCost: cost, discount: base - cost, other: other, total: other + cost,
+    var vc = (M() && man.length) ? M().volumeCost(man.length) : { cost: base, raw: base, slots: man.length, plan: [] };
+    var cost = man.length ? Math.round(Math.min(vc.raw !== undefined ? vc.raw : vc.cost, base)) : 0;
+    return { manuals: man.length, manualsBase: base, manualsCost: cost, discount: Math.round(base - cost), other: other, total: other + cost,
              extra: (M() && man.length) ? M().volumeExtra(man.length) : 0, plan: vc.plan };
   };
   /* demo: compra sin cuenta (guardada bajo el correo, sin abrir sesión); con sesión usa la cuenta */

@@ -6,7 +6,7 @@
 <title>Carrito — Grupo MixMix</title>
 <meta name="robots" content="noindex">
 <link rel="stylesheet" href="css/mixmix-brand/mixmix.css?v=3393207f">
-<link rel="stylesheet" href="css/site.css?v=24a3fc9d">
+<link rel="stylesheet" href="css/site.css?v=d52f838a">
 <!--#meta-->
 <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="img/favicon-48.png" sizes="48x48" type="image/png">
@@ -50,6 +50,7 @@
 
       <div id="cart-full" class="mm-product-layout" hidden>
         <div>
+          <p id="cart-aviso" class="mm-cart-hint" role="status" hidden></p>
           <ul id="cart-lines" class="mm-cart-lines"></ul>
           <div id="cart-tips"></div>
         </div>
@@ -121,10 +122,11 @@
 <!--/#footer-->
 
 <script src="js/config.js?v=9f2db49e"></script>
+<script src="js/fases.js?v=45d6d199"></script>
 <script src="js/catalog.js?v=f76422b3"></script>
-<script src="js/mm.js?v=65b8dc8c"></script>
-<script src="js/store.js?v=b5c67e9d"></script>
-<script src="js/site.js?v=22309fe8"></script>
+<script src="js/mm.js?v=068d9d58"></script>
+<script src="js/store.js?v=549945e1"></script>
+<script src="js/site.js?v=343188cb"></script>
 <script>
 (function () {
   if (window.MM_CONFIG && !window.MM_CONFIG.store) { location.replace("descargables.html"); return; }
@@ -203,6 +205,27 @@
       hl.className = "mm-cart-line mm-cart-discount";
       hl.innerHTML = '<div><p class="mm-cart-hint">Puedes agregar ' + pr.extra + (pr.extra === 1 ? ' manual más' : ' manuales más') + ' sin pagar más. <a href="descargables.html#manuales">Elegir manuales</a></p></div>';
       ul.appendChild(hl);
+    }
+
+    /* precio de lanzamiento: cuánto se ahorra frente al precio regular, y aviso si la fase cambió desde la última visita */
+    if (window.MMFases) {
+      var aviso = window.MMFases.avisoCambio();
+      if (aviso) { var av = $("cart-aviso"); av.textContent = aviso; av.hidden = false; }
+      if (window.MMFases.activa()) {
+        var nm = prods.filter(function (p) { return p.cat !== "manuales"; }), mm = prods.filter(function (p) { return p.cat === "manuales"; });
+        var regOther = nm.reduce(function (a, p) { return a + (p.regular || p.price); }, 0);
+        var regBase = mm.reduce(function (a, p) { return a + (p.regular || p.price); }, 0);
+        var regMan = mm.length ? Math.min(regBase, window.MMFases.regVol(mm.length)) : 0;
+        var ahorro = Math.round(regOther + regMan - pr.total);
+        if (ahorro > 0) {
+          var ll = document.createElement("li");
+          ll.className = "mm-cart-line mm-cart-discount";
+          ll.innerHTML = '<div><p class="mm-cart-title">Precio de lanzamiento</p>' +
+            '<p class="mm-cart-kind">Tu precio de lanzamiento se mantiene si pagas antes del ' + esc(window.MMFases.finTexto()) + '.</p></div>' +
+            '<div class="mm-cart-right"><span class="mm-cart-price">−' + M.money(ahorro) + '</span></div>';
+          ul.appendChild(ll);
+        }
+      }
     }
 
     var total = pr.total;

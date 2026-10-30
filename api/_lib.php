@@ -181,10 +181,10 @@ function phase_active() {
     static $ph = false;
     if ($ph !== false) return $ph;
     $ph = null;
-    $raw = @file_get_contents(dirname(__DIR__) . '/fases.json');
+    $raw = isset($GLOBALS['MM_FASES_RAW']) ? $GLOBALS['MM_FASES_RAW'] : @file_get_contents(dirname(__DIR__) . '/fases.json');   /* MM_FASES_RAW y MM_NOW solo existen en las pruebas internas */
     $d = $raw ? json_decode($raw, true) : null;
     if (!is_array($d) || empty($d['fases']) || !is_array($d['fases'])) return $ph;
-    $now = time();
+    $now = isset($GLOBALS['MM_NOW']) ? (int)$GLOBALS['MM_NOW'] : time();
     foreach ($d['fases'] as $f) {
         if (!is_array($f) || !isset($f['inicio']) || !isset($f['fin'])) continue;
         $a = strtotime((string)$f['inicio']); $b = strtotime((string)$f['fin']);

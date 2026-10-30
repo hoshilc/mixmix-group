@@ -29,7 +29,7 @@ $intereses = array(
     'integral' => 'Auditoría integral (restaurantes)',
     'intensiva' => 'MixMix Intensiva',
     'reingenieria' => 'Reingeniería 360',
-    'descargables' => 'Descargables (manuales, formatos, paquetes)',
+    'factura' => 'Factura de una compra',
     'otro' => 'Otro / no estoy seguro',
 );
 $k = $line('interes', 40);

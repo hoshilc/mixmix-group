@@ -6,7 +6,7 @@
 <title>Consultoría gastronómica para restaurantes — Grupo MixMix</title>
 <meta name="description" content="Auditorías, capacitación y consultoría para restaurantes, más manuales, controles y paquetes descargables: la estructura real que convierte el caos en utilidades.">
 <link rel="stylesheet" href="css/mixmix-brand/mixmix.css?v=3393207f">
-<link rel="stylesheet" href="css/site.css?v=24a3fc9d">
+<link rel="stylesheet" href="css/site.css?v=d52f838a">
 <!--#meta-->
 <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="img/favicon-48.png" sizes="48x48" type="image/png">
@@ -56,7 +56,8 @@
         <p class="mm-body">Consultoría, auditorías y capacitación para cada área de tu restaurante, más manuales, checklists y formatos listos para usar — desde el mesero hasta el administrador. Sin importar el giro o el tamaño de tu negocio, te damos la estructura para convertir tus esfuerzos en utilidades.</p>
         <div class="mm-hero-actions">
           <a class="mm-btn" href="contacto.html?interes=llamada" data-mm-call>Agendar consultoría</a>
-          <a class="mm-btn mm-btn-secondary" href="descargables.html">Ver descargables</a>
+          <a class="mm-btn mm-btn-secondary" href="descargables.html" data-mm-launch="off">Ver descargables</a>
+          <a class="mm-btn mm-btn-secondary" href="descargables.html?utm_source=sitio&amp;utm_medium=banner&amp;utm_campaign=lanzamiento-descargables" data-mm-launch="on" hidden>Ver descargables con precio de lanzamiento</a>
         </div>
       </div>
       <svg class="mm-hero-art" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -246,7 +247,7 @@
   <!-- DESCARGABLES -->
   <section class="mm-section" id="descargables">
     <div class="mm-container">
-      <p class="mm-label mm-label-accent">Descargables · Elige el paquete de tu perfil</p>
+      <p class="mm-label mm-label-accent">Descargables · Elige el paquete de tu perfil <span class="mm-tag" data-mm-launch="on" hidden style="margin-left:8px">Lanzamiento −<span data-mm-launch-pct="paquete"></span>%</span></p>
       <h2 class="mm-h2">Armado para quien lo va a usar</h2>
       <p class="mm-body">Todo el material del proyecto, listo para descargar y usar: <span data-mm-count="total"></span> documentos y <span data-mm-count="juegos"></span> juegos de capacitación. Cada paquete cruza manuales, controles, descripciones de puesto, KPIs y evaluaciones para un perfil concreto, y cuesta menos que comprar cada documento por separado.</p>
       <p class="mm-chips"><span>Manuales tácticos</span><span>Descripciones de puesto</span><span>Controles imprimibles</span><span>KPIs de gerencia</span><span>Mystery Shopper</span><span>Juegos MixMix</span></p>
@@ -256,7 +257,7 @@
       <p class="mm-body" style="margin-top:var(--mm-space-6)"><strong>¿Solo necesitas uno?</strong> Todo también se vende por separado: cada manual, descripción de puesto, control, KPI, formato de Mystery Shopper o juego. Desde <span data-mm-unit="puestos"></span> el documento, <span data-mm-store-only>y puedes mezclar lo que quieras en un mismo carrito.</span></p>
 
       <p class="mm-hero-actions" style="margin-top:var(--mm-space-6)">
-        <a class="mm-btn" href="descargables.html#paquetes">Ver los paquetes</a>
+        <a class="mm-btn" href="descargables.html#paquetes"><span data-mm-launch="off">Ver los paquetes</span><span data-mm-launch="on" hidden>Comprar mi paquete</span></a>
         <a class="mm-btn mm-btn-secondary" href="descargables.html">Ver documentos por separado</a>
         <a class="mm-btn mm-btn-secondary" href="descargables.html#catalogo">Ver el catálogo completo</a>
       </p>
@@ -375,6 +376,7 @@
     <div class="mm-container">
       <p class="mm-label" style="color:var(--mm-stone-onblack)">Tu restaurante no necesita suerte</p>
       <h2 class="mm-display" style="font-size:clamp(30px,5vw,56px)">NECESITA <em>CIMIENTOS</em>.</h2>
+      <p class="mm-body" data-mm-launch="on" hidden>Descargables con precio de lanzamiento hasta el <span data-mm-launch-fecha></span>.</p>
       <div class="mm-hero-actions">
         <a class="mm-btn" href="contacto.html?interes=llamada" data-mm-call>Agendar llamada gratis</a>
         <a class="mm-btn mm-btn-secondary" href="descargables.html">Ver descargables</a>
@@ -421,11 +423,12 @@
 <!--/#footer-->
 
 <script src="js/config.js?v=9f2db49e"></script>
+<script src="js/fases.js?v=45d6d199"></script>
 <script src="js/catalog.js?v=f76422b3"></script>
-<script src="js/mm.js?v=65b8dc8c"></script>
+<script src="js/mm.js?v=068d9d58"></script>
 <script src="js/social.js?v=e0a868e7"></script>
 <script src="js/reputacion.js?v=81d5faf3"></script>
-<script src="js/store.js?v=b5c67e9d"></script>
-<script src="js/site.js?v=22309fe8"></script>
+<script src="js/store.js?v=549945e1"></script>
+<script src="js/site.js?v=343188cb"></script>
 </body>
 </html>

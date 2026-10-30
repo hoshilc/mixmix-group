@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Descargables para restaurantes: manuales, formatos y paquetes — Grupo MixMix</title>
-<meta name="description" content="Todos los manuales, formatos, KPIs, descripciones de puesto y juegos de MixMix: el catálogo completo, paquetes por perfil o cada documento por separado.">
+<title>Descargables para restaurantes, precio de lanzamiento — Grupo MIXMIX</title>
+<meta name="description" content="Manuales, controles, descripciones de puesto, KPIs y Mystery Shopper listos para usar. Precio de lanzamiento por dos semanas.">
 <link rel="stylesheet" href="css/mixmix-brand/mixmix.css?v=3393207f">
-<link rel="stylesheet" href="css/site.css?v=24a3fc9d">
+<link rel="stylesheet" href="css/site.css?v=d52f838a">
 <!--#meta-->
 <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="img/favicon-48.png" sizes="48x48" type="image/png">
@@ -16,8 +16,8 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Grupo MixMix">
 <meta property="og:locale" content="es_MX">
-<meta property="og:title" content="Descargables para restaurantes: manuales, formatos y paquetes — Grupo MixMix">
-<meta property="og:description" content="Todos los manuales, formatos, KPIs, descripciones de puesto y juegos de MixMix: el catálogo completo, paquetes por perfil o cada documento por separado.">
+<meta property="og:title" content="Descargables para restaurantes, precio de lanzamiento — Grupo MIXMIX">
+<meta property="og:description" content="Manuales, controles, descripciones de puesto, KPIs y Mystery Shopper listos para usar. Precio de lanzamiento por dos semanas.">
 <meta property="og:url" content="https://grupomixmix.com/descargables.html">
 <meta property="og:image" content="https://grupomixmix.com/img/og.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -49,9 +49,22 @@
   <section class="mm-hero mm-section">
     <div class="mm-container mm-hero-grid mm-hero-grid-wide">
       <div>
+      <div data-mm-launch="on" hidden>
+        <p class="mm-label" style="color:var(--mm-stone-onblack)">Lanzamiento · Descargables</p>
+        <h1 class="mm-display">A LA ORDEN, CHEF. ABRIMOS LA TIENDA.</h1>
+        <p class="mm-body">Manuales, controles, descripciones de puesto, KPIs, Mystery Shopper y Juegos MIXMIX, listos para descargar y usar mañana en tu turno. Precio de lanzamiento hasta el <span data-mm-launch-fecha></span>; después sube.</p>
+        <div class="mm-hero-actions">
+          <a class="mm-btn" href="#paquetes">Ver los paquetes</a>
+          <a class="mm-btn mm-btn-secondary" href="#explora">Ver documentos por separado</a>
+        </div>
+        <p class="mm-launch-big" data-mm-launch-timer></p>
+        <p class="mm-launch-bigsub">Termina el <span data-mm-launch-fin></span></p>
+      </div>
+      <div data-mm-launch="off">
       <p class="mm-label" style="color:var(--mm-stone-onblack)">Descarga digital, acceso inmediato</p>
       <h1 class="mm-display">DESCARGABLES</h1>
       <p class="mm-body"><span data-mm-count="total"></span> documentos y <span data-mm-count="juegos"></span> juegos de capacitación: compra el que necesitas, un paquete armado para tu perfil, o el catálogo completo. Cuantos más documentos llevas, menos pagas por cada uno.</p>
+      </div>
       </div>
       <img class="mm-hero-mockup" src="img/descargables-mockup.svg?v=2" alt="Manuales, carpeta de paquete y hojas de controles impresos de MixMix" width="1200" height="980">
     </div>
@@ -59,8 +72,6 @@
 
   <section class="mm-section">
     <div class="mm-container">
-
-      <p class="mm-demo-note" data-mm-nostore>La compra en línea abre muy pronto. Mientras tanto, pulsa <strong>Me interesa</strong> en lo que necesites y te contactamos para entregártelo.</p>
 
       <!-- ================= BUSCADOR GENERAL ================= -->
       <div data-mm="search"></div>
@@ -71,7 +82,7 @@
       </div>
 
       <!-- ================= ÍNDICE: cada botón abre su sección ================= -->
-      <p class="mm-label mm-label-accent" style="margin-top:var(--mm-space-8)">O explora por sección</p>
+      <p id="explora" class="mm-label mm-label-accent" style="margin-top:var(--mm-space-8)">O explora por sección</p>
       <div class="mm-filter-bar">
         <a class="mm-filter-btn" href="#paquetes">Paquetes por perfil · <span data-mm-count="packages"></span></a>
         <a class="mm-filter-btn" href="#manuales">Manuales Tácticos · <span data-mm-count="manuales"></span></a>
@@ -225,10 +236,11 @@
 <!--/#footer-->
 
 <script src="js/config.js?v=9f2db49e"></script>
+<script src="js/fases.js?v=45d6d199"></script>
 <script src="js/catalog.js?v=f76422b3"></script>
-<script src="js/mm.js?v=65b8dc8c"></script>
-<script src="js/store.js?v=b5c67e9d"></script>
-<script src="js/site.js?v=22309fe8"></script>
+<script src="js/mm.js?v=068d9d58"></script>
+<script src="js/store.js?v=549945e1"></script>
+<script src="js/site.js?v=343188cb"></script>
 <script>
   /* Abrir todas / cerrar todas las secciones */
   document.querySelectorAll("[data-acc]").forEach(function (b) {
