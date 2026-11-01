@@ -495,10 +495,11 @@ function mail_layout($heading, $inner) {
 
 /* ---------- correo (recuperar contraseña) ----------
    Por defecto usa mail() del hosting. Si en privado/config.php hay 'smtp', usa ese buzón (más confiable). */
-function mail_send($to, $subject, $html, $text, $replyTo = null) {
+function mail_send($to, $subject, $html, $text, $replyTo = null, $extraHeaders = array()) {
     $cfg = config();
     $domain = preg_replace('/^www\./', '', parse_url($cfg['site_url'], PHP_URL_HOST));
-    $from = isset($cfg['mail_from']) ? $cfg['mail_from'] : 'no-reply@' . $domain;
+    /* sale desde el buzón real de contacto: los correos desde un no-reply@ sin buzón llegan peor a Gmail */
+    $from = isset($cfg['mail_from']) ? $cfg['mail_from'] : 'contacto@' . $domain;
     /* las respuestas de los clientes van a la bandeja de contacto, no al no-reply */
     if (!$replyTo) $replyTo = !empty($cfg['reply_to']) ? $cfg['reply_to'] : 'contacto@' . $domain;
     $name = 'Grupo MixMix';
@@ -510,6 +511,7 @@ function mail_send($to, $subject, $html, $text, $replyTo = null) {
         'MIME-Version: 1.0',
         'Content-Type: multipart/alternative; boundary="' . $boundary . '"',
     );
+    foreach ($extraHeaders as $h) $headers[] = $h;
     $body = '--' . $boundary . "\r\n" . "Content-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n" . chunk_split(base64_encode($text)) .
             '--' . $boundary . "\r\n" . "Content-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n" . chunk_split(base64_encode($html)) .
             '--' . $boundary . "--\r\n";
@@ -682,6 +684,33 @@ function contact_from_token($t) {
 }
 function contact_baja_code($id) { return substr(mm_hmac('baja|' . $id), 0, 32); }
 function contact_baja_link($id) { $c = config(); return $c['site_url'] . '/baja?c=' . (int)$id . '&t=' . contact_baja_code($id); }
+
+/* Correo del manual gratuito. El diseño vive en api/plantillas/manual.html (marcas {{SALUDO}}, {{PDF}}, {{BAJA}}, {{SITE}}, {{HOST}}, {{CONTACTO}}, {{TITULO}}). */
+function manual_mail($to, $nombre, $contactId) {
+    $cfg = config();
+    $site = rtrim($cfg['site_url'], '/');
+    $host = preg_replace('#^https?://#', '', $site);
+    $contact = !empty($cfg['reply_to']) ? $cfg['reply_to'] : 'contacto@' . preg_replace('/^www\./', '', $host);
+    $first = trim(mb_substr($nombre, 0, (int)mb_strpos($nombre . ' ', ' ')));
+    if ($first === '') $first = 'Hola';
+    $pdf = $site . '/descargas/manual-donde-pierde-dinero.pdf';
+    $baja = contact_baja_link($contactId);
+    $tpl = @file_get_contents(__DIR__ . '/plantillas/manual.html');
+    if ($tpl === false) { error_log('manual_mail: falta la plantilla'); return false; }
+    $esc = function ($s) { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); };
+    $html = strtr($tpl, array(
+        '{{TITULO}}' => $esc('Tu manual de Grupo MIXMIX'), '{{SALUDO}}' => $esc($first), '{{PDF}}' => $esc($pdf), '{{BAJA}}' => $esc($baja),
+        '{{SITE}}' => $esc($site), '{{HOST}}' => $esc($host), '{{CONTACTO}}' => $esc($contact),
+    ));
+    $text = $first . ", aquí está tu manual.\n\n" .
+        "Descubre en 7 días dónde pierde dinero tu restaurante: un diagnóstico día por día, con lo mismo que revisamos en nuestras consultorías.\n\n" .
+        "Descárgalo aquí: " . $pdf . "\n\n" .
+        "Empieza hoy con el Día 1: solo te toma 30 minutos. Son siete revisiones cortas, una por día: costeo, inventario, mermas, aperturas, personal, servicio y números.\n\n" .
+        "Si te surge una duda, responde este correo y te leemos.\n\n" .
+        "Grupo MIXMIX · " . $host . "\n" .
+        "Recibes este correo porque pediste el manual en " . $host . ". Si ya no quieres recibir mensajes, date de baja aquí: " . $baja . "\n";
+    return mail_send($to, $first . ', aquí está tu manual de 7 días', $html, $text, null, array('List-Unsubscribe: <' . $baja . '>'));
+}
 function contact_mark_bought($email, $phone10, $contactId) {
     $w = array(); $p = array();
     if ($email) { $w[] = 'correo = ?'; $p[] = strtolower((string)$email); }

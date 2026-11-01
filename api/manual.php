@@ -68,19 +68,6 @@ $_SESSION['manual_cid'] = $id;
 
 /* correo con el enlace al PDF: solo si dejó correo y es nuevo o cambió (no se manda en cada registro repetido) */
 if ($correo !== '' && ($isNew || $mailChanged)) {
-    $cfg = config();
-    $pdf = $cfg['site_url'] . '/descargas/manual-donde-pierde-dinero.pdf';
-    $esc = function ($s) { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); };
-    $first = mb_substr($nombre, 0, (int)mb_strpos($nombre . ' ', ' '));
-    $baja = contact_baja_link($id);
-    $html = mail_layout('Tu manual está listo, ' . $first,
-        '<p style="margin:0 0 8px">Aquí está <strong>Descubre en 7 días dónde pierde dinero tu restaurante</strong>, el manual gratuito de Grupo MIXMIX.</p>' .
-        mail_button($pdf, 'Descargar el manual (PDF)') .
-        '<p style="margin:16px 0 8px"><strong>Empieza hoy con el Día 1:</strong> solo te toma 30 minutos.</p>' .
-        '<p style="font-size:12px;color:#8A8A87;margin:20px 0 4px">Recibes este correo porque pediste el manual en grupomixmix.com. Si ya no quieres recibir mensajes, <a href="' . $esc($baja) . '" style="color:#555555">date de baja aquí</a>.</p>');
-    $text = 'Tu manual está listo, ' . $first . ".\n\nDescárgalo aquí: " . $pdf .
-        "\n\nEmpieza hoy con el Día 1: solo te toma 30 minutos." .
-        "\n\nSi ya no quieres recibir mensajes, date de baja aquí: " . $baja . "\n\nGrupo MIXMIX";
-    if (!mail_send($correo, 'Tu manual: dónde pierde dinero tu restaurante', $html, $text)) error_log('manual: no se pudo enviar el correo al contacto ' . $id);
+    if (!manual_mail($correo, $nombre, $id)) error_log('manual: no se pudo enviar el correo al contacto ' . $id);
 }
 ok(array('next' => '/manual/gracias', 'ct' => contact_token($id)));
