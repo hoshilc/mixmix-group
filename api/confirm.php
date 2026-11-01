@@ -9,7 +9,7 @@ $ref = isset($_GET['pedido']) ? (string)$_GET['pedido'] : '';
 if ($pid !== '') {   /* regreso de Mercado Pago: se consulta el pago a Mercado Pago */
     if (!preg_match('/^[0-9]{1,20}$/', $pid) || !preg_match('/^MM-[A-F0-9]{8}$/', $ref)) fail('bad_session');
     try {
-        $st = db()->prepare('SELECT status FROM orders WHERE ref = ? AND user_id = ? AND stripe_session_id = ?');
+        $st = db()->prepare('SELECT ref, status, total, lines_json, paid_at FROM orders WHERE ref = ? AND user_id = ? AND stripe_session_id = ?');
         $st->execute(array($ref, $u['id'], 'mp_' . $ref));
         $o = $st->fetch();
         if (!$o) fail('order_not_found', 404);
@@ -18,7 +18,7 @@ if ($pid !== '') {   /* regreso de Mercado Pago: se consulta el pago a Mercado P
             $st->execute(array($ref, $u['id'], 'mp_' . $ref));
             $o = $st->fetch();
         }
-        ok(array('status' => $o['status']));
+        ok(order_payload($o));
     } catch (PDOException $e) {
         error_log('confirm mp: ' . $e->getMessage());
         fail('server', 500);
@@ -26,7 +26,7 @@ if ($pid !== '') {   /* regreso de Mercado Pago: se consulta el pago a Mercado P
 }
 if (!preg_match('/^cs_[A-Za-z0-9_]+$/', $sid)) fail('bad_session');
 try {
-    $st = db()->prepare('SELECT status FROM orders WHERE stripe_session_id = ? AND user_id = ?');
+    $st = db()->prepare('SELECT ref, status, total, lines_json, paid_at FROM orders WHERE stripe_session_id = ? AND user_id = ?');
     $st->execute(array($sid, $u['id']));
     $o = $st->fetch();
     if (!$o) fail('order_not_found', 404);
@@ -36,7 +36,7 @@ try {
     }
     $st->execute(array($sid, $u['id']));
     $o = $st->fetch();
-    ok(array('status' => $o['status']));
+    ok(order_payload($o));
 } catch (PDOException $e) {
     error_log('confirm: ' . $e->getMessage());
     fail('server', 500);

@@ -67,6 +67,41 @@
   /* año del pie */
   document.querySelectorAll("[data-mm-year]").forEach(function (e) { e.textContent = new Date().getFullYear(); });
 
+  /* Meta Pixel (solo si hay metaPixelId en config.js). MMTrack.lead / MMTrack.purchase mandan los eventos con un
+     identificador (eventID) que el servidor repite en la API de conversiones, para que Meta no los cuente dos veces. */
+  var pixelOn = !!(C.metaPixelId && /^[0-9]{5,20}$/.test(String(C.metaPixelId)));
+  if (pixelOn) {
+    /* código oficial de Meta */
+    !function (f, b, e, v, n, t, s) {
+      if (f.fbq) return; n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); };
+      if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = "2.0"; n.queue = [];
+      t = b.createElement(e); t.async = !0; t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s);
+    }(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
+    window.fbq("init", String(C.metaPixelId));
+    window.fbq("track", "PageView");
+  }
+  window.MMTrack = {
+    lead: function (eventId) {
+      if (pixelOn) window.fbq("track", "Lead", {}, { eventID: eventId });
+    },
+    /* compra: valor en MXN y productos. Solo si el pago es reciente (abrir el enlace días después no cuenta otra compra) y una vez por pedido en este navegador */
+    purchase: function (ref, total, lines, paidTs) {
+      if (!pixelOn || !ref) return;
+      try {
+        if (paidTs && Date.now() / 1000 - paidTs > 7200) return;
+        var k = "mm_px_p_" + ref;
+        if (localStorage.getItem(k)) return;
+        localStorage.setItem(k, "1");
+      } catch (e) { /* sin almacenamiento: se manda igual; Meta descarta el repetido por eventID */ }
+      var L = lines || [];
+      window.fbq("track", "Purchase", {
+        value: Number(total) || 0, currency: "MXN", content_type: "product",
+        content_ids: L.map(function (l) { return String(l.id); }),
+        contents: L.map(function (l) { return { id: String(l.id), quantity: 1, item_price: Number(l.price) || 0 }; })
+      }, { eventID: "purchase-" + ref });
+    }
+  };
+
   /* analítica sin cookies (Plausible), solo si hay dominio configurado */
   if (C.plausibleDomain) {
     var s = document.createElement("script");

@@ -1,0 +1,111 @@
+/* MIXMIX — páginas del embudo: /manual, /manual/gracias, /acceso y /baja.
+   Mismas reglas de marca que el resto del sitio (css/mixmix-brand/mixmix.css): fondo negro dominante, dorado solo como acento,
+   cero esquinas redondeadas, filetes de 2 px y todo alineado a la izquierda. Diseñado primero para celular. */
+.mf { margin: 0; background: var(--mm-black); color: var(--mm-bone); font-family: var(--mm-font-body); -webkit-text-size-adjust: 100%; }
+.mf *, .mf *::before, .mf *::after { box-sizing: border-box; }
+.mf a { color: var(--mm-bone); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.mf a:hover { color: var(--mm-gold); }
+.mf-wrap { width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+.mf [hidden] { display: none !important; }
+
+/* encabezado: solo el logotipo, sin menú */
+.mf-head { border-bottom: var(--mm-rule) solid var(--mm-gold); }
+.mf-head .mf-wrap { padding-top: 12px; padding-bottom: 12px; }
+.mf-logo { display: inline-block; line-height: 0; }
+.mf-logo img { display: block; height: 52px; width: auto; }
+
+/* textos */
+.mf-label { margin: 0 0 14px; font-family: var(--mm-font-display); font-weight: 600; font-size: 12px; line-height: 1.2; letter-spacing: var(--mm-track-label); text-transform: uppercase; color: var(--mm-stone-onblack); }
+.mf-title { margin: 0; font-family: var(--mm-font-logo); font-weight: 400; font-size: clamp(46px, 11.5vw, 92px); line-height: 0.95; letter-spacing: 0.02em; text-transform: uppercase; color: var(--mm-bone); text-wrap: balance; }
+.mf-title em { font-style: normal; color: var(--mm-gold); }
+.mf-rule { display: block; width: 64px; height: var(--mm-rule); margin: 20px 0; background: var(--mm-gold); }
+.mf-sub { margin: 0; max-width: 34em; font-size: 19px; line-height: 1.5; color: #D9D8DD; }
+.mf-h2 { margin: 0 0 14px; font-family: var(--mm-font-logo); font-weight: 400; font-size: clamp(34px, 7vw, 46px); line-height: 1; letter-spacing: 0.03em; text-transform: uppercase; }
+.mf-script { font-family: var(--mm-font-script); font-size: 1.25em; letter-spacing: 0; text-transform: none; color: var(--mm-gold-ink); line-height: 0.8; }
+.mf-dark .mf-script { color: var(--mm-gold); }
+
+/* disposición: celular en una columna; escritorio con el formulario a la derecha */
+.mf-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 36px; padding-top: 32px; }
+.mf-cover-fig { margin: 0; }
+@media (min-width: 1000px) {
+  .mf-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 420px; grid-template-areas: "intro intro form" "cover benefits form"; column-gap: 48px; row-gap: 44px; padding-top: 56px; align-items: start; }
+  .mf-cover { max-width: 320px; }
+  .mf-intro { grid-area: intro; } .mf-cover-fig { grid-area: cover; } .mf-benefits { grid-area: benefits; }
+  .mf-formcol { grid-area: form; position: sticky; top: 24px; }
+}
+
+/* portada del manual (4:5). Cuando llegue el diseño final, reemplaza el bloque .mf-cover por <img src="/img/manual-portada.jpg" alt="..."> */
+.mf-cover { width: 100%; max-width: 270px; aspect-ratio: 4 / 5; padding: 22px; display: flex; flex-direction: column; justify-content: space-between; background: #1B1B19; border: var(--mm-rule) solid var(--mm-gold); }
+.mf-cover-top { font-family: var(--mm-font-display); font-weight: 600; font-size: 11px; letter-spacing: var(--mm-track-label); text-transform: uppercase; color: var(--mm-stone-onblack); }
+.mf-cover-num { font-family: var(--mm-font-logo); font-size: 150px; line-height: 0.82; color: var(--mm-gold); }
+.mf-cover-num small { font-size: 54px; color: var(--mm-bone); letter-spacing: 0.06em; margin-left: 6px; }
+.mf-cover-title { margin: 0; font-family: var(--mm-font-logo); font-weight: 400; font-size: 34px; line-height: 1; letter-spacing: 0.03em; text-transform: uppercase; }
+.mf-cover-foot { font-family: var(--mm-font-display); font-weight: 600; font-size: 11px; letter-spacing: var(--mm-track-label); text-transform: uppercase; color: var(--mm-stone-onblack); border-top: var(--mm-rule) solid var(--mm-gold); padding-top: 10px; }
+
+/* beneficios con números dorados */
+.mf-benefits { list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; counter-reset: mfb; }
+.mf-benefits li { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 10px; padding-top: 14px; border-top: var(--mm-rule) solid #2B2B29; font-size: 17px; line-height: 1.5; counter-increment: mfb; }
+.mf-benefits li::before { content: "0" counter(mfb); font-family: var(--mm-font-logo); font-size: 36px; line-height: 1; color: var(--mm-gold); }
+.mf-benefits strong { font-family: var(--mm-font-display); font-weight: 600; }
+
+/* tarjeta hueso con el formulario */
+.mf-card { background: var(--mm-bone); color: var(--mm-black); padding: 24px 20px 26px; border-top: var(--mm-rule) solid var(--mm-gold); scroll-margin-top: 16px; }
+.mf-card a { color: var(--mm-black); }
+.mf-card a:hover { color: var(--mm-gold-ink); }
+.mf-field { margin: 0 0 14px; min-width: 0; }
+.mf-field > label, .mf-lab { display: block; margin: 0 0 6px; font-family: var(--mm-font-display); font-weight: 600; font-size: 11px; line-height: 1.2; letter-spacing: 0.16em; text-transform: uppercase; color: var(--mm-stone-ink); }
+.mf-opt { font-weight: 400; letter-spacing: 0.08em; }
+.mf-input, .mf-select { display: block; width: 100%; min-height: 48px; margin: 0; padding: 11px 12px; font-family: var(--mm-font-body); font-size: 17px; color: var(--mm-black); background: #fff; border: var(--mm-rule) solid var(--mm-black); border-radius: 0; -webkit-appearance: none; appearance: none; }
+.mf-select { padding-right: 38px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%23111110' stroke-width='2'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; }
+.mf-input:focus-visible, .mf-select:focus-visible, .mf-check input:focus-visible { outline: var(--mm-rule) solid var(--mm-gold); outline-offset: 2px; }
+.mf-input[aria-invalid="true"], .mf-select[aria-invalid="true"] { border-color: var(--mm-wine); }
+.mf-tel { display: flex; }
+.mf-tel > span { display: flex; align-items: center; padding: 0 12px; font-family: var(--mm-font-display); font-weight: 600; font-size: 15px; background: var(--mm-bone); border: var(--mm-rule) solid var(--mm-black); border-right: 0; }
+.mf-tel .mf-input { flex: 1; min-width: 0; }
+.mf-err { margin: 6px 0 0; font-family: var(--mm-font-display); font-weight: 600; font-size: 13px; line-height: 1.3; color: var(--mm-wine); }
+.mf-row { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0 14px; }
+@media (min-width: 480px) { .mf-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+.mf-check { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 10px; align-items: start; margin: 4px 0 6px; font-size: 14px; line-height: 1.45; }
+.mf-check input { width: 22px; height: 22px; margin: 1px 0 0; accent-color: var(--mm-black); }
+.mf-check label { font-family: var(--mm-font-body); font-size: 14px; letter-spacing: 0; text-transform: none; color: var(--mm-black); margin: 0; }
+.mf-trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+/* botones: principal negro con texto hueso (hover dorado legible); secundario con filete hueso */
+.mf-btn { display: block; width: 100%; margin-top: 16px; padding: 16px 18px; font-family: var(--mm-font-display); font-weight: 600; font-size: 15px; line-height: 1.2; letter-spacing: 0.14em; text-transform: uppercase; text-align: left; text-decoration: none; color: var(--mm-bone); background: var(--mm-black); border: var(--mm-rule) solid var(--mm-black); border-radius: 0; cursor: pointer; }
+.mf-btn:hover, .mf-btn:focus-visible { background: var(--mm-gold-ink); border-color: var(--mm-gold-ink); color: var(--mm-bone); }
+.mf-btn:disabled { cursor: progress; opacity: 0.75; background: var(--mm-black); border-color: var(--mm-black); }
+.mf-btn-line { color: var(--mm-bone); background: transparent; border-color: var(--mm-bone); }
+.mf-btn-line:hover, .mf-btn-line:focus-visible { background: var(--mm-gold); border-color: var(--mm-gold); color: var(--mm-black); }
+.mf a.mf-btn, .mf a.mf-btn:hover { text-decoration: none; }
+.mf-card a.mf-btn { color: var(--mm-bone); }
+.mf-card a.mf-btn:hover { color: var(--mm-bone); }
+.mf-msg { margin: 12px 0 0; font-family: var(--mm-font-display); font-weight: 600; font-size: 14px; color: var(--mm-wine); }
+
+/* bonus bajo el botón */
+.mf-bonus { margin: 16px 0 0; padding: 2px 0 2px 14px; border-left: var(--mm-rule) solid var(--mm-gold); font-size: 15px; line-height: 1.45; }
+.mf-bonus strong { font-family: var(--mm-font-display); font-weight: 600; }
+
+/* botón fijo al fondo en celular: baja hasta el formulario y se esconde cuando el formulario ya se ve */
+.mf-sticky { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); background: var(--mm-bone); border-top: var(--mm-rule) solid var(--mm-gold); transform: translateY(115%); transition: transform 0.2s ease; }
+.mf-sticky.is-on { transform: none; }
+.mf-sticky .mf-btn { margin-top: 0; text-align: center; }
+@media (min-width: 1000px) { .mf-sticky { display: none; } }
+@media (prefers-reduced-motion: reduce) { .mf-sticky { transition: none; } }
+.mf-main { padding-bottom: 96px; }
+@media (min-width: 1000px) { .mf-main { padding-bottom: 40px; } }
+
+/* pie */
+.mf-foot { margin-top: 24px; padding: 24px 0 32px; border-top: var(--mm-rule) solid #2B2B29; font-family: var(--mm-font-display); font-size: 13px; line-height: 1.6; color: var(--mm-stone-onblack); }
+.mf-foot a { color: var(--mm-bone); }
+.mf-foot p { margin: 0; }
+
+/* gracias / baja */
+.mf-narrow { max-width: 720px; padding-top: 40px; padding-bottom: 8px; }
+.mf-steps { margin: 28px 0 0; padding: 0; list-style: none; display: grid; gap: 18px; }
+.mf-steps li { padding-top: 14px; border-top: var(--mm-rule) solid #2B2B29; font-size: 17px; line-height: 1.5; }
+.mf-steps b { display: block; margin-bottom: 4px; font-family: var(--mm-font-display); font-weight: 600; font-size: 11px; letter-spacing: var(--mm-track-label); text-transform: uppercase; color: var(--mm-gold); }
+.mf-spinner { margin: 0; font-family: var(--mm-font-display); font-size: 14px; color: var(--mm-stone-onblack); }
+
+/* acceso anticipado (/acceso) */
+.mf-timer { margin: 20px 0 4px; font-family: var(--mm-font-logo); font-size: clamp(40px, 10vw, 72px); line-height: 1; letter-spacing: 0.06em; color: var(--mm-gold); font-variant-numeric: tabular-nums; }
+.mf-timer-sub { margin: 0 0 24px; font-family: var(--mm-font-display); font-weight: 600; font-size: 12px; letter-spacing: var(--mm-track-label); text-transform: uppercase; color: var(--mm-stone-onblack); }

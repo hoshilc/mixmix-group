@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contactos del manual — Grupo MixMix</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<link rel="stylesheet" href="css/mixmix-brand/mixmix.css?v=3393207f">
+<link rel="stylesheet" href="css/site.css?v=e9490168">
+<!--#meta-->
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="img/favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<meta name="theme-color" content="#111110">
+<!--/#meta-->
+</head>
+<body>
+<a class="mm-skip" href="#content">Ir al contenido</a>
+
+<!--#header-->
+<header class="mm-header">
+  <div class="mm-container">
+    <a class="mm-logo" href="index.html"><img class="mm-logo-img" src="img/logo.png" alt="MixMix, inicio"></a>
+    <div class="mm-header-util"><a href="cuenta.html" data-mm-account aria-label="Mi cuenta" title="Mi cuenta"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v2"/></svg></a></div>
+    <button type="button" class="mm-menu-btn" aria-expanded="false" aria-controls="mm-nav">Menú</button>
+    <nav id="mm-nav" aria-label="Principal">
+      <ul class="mm-navlinks">
+        <li><a href="index.html">Nosotros</a></li>
+        <li><a href="descargables.html">Descargables</a></li>
+        <li><a href="consultoria.html">Consultoría</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<!--/#header-->
+
+<main id="content">
+  <section class="mm-section">
+    <div class="mm-container">
+      <p class="mm-label mm-label-accent">Solo para el dueño</p>
+      <h1 class="mm-display" style="font-size:clamp(30px,5vw,56px); color:var(--mm-black)">CONTACTOS DEL MANUAL</h1>
+
+      <form id="key-form" class="mm-adm-key" novalidate>
+        <label class="mm-field">Clave de administrador
+          <input class="mm-search" type="password" id="key" autocomplete="off" placeholder="La clave admin_key de privado/config.php">
+        </label>
+        <button type="submit" class="mm-btn" id="key-btn">Ver contactos</button>
+      </form>
+      <p id="adm-err" class="mm-cart-warn" role="alert" hidden></p>
+
+      <div id="adm" hidden>
+        <div class="mm-adm-stats" id="adm-stats"></div>
+
+        <div class="mm-adm-tools">
+          <input class="mm-search" type="search" id="adm-q" placeholder="Buscar por nombre, WhatsApp, correo o campaña" aria-label="Buscar contactos">
+          <label class="mm-field" style="grid-auto-flow:column; align-items:center; gap:8px">Desde <input class="mm-search" type="date" id="adm-from" style="width:auto"></label>
+          <label class="mm-field" style="grid-auto-flow:column; align-items:center; gap:8px">Hasta <input class="mm-search" type="date" id="adm-to" style="width:auto"></label>
+        </div>
+        <div class="mm-adm-tools">
+          <div class="mm-filter-bar" id="adm-filter" style="margin:0">
+            <button type="button" class="mm-filter-btn active" data-f="all">Todos</button>
+            <button type="button" class="mm-filter-btn" data-f="no">No han comprado</button>
+            <button type="button" class="mm-filter-btn" data-f="si">Compraron</button>
+            <button type="button" class="mm-filter-btn" data-f="baja">De baja</button>
+          </div>
+          <button type="button" class="mm-btn" id="adm-csv">Exportar CSV</button>
+          <button type="button" class="mm-btn mm-btn-secondary" id="adm-copy">Copiar WhatsApp de hoy</button>
+          <button type="button" class="mm-link-btn" id="adm-refresh">Actualizar</button>
+        </div>
+        <p class="mm-body" id="adm-note" style="font-size:14px" hidden></p>
+
+        <div class="mm-adm-wrap"><table class="mm-adm-table" id="adm-table"><thead><tr>
+          <th>Registro</th><th>Contacto</th><th>Negocio</th><th>Llegó por</th><th>Compró</th><th></th>
+        </tr></thead><tbody></tbody></table></div>
+        <p class="mm-body" id="adm-empty" style="font-size:14px" hidden>No hay contactos con ese filtro.</p>
+        <p class="mm-body" style="font-size:13px">Las fechas están en hora de Ciudad de México. «Descargas» cuenta personas distintas (un WhatsApp = un contacto); si alguien se registra dos veces se actualiza su registro y no se duplica. Quien está de baja sale marcado y no debe recibir más mensajes.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!--#footer-->
+<footer class="mm-footer">
+  <div class="mm-container">
+    <div class="mm-footer-cols">
+      <div class="mm-footer-col">
+        <p class="mm-footer-title">Sitio</p>
+        <ul class="mm-footer-list">
+          <li><a href="index.html">Nosotros</a></li>
+          <li><a href="descargables.html">Descargables</a></li>
+          <li><a href="consultoria.html">Consultoría</a></li>
+          <li><a href="mixmix-app.html">MixMix App</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+      </div>
+      <div class="mm-footer-col">
+        <p class="mm-footer-title">Equipo</p>
+        <ul class="mm-footer-list">
+          <li><a href="chef-adrian.html">Chef Adrián Noverola</a></li>
+          <li><a href="juan-hernandez.html">Juan Hernández Aparicio</a></li>
+          <li><a href="hoshi-coeto.html">Hoshi López Coeto</a></li>
+        </ul>
+      </div>
+      <div class="mm-footer-col">
+        <p class="mm-footer-title">Legal</p>
+        <ul class="mm-footer-list">
+          <li><a href="privacidad.html">Aviso de privacidad</a></li>
+          <li><a href="terminos.html">Términos y reembolsos</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="mm-social" data-mm-social hidden></p>
+    <p class="mm-footer-legal">Copyright © <span data-mm-year>2026</span> Grupo MixMix. Todos los derechos reservados.</p>
+  </div>
+</footer>
+<!--/#footer-->
+
+<script src="js/config.js?v=88e5243d"></script>
+<script>
+(function () {
+  var C = window.MM_CONFIG || {};
+  var TZ = "America/Mexico_City";
+  var KEY_STORE = "mm_adm_key";
+  var data = null, filter = "all", q = "", from = "", to = "";
+  function $(id) { return document.getElementById(id); }
+  function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
+  function dayOf(ts) { return new Date(ts * 1000).toLocaleDateString("en-CA", { timeZone: TZ }); }   /* AAAA-MM-DD en hora de CDMX */
+  function fmt(ts) { return ts ? new Date(ts * 1000).toLocaleString("es-MX", { timeZone: TZ, day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }) : ""; }
+  function iso(ts) { return ts ? new Date(ts * 1000).toLocaleString("sv-SE", { timeZone: TZ }).slice(0, 16) : ""; }   /* AAAA-MM-DD HH:MM para el CSV */
+  var ERR = {
+    bad_key: "Esa clave no es correcta.",
+    admin_not_configured: "Falta la clave: agrega 'admin_key' (de 16 caracteres o más) en privado/config.php.",
+    too_many: "Demasiados intentos. Espera unos minutos.",
+    network: "No pudimos conectar con el servidor.",
+    server: "El servidor no respondió bien. Revisa que la base de datos esté lista."
+  };
+  function getKey() { try { return sessionStorage.getItem(KEY_STORE) || ""; } catch (e) { return ""; } }
+  function setKey(k) { try { if (k) sessionStorage.setItem(KEY_STORE, k); else sessionStorage.removeItem(KEY_STORE); } catch (e) { /* sin almacenamiento */ } }
+
+  function load(key) {
+    var btn = $("key-btn"); btn.disabled = true;
+    return fetch((C.api || "/api/") + "admin_contacts.php", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ key: key }) })
+      .then(function (r) { return r.json().catch(function () { return { ok: false, error: "server" }; }); })
+      .catch(function () { return { ok: false, error: "network" }; })
+      .then(function (d) {
+        btn.disabled = false;
+        var err = $("adm-err");
+        if (!d || !d.ok) {
+          err.textContent = ERR[d && d.error] || ERR.server; err.hidden = false;
+          if (d && d.error === "bad_key") setKey("");
+          $("adm").hidden = true; $("key-form").hidden = false;
+          return;
+        }
+        err.hidden = true; setKey(key); data = d;
+        $("key-form").hidden = true; $("adm").hidden = false;
+        render();
+      });
+  }
+
+  function visible() {
+    return data.contacts.filter(function (c) {
+      if (filter === "no" && (c.compro || c.baja)) return false;
+      if (filter === "si" && !c.compro) return false;
+      if (filter === "baja" && !c.baja) return false;
+      var d = dayOf(c.registro);
+      if (from && d < from) return false;
+      if (to && d > to) return false;
+      if (q && (c.nombre + " " + c.whatsapp + " " + c.correo + " " + c.utm_source + " " + c.utm_medium + " " + c.utm_campaign + " " + c.tipo).toLowerCase().indexOf(q) < 0) return false;
+      return true;
+    });
+  }
+  function stat(label, big, small) { var b = el("div", "mm-adm-stat"); b.appendChild(el("b", null, big)); b.appendChild(el("span", null, label)); if (small) b.appendChild(el("small", null, small)); return b; }
+
+  function render() {
+    var all = data.contacts, today = dayOf(data.now);
+    var hoy = all.filter(function (c) { return dayOf(c.registro) === today; }).length;
+    var st = $("adm-stats"); st.textContent = "";
+    st.appendChild(stat("Descargas totales", String(all.length), "personas distintas"));
+    st.appendChild(stat("Descargas de hoy", String(hoy), "hora de Ciudad de México"));
+    st.appendChild(stat("Compraron", String(all.filter(function (c) { return c.compro; }).length), "de los que descargaron"));
+    st.appendChild(stat("De baja", String(all.filter(function (c) { return c.baja; }).length), "no escribirles"));
+    var list = visible();
+    var body = $("adm-table").tBodies[0]; body.textContent = "";
+    $("adm-empty").hidden = list.length > 0;
+    list.forEach(function (c) {
+      var tr = document.createElement("tr");
+      tr.appendChild(el("td", null, fmt(c.registro)));
+      var who = el("td"); who.appendChild(el("strong", null, c.nombre));
+      who.appendChild(el("small", "mm-adm-sub", c.whatsapp));
+      if (c.correo) who.appendChild(el("small", "mm-adm-sub", c.correo));
+      tr.appendChild(who);
+      var biz = el("td"); biz.appendChild(el("span", null, c.tipo)); biz.appendChild(el("small", "mm-adm-sub", c.sucursales + (c.sucursales === "1" ? " sucursal" : " sucursales"))); tr.appendChild(biz);
+      var src = el("td"); var u = [c.utm_source, c.utm_medium, c.utm_campaign].filter(Boolean);
+      src.appendChild(el("span", null, u.length ? u.join(" · ") : "Directo / sin UTM")); tr.appendChild(src);
+      var buy = el("td");
+      if (c.baja) buy.appendChild(el("span", "mm-adm-pill is-expired", "Baja"));
+      else buy.appendChild(el("span", "mm-adm-pill " + (c.compro ? "is-paid" : "is-pending"), c.compro ? "Sí" : "No"));
+      if (c.compro && c.compra) buy.appendChild(el("small", "mm-adm-sub", fmt(c.compra)));
+      tr.appendChild(buy);
+      var act = el("td"); var a = el("a", null, "WhatsApp");
+      var first = c.nombre.split(" ")[0];
+      a.href = "https://wa.me/" + c.whatsapp.replace(/\D/g, "") + "?text=" + encodeURIComponent("Hola " + first + ", aquí está tu manual de Grupo MIXMIX: " + data.pdf);
+      a.target = "_blank"; a.rel = "noopener"; if (c.baja) { a.removeAttribute("href"); a.textContent = "No escribir"; }
+      act.appendChild(a); tr.appendChild(act);
+      body.appendChild(tr);
+    });
+  }
+
+  function csvCell(v) { v = String(v == null ? "" : v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
+  function exportCsv() {
+    var head = ["nombre", "whatsapp", "correo", "tipo_negocio", "sucursales", "consentimiento", "consentimiento_fecha", "fecha_registro", "utm_source", "utm_medium", "utm_campaign", "compro", "fecha_compra", "baja"];
+    var rows = visible().map(function (c) {
+      return [c.nombre, c.whatsapp, c.correo, c.tipo, c.sucursales, c.consentimiento ? "sí" : "no", iso(c.consent), iso(c.registro), c.utm_source, c.utm_medium, c.utm_campaign, c.compro ? "sí" : "no", iso(c.compra), c.baja ? "sí" : "no"];
+    });
+    var csv = "﻿" + [head].concat(rows).map(function (r) { return r.map(csvCell).join(","); }).join("\r\n");
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+    a.download = "contactos-manual-" + dayOf(data.now) + ".csv";
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+  function note(t) { var n = $("adm-note"); n.textContent = t; n.hidden = false; }
+  function copyToday() {
+    var today = dayOf(data.now);
+    var nums = data.contacts.filter(function (c) { return dayOf(c.registro) === today && !c.baja; }).map(function (c) { return c.whatsapp; });
+    if (!nums.length) { note("Hoy todavía no hay registros nuevos."); return; }
+    var text = nums.join("\n");
+    (navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText(text) : Promise.reject()).then(function () {
+      note("Copiados " + nums.length + " números de hoy (uno por línea).");
+    }, function () { window.prompt("Copia los números de hoy:", nums.join(", ")); });
+  }
+
+  $("key-form").addEventListener("submit", function (e) { e.preventDefault(); var k = $("key").value.trim(); if (k) load(k); });
+  $("adm-refresh").addEventListener("click", function () { load(getKey()); });
+  $("adm-csv").addEventListener("click", function () { if (data) exportCsv(); });
+  $("adm-copy").addEventListener("click", function () { if (data) copyToday(); });
+  $("adm-q").addEventListener("input", function () { q = this.value.trim().toLowerCase(); if (data) render(); });
+  $("adm-from").addEventListener("change", function () { from = this.value; if (data) render(); });
+  $("adm-to").addEventListener("change", function () { to = this.value; if (data) render(); });
+  $("adm-filter").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-f]"); if (!b) return;
+    filter = b.getAttribute("data-f");
+    document.querySelectorAll("#adm-filter [data-f]").forEach(function (x) { x.classList.toggle("active", x === b); });
+    if (data) render();
+  });
+  var saved = getKey();
+  if (saved) load(saved);
+})();
+</script>
+</body>
+</html>

@@ -11,7 +11,13 @@ $type = isset($event['type']) ? $event['type'] : '';
 $obj = isset($event['data']['object']) ? $event['data']['object'] : array();
 try {
     if ($type === 'checkout.session.completed' || $type === 'checkout.session.async_payment_succeeded') {
-        if (isset($obj['payment_status']) && $obj['payment_status'] === 'paid') { mark_paid($obj['id']); after_paid($obj['id']); }
+        if (isset($obj['payment_status']) && $obj['payment_status'] === 'paid') {
+            mark_paid($obj['id']);
+            after_paid($obj['id'], array(
+                'contact_id' => isset($obj['metadata']['contact_id']) ? (int)$obj['metadata']['contact_id'] : 0,
+                'phone' => isset($obj['customer_details']['phone']) ? $obj['customer_details']['phone'] : '',
+            ));
+        }
     } elseif ($type === 'checkout.session.expired' || $type === 'checkout.session.async_payment_failed') {
         db()->prepare("UPDATE orders SET status = 'expired' WHERE stripe_session_id = ? AND status = 'pending'")->execute(array($obj['id']));
     }

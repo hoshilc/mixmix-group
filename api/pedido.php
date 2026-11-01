@@ -40,6 +40,7 @@ try {
         'lines' => json_decode($o['lines_json'], true),
         'discount' => (int)$o['discount'],
         'total' => (int)$o['total'],
+        'paid_ts' => $o['paid_at'] ? strtotime($o['paid_at'] . ' UTC') : null,
         'saved' => $o['user_id'] !== null,                 /* ya está guardada en una cuenta */
         'account_exists' => (bool)$st->fetch(),              /* ya hay una cuenta con ese correo */
         'logged_in' => $me ? array('name' => $me['name'], 'email' => $me['email']) : null,

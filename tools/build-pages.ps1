@@ -23,7 +23,7 @@ $navKey = @{
   "index.html" = "index.html"; "descargables.html" = "descargables.html"; "consultoria.html" = "consultoria.html";
   "asesoria-intensiva.html" = "consultoria.html"; "chef-adrian.html" = "index.html"; "hoshi-coeto.html" = "index.html"; "juan-hernandez.html" = "index.html"; "mixmix-app.html" = "index.html"; "reingenieria-360.html" = "consultoria.html"; "contacto.html" = "contacto.html"
 }
-$noindex = @("carrito.html", "cuenta.html", "gracias.html", "pedido.html", "admin-pedidos.html")
+$noindex = @("carrito.html", "cuenta.html", "gracias.html", "pedido.html", "admin-pedidos.html", "admin-contactos.html", "manual-gracias.html", "acceso.html", "baja.html", "manual.html")
 $sitemapPages = @()
 
 function Wrap($html, $name, $pattern, $fresh) {
@@ -83,9 +83,9 @@ foreach ($f in (Get-ChildItem $root -File -Filter *.html)) {
   $h = Fill $h "meta" $meta
 
   # 4) version en css/js locales (?v=huella del archivo): al cambiar un archivo, los navegadores y el CDN lo vuelven a pedir
-  $h = [regex]::Replace($h, '(href|src)="((?:css|js)/[^"?#]+\.(?:css|js))(?:\?v=[0-9a-f]+)?"', {
+  $h = [regex]::Replace($h, '(href|src)="(/?(?:css|js)/[^"?#]+\.(?:css|js))(?:\?v=[0-9a-f]+)?"', {
     param($m)
-    $file = Join-Path $root ($m.Groups[2].Value -replace '/', '\')
+    $file = Join-Path $root (($m.Groups[2].Value.TrimStart('/')) -replace '/', '\')
     if (-not (Test-Path $file)) { return $m.Value }
     $md5 = [System.Security.Cryptography.MD5]::Create()
     $hash = ([System.BitConverter]::ToString($md5.ComputeHash([System.IO.File]::ReadAllBytes($file))) -replace '-', '').ToLower().Substring(0, 8)
@@ -104,6 +104,6 @@ $sm = New-Object System.Text.StringBuilder
 foreach ($u in ($sitemapPages | Sort-Object)) { [void]$sm.AppendLine("  <url><loc>$u</loc><lastmod>$today</lastmod></url>") }
 [void]$sm.AppendLine('</urlset>')
 WriteU (Join-Path $root "sitemap.xml") $sm.ToString()
-$rb = "User-agent: *`nAllow: /`nDisallow: /carrito.html`nDisallow: /cuenta.html`nDisallow: /gracias.html`nDisallow: /pedido.html`nDisallow: /admin-pedidos.html`nDisallow: /api/`n`nSitemap: $site/sitemap.xml`n"
+$rb = "User-agent: *`nAllow: /`nDisallow: /carrito.html`nDisallow: /cuenta.html`nDisallow: /gracias.html`nDisallow: /pedido.html`nDisallow: /admin-pedidos.html`nDisallow: /admin-contactos.html`nDisallow: /manual/gracias`nDisallow: /acceso`nDisallow: /baja`nDisallow: /api/`n`nSitemap: $site/sitemap.xml`n"
 WriteU (Join-Path $root "robots.txt") $rb
 Write-Host ("sitemap.xml y robots.txt  (sitio: " + $site + ")")

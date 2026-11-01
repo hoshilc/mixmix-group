@@ -5,6 +5,10 @@ Disallow: /cuenta.html
 Disallow: /gracias.html
 Disallow: /pedido.html
 Disallow: /admin-pedidos.html
+Disallow: /admin-contactos.html
+Disallow: /manual/gracias
+Disallow: /acceso
+Disallow: /baja
 Disallow: /api/
 
 Sitemap: https://grupomixmix.com/sitemap.xml

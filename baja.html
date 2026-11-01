@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Darme de baja — Grupo MIXMIX</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="/css/mixmix-brand/mixmix.css?v=3393207f">
+<link rel="stylesheet" href="/css/manual.css?v=d2248cd6">
+<link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/img/favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<meta name="theme-color" content="#111110">
+</head>
+<body class="mf">
+
+<header class="mf-head">
+  <div class="mf-wrap"><a class="mf-logo" href="https://grupomixmix.com" aria-label="MIX MIX, grupomixmix.com"><img src="/img/logo.png" alt="MIX MIX" width="75" height="52"></a></div>
+</header>
+
+<main>
+  <div class="mf-wrap mf-narrow">
+    <p class="mf-label">Mensajes de Grupo MIXMIX</p>
+    <h1 class="mf-title" id="b-title">Darme de baja</h1>
+    <span class="mf-rule" aria-hidden="true"></span>
+    <div id="b-ask">
+      <p class="mf-sub">Si confirmas, dejamos de escribirte por correo y por WhatsApp. Puedes volver a pedir el manual cuando quieras.</p>
+      <div class="mf-card" style="margin-top:28px">
+        <button class="mf-btn" type="button" id="b-btn" style="margin-top:0">Sí, darme de baja</button>
+        <p class="mf-msg" id="b-msg" role="alert" hidden></p>
+      </div>
+    </div>
+    <p class="mf-sub" id="b-done" hidden>Listo. Ya no te escribiremos. Gracias por el tiempo que nos diste.</p>
+    <p class="mf-sub" id="b-bad" hidden>Este enlace no es válido. Si necesitas ayuda, escríbenos a <a href="mailto:contacto@grupomixmix.com">contacto@grupomixmix.com</a>.</p>
+  </div>
+</main>
+
+<footer class="mf-foot">
+  <div class="mf-wrap"><p><a href="/aviso-de-privacidad">Aviso de privacidad</a> · <a href="https://grupomixmix.com">grupomixmix.com</a></p></div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  function $(id) { return document.getElementById(id); }
+  var p = new URLSearchParams(location.search), c = p.get("c") || "", t = p.get("t") || "";
+  if (!/^[0-9]{1,10}$/.test(c) || !/^[a-f0-9]{32}$/.test(t)) { $("b-ask").hidden = true; $("b-bad").hidden = false; $("b-title").textContent = "Enlace no válido"; return; }
+  $("b-btn").addEventListener("click", function () {
+    var b = this; b.disabled = true; b.textContent = "Enviando…";
+    fetch("/api/baja.php", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ c: c, t: t }) })
+      .then(function (r) { return r.json().catch(function () { return { ok: false }; }); })
+      .catch(function () { return { ok: false }; })
+      .then(function (d) {
+        if (d && d.ok) { $("b-ask").hidden = true; $("b-done").hidden = false; $("b-title").textContent = "Listo"; return; }
+        b.disabled = false; b.textContent = "Sí, darme de baja";
+        var m = $("b-msg"); m.textContent = d && d.error === "bad_link" ? "Este enlace no es válido." : "No pudimos procesar la baja. Inténtalo de nuevo."; m.hidden = false;
+      });
+  });
+})();
+</script>
+</body>
+</html>

@@ -17,12 +17,16 @@ window.MM_CONFIG = {
   whatsapp: "",
   calendarUrl: "",
   plausibleDomain: "",
+  /* Meta Pixel: pega aquí el ID del pixel (solo números). Vacío = no se carga el pixel.
+     Los eventos PageView, Lead (/manual/gracias) y Purchase salen solos. Para mandarlos también desde el servidor
+     (API de conversiones) agrega 'meta_pixel_id' y 'meta_capi_token' en privado/config.php. */
+  metaPixelId: "",
   /* true = se ven los recuadros de ejemplo (videos, logos, reseñas) mientras llegan los reales.
      Ponlo en false al lanzar para ocultar los que sigan vacíos. */
   showPlaceholders: false,
   /* servidor de la tienda (carpeta api/ del hosting con PHP). Solo se usa en los dominios de apiHosts;
      en cualquier otro (Netlify, vista previa) la tienda funciona en modo demostración. */
-  api: "api/",
+  api: "/api/",
   apiHosts: ["darkslategray-trout-767454.hostingersite.com", "grupomixmix.com", "www.grupomixmix.com"],
   /* redes sociales: pega la dirección completa de cada perfil; las vacías no se muestran */
   social: {

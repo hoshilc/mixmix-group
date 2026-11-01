@@ -1,21 +1,4 @@
 {
-  "zona": "America/Cancun",
-  "fases": [
-    {
-      "id": "etapa-1",
-      "inicio": "2026-10-30T12:00:00-05:00",
-      "fin": "2026-11-13T23:59:59-05:00",
-      "paquetes": 30,
-      "sueltos": 20,
-      "texto": "30% en paquetes y 20% en documentos. Termina en"
-    },
-    {
-      "id": "etapa-2",
-      "inicio": "2026-11-14T00:00:00-05:00",
-      "fin": "2026-11-28T23:59:59-05:00",
-      "paquetes": 20,
-      "sueltos": 10,
-      "texto": "Última etapa: 20% en paquetes y 10% en documentos. Termina en"
-    }
-  ]
+  "zona": "America/Mexico_City",
+  "fases": []
 }

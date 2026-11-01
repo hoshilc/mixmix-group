@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¡Listo! Descarga tu manual — Grupo MIXMIX</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="/css/mixmix-brand/mixmix.css?v=3393207f">
+<link rel="stylesheet" href="/css/manual.css?v=d2248cd6">
+<link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/img/favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<meta name="theme-color" content="#111110">
+</head>
+<body class="mf mf-dark">
+
+<header class="mf-head">
+  <div class="mf-wrap"><a class="mf-logo" href="https://grupomixmix.com" aria-label="MIX MIX, grupomixmix.com"><img src="/img/logo.png" alt="MIX MIX" width="75" height="52"></a></div>
+</header>
+
+<main>
+  <div class="mf-wrap mf-narrow">
+    <p class="mf-spinner" id="g-wait">Un momento…</p>
+    <noscript><p class="mf-sub">Para ver tu descarga activa JavaScript, o <a href="/manual">vuelve al formulario</a>.</p></noscript>
+
+    <div id="g-ok" hidden>
+      <p class="mf-label">Manual gratuito</p>
+      <h1 class="mf-title" id="g-title">¡Listo!</h1>
+      <span class="mf-rule" aria-hidden="true"></span>
+      <p class="mf-sub">Tu manual va en camino a tu WhatsApp. También puedes descargarlo aquí.</p>
+
+      <div class="mf-card" style="margin-top:28px">
+        <a class="mf-btn" id="g-download" href="/descargas/manual-donde-pierde-dinero.pdf" download style="margin-top:0">Descargar el manual (PDF)</a>
+      </div>
+
+      <ul class="mf-steps">
+        <li><b>Siguiente paso</b>Empieza hoy con el Día 1: solo te toma 30 minutos.</li>
+        <li><b>Tu bonus</b>Por haberlo descargado, el miércoles 11 de noviembre entras a la tienda 12 horas antes que todos, con 25% de descuento.</li>
+      </ul>
+
+      <a class="mf-btn mf-btn-line" id="g-wa" href="#" target="_blank" rel="noopener" hidden>Guarda mi número en WhatsApp</a>
+    </div>
+  </div>
+</main>
+
+<footer class="mf-foot">
+  <div class="mf-wrap"><p><a href="/aviso-de-privacidad">Aviso de privacidad</a> · <a href="https://grupomixmix.com">grupomixmix.com</a></p></div>
+</footer>
+
+<script src="/js/config.js?v=88e5243d"></script>
+<script src="/js/site.js?v=2dd9f31a"></script>
+<script>
+(function () {
+  "use strict";
+  var C = window.MM_CONFIG || {};
+  function $(id) { return document.getElementById(id); }
+  function show(nombre) {
+    $("g-title").textContent = nombre ? "¡Listo, " + nombre + "!" : "¡Listo!";
+    if (C.whatsapp) {   /* el número de WhatsApp Business se pone en js/config.js; sin número el botón no aparece */
+      var a = $("g-wa");
+      a.href = "https://wa.me/" + C.whatsapp + "?text=" + encodeURIComponent("Hola, ya descargué el manual");
+      a.hidden = false;
+    }
+    $("g-wait").hidden = true; $("g-ok").hidden = false;
+  }
+  fetch("/api/manual-gracias.php", { credentials: "same-origin" })
+    .then(function (r) { return r.json().catch(function () { return { ok: false, error: "server" }; }).then(function (d) { d._status = r.status; return d; }); })
+    .catch(function () { return { ok: false, error: "network" }; })
+    .then(function (d) {
+      if (d && d.ok) {
+        show(d.nombre || "");
+        /* Lead: una sola vez por registro (el servidor solo lo marca "nuevo" la primera vez) */
+        if (d.lead && window.MMTrack) window.MMTrack.lead(d.event_id);
+        return;
+      }
+      if (d && d.error === "no_contact") { location.replace("/manual"); return; }   /* entró directo sin registrarse */
+      show("");   /* falla temporal del servidor: la persona ya se registró, que pueda descargar igual */
+    });
+})();
+</script>
+</body>
+</html>

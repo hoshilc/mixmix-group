@@ -309,8 +309,9 @@ function order_products($o) {
 }
 /* después de confirmar un pago: manda UNA vez el correo de confirmación.
    Compra sin cuenta: con el enlace personal a los archivos. Compra con cuenta: con la liga a «Mis compras». */
-function after_paid($sessionId) {
+function after_paid($sessionId, $meta = array()) {
     $pdo = db();
+    contact_after_paid($sessionId, $meta);   /* separa a quien compró de quien no en la lista del manual (idempotente) */
     try {
         $st = $pdo->prepare("SELECT o.id, o.ref, o.user_id, o.guest_email, o.total, o.lines_json, u.email AS user_email, u.name AS user_name FROM orders o LEFT JOIN users u ON u.id = o.user_id WHERE o.stripe_session_id = ? AND o.status = 'paid' AND o.mailed_at IS NULL");
         $st->execute(array($sessionId));
@@ -323,6 +324,13 @@ function after_paid($sessionId) {
     $claim->execute(array($o['id']));
     if ($claim->rowCount() !== 1) return;
     $cfg = config();
+    /* evento Purchase desde el servidor (API de conversiones de Meta); el mismo event_id que el del navegador evita contarlo doble */
+    $pl = json_decode($o['lines_json'], true);
+    $ids = array(); $contents = array();
+    if (is_array($pl)) foreach ($pl as $l) if (isset($l['id'])) { $ids[] = (string)$l['id']; $contents[] = array('id' => (string)$l['id'], 'quantity' => 1, 'item_price' => isset($l['price']) ? (float)$l['price'] : 0); }
+    $ph = norm_phone(isset($meta['phone']) ? $meta['phone'] : '');
+    meta_capi('Purchase', 'purchase-' . $o['ref'], array('em' => array(meta_hash($to)), 'ph' => $ph ? array(meta_hash('52' . $ph)) : null),
+        array('currency' => 'MXN', 'value' => (float)$o['total'], 'content_type' => 'product', 'content_ids' => $ids, 'contents' => $contents), $cfg['site_url']);
     $esc = function ($s) { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); };
     /* resumen de lo comprado */
     $items = ''; $itemsText = '';
@@ -609,7 +617,113 @@ function mp_confirm_payment($paymentId) {
             return 'mismatch';
         }
         mark_paid('mp_' . $ref);
-        after_paid('mp_' . $ref);
+        after_paid('mp_' . $ref, array(
+            'contact_id' => isset($p['metadata']['contact_id']) ? (int)$p['metadata']['contact_id'] : 0,
+            'phone' => isset($p['payer']['phone']['number']) ? (string)$p['payer']['phone']['number'] : '',
+        ));
     }
     return $status;
+}
+
+/* estado de un pedido para el navegador, con lo necesario para el evento Purchase (ver MMTrack.purchase en js/site.js) */
+function order_payload($o) {
+    $lines = json_decode($o['lines_json'], true);
+    return array('status' => $o['status'], 'ref' => $o['ref'], 'total' => (int)$o['total'],
+        'lines' => is_array($lines) ? $lines : array(), 'paid_ts' => $o['paid_at'] ? strtotime($o['paid_at'] . ' UTC') : null);
+}
+
+/* ---------- embudo: contactos del manual gratuito ---------- */
+function mm_hmac($data) {
+    $c = config();
+    $key = (isset($c['stripe_webhook_secret']) && $c['stripe_webhook_secret'] !== '') ? $c['stripe_webhook_secret'] : $c['stripe_secret'];
+    return hash_hmac('sha256', $data, $key);
+}
+/* la tabla se crea sola la primera vez que alguien se registra (no hay que importar nada en phpMyAdmin) */
+function contacts_ensure() {
+    static $done = false;
+    if ($done) return;
+    db()->exec("CREATE TABLE IF NOT EXISTS contacts (
+        id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        nombre VARCHAR(120) NOT NULL,
+        whatsapp VARCHAR(16) NOT NULL,
+        correo VARCHAR(190) NULL,
+        tipo_negocio VARCHAR(40) NOT NULL,
+        sucursales VARCHAR(10) NOT NULL,
+        consentimiento TINYINT(1) NOT NULL DEFAULT 0,
+        consentimiento_at DATETIME NULL,
+        fecha_registro DATETIME NOT NULL,
+        utm_source VARCHAR(120) NULL,
+        utm_medium VARCHAR(120) NULL,
+        utm_campaign VARCHAR(120) NULL,
+        compro TINYINT(1) NOT NULL DEFAULT 0,
+        fecha_compra DATETIME NULL,
+        baja TINYINT(1) NOT NULL DEFAULT 0,
+        fecha_baja DATETIME NULL,
+        lead_enviado TINYINT(1) NOT NULL DEFAULT 0,
+        ultima_actualizacion DATETIME NOT NULL,
+        UNIQUE KEY uq_contacts_whatsapp (whatsapp),
+        KEY idx_contacts_correo (correo),
+        KEY idx_contacts_fecha (fecha_registro)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    $done = true;
+}
+/* 10 dígitos de México (acepta +52 / 52 / 521 al inicio, espacios y guiones); null si no es válido */
+function norm_phone($s) {
+    $d = preg_replace('/\D+/', '', (string)$s);
+    if (strlen($d) === 13 && strpos($d, '521') === 0) $d = substr($d, 3);
+    elseif (strlen($d) === 12 && strpos($d, '52') === 0) $d = substr($d, 2);
+    return preg_match('/^[0-9]{10}$/', $d) ? $d : null;
+}
+/* código que el navegador guarda al registrarse; así una compra se liga al contacto aunque use otro correo */
+function contact_token($id) { return $id . '.' . substr(mm_hmac('contact|' . $id), 0, 20); }
+function contact_from_token($t) {
+    if (!is_string($t) || !preg_match('/^([0-9]{1,10})\.([a-f0-9]{20})$/', $t, $m)) return 0;
+    return hash_equals(substr(mm_hmac('contact|' . $m[1]), 0, 20), $m[2]) ? (int)$m[1] : 0;
+}
+function contact_baja_code($id) { return substr(mm_hmac('baja|' . $id), 0, 32); }
+function contact_baja_link($id) { $c = config(); return $c['site_url'] . '/baja?c=' . (int)$id . '&t=' . contact_baja_code($id); }
+function contact_mark_bought($email, $phone10, $contactId) {
+    $w = array(); $p = array();
+    if ($email) { $w[] = 'correo = ?'; $p[] = strtolower((string)$email); }
+    if ($phone10) { $w[] = 'whatsapp = ?'; $p[] = '+52' . $phone10; }
+    if ($contactId) { $w[] = 'id = ?'; $p[] = (int)$contactId; }
+    if (!$w) return;
+    try {
+        db()->prepare('UPDATE contacts SET compro = 1, fecha_compra = COALESCE(fecha_compra, UTC_TIMESTAMP()), ultima_actualizacion = UTC_TIMESTAMP() WHERE ' . implode(' OR ', $w))->execute($p);
+    } catch (PDOException $e) { /* todavía no existe la tabla de contactos: nadie se ha registrado */ }
+}
+function contact_after_paid($sessionId, $meta) {
+    try {
+        $st = db()->prepare("SELECT o.guest_email, u.email AS user_email FROM orders o LEFT JOIN users u ON u.id = o.user_id WHERE o.stripe_session_id = ? AND o.status = 'paid'");
+        $st->execute(array($sessionId));
+        $o = $st->fetch();
+    } catch (PDOException $e) { return; }
+    if (!$o) return;
+    $email = $o['user_email'] ? $o['user_email'] : $o['guest_email'];
+    contact_mark_bought($email, norm_phone(isset($meta['phone']) ? $meta['phone'] : ''), isset($meta['contact_id']) ? (int)$meta['contact_id'] : 0);
+}
+
+/* ---------- Meta: API de conversiones (eventos desde el servidor) ----------
+   Se activa con 'meta_pixel_id' y 'meta_capi_token' en privado/config.php. Nunca debe romper un pago ni un registro. */
+function meta_hash($v) { $v = strtolower(trim((string)$v)); return $v === '' ? null : hash('sha256', $v); }
+function meta_capi($event, $eventId, $user, $custom, $url) {
+    $c = config();
+    if (empty($c['meta_pixel_id']) || empty($c['meta_capi_token'])) return;
+    $clean = array();
+    foreach ($user as $k => $v) {
+        if (is_array($v)) { $v = array_values(array_filter($v)); if (!$v) continue; }
+        elseif ($v === null || $v === '') continue;
+        $clean[$k] = $v;
+    }
+    $data = array('event_name' => $event, 'event_time' => time(), 'event_id' => $eventId, 'action_source' => 'website', 'event_source_url' => $url, 'user_data' => $clean);
+    if ($custom) $data['custom_data'] = $custom;
+    $body = array('data' => array($data), 'access_token' => $c['meta_capi_token']);
+    if (!empty($c['meta_test_event_code'])) $body['test_event_code'] = $c['meta_test_event_code'];
+    $ch = curl_init('https://graph.facebook.com/v21.0/' . rawurlencode($c['meta_pixel_id']) . '/events');
+    curl_setopt_array($ch, array(CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 8, CURLOPT_POST => true,
+        CURLOPT_HTTPHEADER => array('Content-Type: application/json'), CURLOPT_POSTFIELDS => json_encode($body)));
+    $resp = curl_exec($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    if ($resp === false || $code >= 400) error_log('meta capi ' . $event . ' http ' . $code . ': ' . mb_substr((string)$resp, 0, 300));
 }

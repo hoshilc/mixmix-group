@@ -2,6 +2,10 @@
 descargas/
 *.pdf
 *.zip
+# excepcion: el manual gratuito del embudo es publico a proposito (/descargas/manual-donde-pierde-dinero.pdf)
+!descargas/
+descargas/*
+!descargas/manual-donde-pierde-dinero.pdf
 
 # Secretos
 .env

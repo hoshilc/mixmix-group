@@ -18,6 +18,7 @@ if ($u) {
 }
 expire_old_pending();
 /* pasarela: Stripe por defecto; 'mp' = Mercado Pago (solo si hay mp_access_token en privado/config.php) */
+$contactId = contact_from_token(isset($in['ct']) ? $in['ct'] : '');   /* contacto del manual gratuito (código que guardó el navegador al registrarse) */
 $gateway = (isset($in['gateway']) && $in['gateway'] === 'mp') ? 'mp' : 'stripe';
 if ($gateway === 'mp' && !mp_enabled()) fail('mp_not_available');
 try {
@@ -65,7 +66,7 @@ try {
             'items' => $mpItems,
             'payer' => array('email' => $u ? $u['email'] : $guestEmail),
             'external_reference' => $ref,
-            'metadata' => array('order_ref' => $ref, 'phase' => $cart['phase']),
+            'metadata' => array('order_ref' => $ref, 'phase' => $cart['phase'], 'contact_id' => $contactId ? (string)$contactId : ''),
             'back_urls' => array('success' => $back, 'pending' => $back, 'failure' => $cfg['site_url'] . '/carrito.html'),
             'auto_return' => 'approved',
             'notification_url' => $cfg['site_url'] . '/api/mp-webhook.php',
@@ -106,6 +107,7 @@ try {
     /* precio de lanzamiento: se anota la fase y la sesión de pago vence al cerrar la fase, para que nadie pague un precio ya terminado.
        Stripe exige que venza entre 30 minutos y 24 horas después de crearse; en los últimos 31 minutos de una fase puede quedar
        hasta ~30 min abierta después del cierre (límite de Stripe). */
+    if ($contactId) $params['metadata']['contact_id'] = (string)$contactId;
     if ($cart['phase'] !== null) {
         $params['metadata']['phase'] = $cart['phase'];
         $left = $cart['phaseEnd'] - time();

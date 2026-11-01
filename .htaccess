@@ -38,3 +38,10 @@ RedirectMatch 301 ^/tienda/?$ /descargables.html
 RewriteEngine On
 RewriteCond %{HTTP_HOST} ^www\.grupomixmix\.com$ [NC]
 RewriteRule ^(.*)$ https://grupomixmix.com/$1 [R=301,L]
+
+# Direcciones limpias del embudo (los archivos son manual.html, manual-gracias.html, acceso.html, baja.html y privacidad.html)
+RewriteRule ^manual/?$ manual.html [L]
+RewriteRule ^manual/gracias/?$ manual-gracias.html [L]
+RewriteRule ^acceso/?$ acceso.html [L]
+RewriteRule ^baja/?$ baja.html [L]
+RewriteRule ^aviso-de-privacidad/?$ privacidad.html [L]

@@ -90,7 +90,10 @@
   };
   S.googleId = function () { return LIVE.google || ""; };
   /* con sesión paga a nombre de la cuenta; sin sesión hace falta el correo (compra como invitado) */
-  S.checkout = function (email, gateway) { return api("checkout.php", { ids: S.cart(), email: email || "", gateway: gateway || "" }); };
+  S.checkout = function (email, gateway) {
+    var ct = ""; try { ct = localStorage.getItem("mm_ct") || ""; } catch (e) { /* sin almacenamiento */ }   /* contacto del manual gratuito, si se registró en este navegador */
+    return api("checkout.php", { ids: S.cart(), email: email || "", gateway: gateway || "", ct: ct });
+  };
   S.mpEnabled = function () { return live() && !!LIVE.mp; };
   S.confirm = function (sessionId, ref, paymentId) {
     return api("confirm.php?" + (paymentId ? "pedido=" + encodeURIComponent(ref || "") + "&payment_id=" + encodeURIComponent(paymentId) : "session_id=" + encodeURIComponent(sessionId)));

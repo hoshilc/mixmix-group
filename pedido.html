@@ -145,12 +145,12 @@
 </footer>
 <!--/#footer-->
 
-<script src="js/config.js?v=ef2989c3"></script>
+<script src="js/config.js?v=88e5243d"></script>
 <script src="js/fases.js?v=f066e5b6"></script>
 <script src="js/catalog.js?v=f76422b3"></script>
 <script src="js/mm.js?v=068d9d58"></script>
-<script src="js/store.js?v=b9ce29ff"></script>
-<script src="js/site.js?v=343188cb"></script>
+<script src="js/store.js?v=122b887d"></script>
+<script src="js/site.js?v=2dd9f31a"></script>
 <script>
 (function () {
   if (window.MM_CONFIG && !window.MM_CONFIG.store) { location.replace("descargables.html"); return; }
@@ -280,7 +280,7 @@
   var tries = 0;
   (function check() {
     S.guestOrder(ref, tok, sid, pid).then(function (d) {
-      if (d && d.ok && d.status === "paid") { S.clear(); renderOrder(d); return; }
+      if (d && d.ok && d.status === "paid") { S.clear(); if (window.MMTrack) window.MMTrack.purchase(d.ref, d.total, d.lines, d.paid_ts); renderOrder(d); return; }
       if (d && d.ok === false && d.error === "order_not_found") { show("bad"); return; }
       if (++tries < 10) { setTimeout(check, 2000); return; }
       $("ped-wait-msg").innerHTML = 'Todavía no vemos tu pago. Si elegiste pagar en OXXO o por transferencia, tus archivos llegan a tu correo y a esta página en cuanto se confirme el pago (puede tardar de minutos a un par de días). Si ya pagaste con tarjeta, espera un minuto y <a href="">recarga esta página</a>; si no se resuelve, <a href="contacto.html">escríbenos</a> con tu número de pedido <strong>' + esc(ref) + '</strong>.';
