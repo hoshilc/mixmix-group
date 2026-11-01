@@ -81,9 +81,6 @@
 .mf-card a.mf-btn:hover { color: var(--mm-bone); }
 .mf-msg { margin: 12px 0 0; font-family: var(--mm-font-display); font-weight: 600; font-size: 14px; color: var(--mm-wine); }
 
-/* bonus bajo el botón */
-.mf-bonus { margin: 16px 0 0; padding: 2px 0 2px 14px; border-left: var(--mm-rule) solid var(--mm-gold); font-size: 15px; line-height: 1.45; }
-.mf-bonus strong { font-family: var(--mm-font-display); font-weight: 600; }
 
 /* botón fijo al fondo en celular: baja hasta el formulario y se esconde cuando el formulario ya se ve */
 .mf-sticky { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); background: var(--mm-bone); border-top: var(--mm-rule) solid var(--mm-gold); transform: translateY(115%); transition: transform 0.2s ease; }

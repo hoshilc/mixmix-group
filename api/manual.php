@@ -77,10 +77,9 @@ if ($correo !== '' && ($isNew || $mailChanged)) {
         '<p style="margin:0 0 8px">Aquí está <strong>Descubre en 7 días dónde pierde dinero tu restaurante</strong>, el manual gratuito de Grupo MIXMIX.</p>' .
         mail_button($pdf, 'Descargar el manual (PDF)') .
         '<p style="margin:16px 0 8px"><strong>Empieza hoy con el Día 1:</strong> solo te toma 30 minutos.</p>' .
-        '<p style="margin:0 0 8px">Por haberlo descargado, el miércoles 11 de noviembre entras a la tienda 12 horas antes que todos, con 25% de descuento. Te avisamos por WhatsApp.</p>' .
         '<p style="font-size:12px;color:#8A8A87;margin:20px 0 4px">Recibes este correo porque pediste el manual en grupomixmix.com. Si ya no quieres recibir mensajes, <a href="' . $esc($baja) . '" style="color:#555555">date de baja aquí</a>.</p>');
     $text = 'Tu manual está listo, ' . $first . ".\n\nDescárgalo aquí: " . $pdf .
-        "\n\nEmpieza hoy con el Día 1: solo te toma 30 minutos.\n\nPor haberlo descargado, el miércoles 11 de noviembre entras a la tienda 12 horas antes que todos, con 25% de descuento. Te avisamos por WhatsApp." .
+        "\n\nEmpieza hoy con el Día 1: solo te toma 30 minutos." .
         "\n\nSi ya no quieres recibir mensajes, date de baja aquí: " . $baja . "\n\nGrupo MIXMIX";
     if (!mail_send($correo, 'Tu manual: dónde pierde dinero tu restaurante', $html, $text)) error_log('manual: no se pudo enviar el correo al contacto ' . $id);
 }
