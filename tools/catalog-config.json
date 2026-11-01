@@ -33,38 +33,36 @@
     { "id": "blindaje",      "name": "Blindaje, riesgo y seguridad" }
   ],
   "prices": {
-    "manual": 299, "corto": 129,
-    "catalogo": 6999,
-    "themes": { "apertura": 2499, "fundamentos": 1799, "arquitectura": 1599, "servicio": 799, "marketing": 1099, "finanzas": 549, "talento": 1799, "blindaje": 1599 },
-    "types": { "puestos": 2249, "controles": 1149, "kpis": 749, "mystery": 579 },
-    "juegos": 699,
+    "manual": 99, "corto": 49,
+    "catalogo": 1999,
+    "themes": { "apertura": 549, "fundamentos": 399, "arquitectura": 399, "servicio": 149, "marketing": 249, "finanzas": 149, "talento": 399, "blindaje": 399 },
+    "types": { "puestos": 849, "controles": 449, "kpis": 299, "mystery": 199 },
+    "juegos": 199,
     "volume": {
-      "_nota": "Manuales por volumen: precio base x N con el descuento de la estrategia (2-4: 10%, 5-9: 25%, 10-20: 35%), redondeado a ...49/...99 y ajustado para que el precio por manual nunca suba al llevar mas.",
+      "_nota": "Manuales por volumen (estrategia de impulso): 1 a $99, 3 a $199, 5 a $299, 10 a $499, 20 a $899; el precio por manual nunca sube al llevar mas.",
       "manuales": [
-        { "n": 1,  "price": 299 },
-        { "n": 3,  "price": 799 },
-        { "n": 5,  "price": 1149 },
-        { "n": 7,  "price": 1599 },
-        { "n": 10, "price": 1949 },
-        { "n": 15, "price": 2899 },
-        { "n": 20, "price": 3849 }
+        { "n": 1, "price": 99 },
+        { "n": 3, "price": 199 },
+        { "n": 5, "price": 299 },
+        { "n": 10, "price": 499 },
+        { "n": 20, "price": 899 }
       ]
     }
   },
   "games": [
-    { "id": "loteria-ingles", "title": "Lotería MIXMIX: Inglés", "price": 249,
+    { "id": "loteria-ingles", "title": "Lotería MIXMIX: Inglés", "price": 79,
       "desc": "Lotería de capacitación para que tu equipo practique inglés de restaurante. Incluye cartas y tablas para imprimir.",
       "files": [ "Cartas de Ingl", "Tablas de Ingl" ] },
-    { "id": "loteria-servicio", "title": "Lotería MIXMIX: Servicio", "price": 249,
+    { "id": "loteria-servicio", "title": "Lotería MIXMIX: Servicio", "price": 79,
       "desc": "Lotería de capacitación sobre el servicio en sala. Incluye cartas y tablas para imprimir.",
       "files": [ "Cartas de Servicio", "Tablas de Servicio" ] },
-    { "id": "memorama-kpi", "title": "MIX Games: KPI", "price": 149,
+    { "id": "memorama-kpi", "title": "MIX Games: KPI", "price": 49,
       "desc": "Memorama de capacitación para aprender los indicadores del restaurante jugando.",
       "files": [ "MIX Games - KPI" ] },
-    { "id": "memorama-marketing", "title": "MIX Games: Marketing", "price": 149,
+    { "id": "memorama-marketing", "title": "MIX Games: Marketing", "price": 49,
       "desc": "Memorama de capacitación para aprender marketing gastronómico jugando.",
       "files": [ "MIX Games - Marketing" ] },
-    { "id": "memorama-crisis", "title": "MIX Games: Restaurante en Crisis", "price": 149,
+    { "id": "memorama-crisis", "title": "MIX Games: Restaurante en Crisis", "price": 49,
       "desc": "Memorama de capacitación para entrenar al equipo ante situaciones de crisis en el restaurante.",
       "files": [ "Restaurante en Crisis" ] }
   ],
@@ -132,43 +130,43 @@
   },
   "packages": [
     {
-      "id": "pkg-apertura", "title": "Apertura de Negocio", "price": 3299,
+      "id": "pkg-apertura", "title": "Apertura de Negocio", "price": 999,
       "who": "Para quien está por abrir un concepto (tacos, bar, marisquería, panadería…): el manual de tu giro más toda la base para arrancar.",
       "choose": { "cat": "manuales", "g": "apertura" },
       "parts": [ { "cat": "manuales", "g": "fundamentos" }, { "cat": "manuales", "g": "arquitectura" }, { "cat": "controles" } ]
     },
     {
-      "id": "pkg-operacion", "title": "Operación Diaria", "price": 1999,
+      "id": "pkg-operacion", "title": "Operación Diaria", "price": 799,
       "who": "Para el gerente de operaciones de un restaurante ya abierto: controles, indicadores y evaluación del servicio.",
       "parts": [ { "cat": "controles" }, { "cat": "manuales", "titles": ["Formatos Operativos para Restaurantes"] }, { "cat": "kpis" }, { "cat": "mystery" } ]
     },
     {
-      "id": "pkg-talento", "title": "Talento y RRHH", "price": 3399,
+      "id": "pkg-talento", "title": "Talento y RRHH", "price": 999,
       "who": "Para el gerente de RRHH o el dueño que arma su equipo: todas las descripciones de puesto y los manuales de talento.",
       "parts": [ { "cat": "puestos", "exceptTitles": ["Secuencia de Servicio: Meseros"] }, { "cat": "manuales", "g": "talento" } ]
     },
     {
-      "id": "pkg-servicio", "title": "Servicio y Experiencia", "price": 1849,
+      "id": "pkg-servicio", "title": "Servicio y Experiencia", "price": 599,
       "who": "Para el capitán de sala o gerente de piso: servicio, evaluación de cliente incógnito y los puestos de salón.",
       "parts": [ { "cat": "manuales", "g": "servicio" }, { "cat": "mystery" }, { "cat": "kpis", "titles": ["Cuadro de Mando: Capitán de Sala"] }, { "cat": "puestos", "g": "salon" } ]
     },
     {
-      "id": "pkg-marketing", "title": "Marketing y Crecimiento", "price": 1299,
+      "id": "pkg-marketing", "title": "Marketing y Crecimiento", "price": 399,
       "who": "Para el dueño o encargado de marketing que quiere subir ingresos.",
       "parts": [ { "cat": "manuales", "g": "marketing" }, { "cat": "puestos", "g": "mkt" } ]
     },
     {
-      "id": "pkg-liderazgo", "title": "Liderazgo y Alto Rendimiento", "price": 1349,
+      "id": "pkg-liderazgo", "title": "Liderazgo y Alto Rendimiento", "price": 349,
       "who": "Para el personal en vía de ascenso a gerente: la serie Alto Rendimiento y el camino de carrera.",
       "parts": [ { "cat": "manuales", "titles": ["Alto Rendimiento: Gerente General", "Alto Rendimiento: Chef Ejecutivo", "Alto Rendimiento: Jefe de Bares", "Ascenso: De Jefe de Bares a Gerente General", "De Hostess a Gerenta", "Perfiles de Puesto y Perfil DISC Ideal"] } ]
     },
     {
-      "id": "pkg-blindaje", "title": "Blindaje y Control de Riesgo", "price": 1799,
+      "id": "pkg-blindaje", "title": "Blindaje y Control de Riesgo", "price": 449,
       "who": "Para el operador multi-unidad enfocado en pérdidas y cumplimiento.",
       "parts": [ { "cat": "manuales", "g": "blindaje" }, { "cat": "controles", "titles": ["Control de Temperaturas", "Bitácora y Control de Mermas"] } ]
     },
     {
-      "id": "pkg-finanzas", "title": "Finanzas y Proveedores", "price": 799,
+      "id": "pkg-finanzas", "title": "Finanzas y Proveedores", "price": 199,
       "who": "Para el dueño o administrador enfocado en costos.",
       "parts": [ { "cat": "manuales", "g": "finanzas" }, { "cat": "controles", "titles": ["Alta de Proveedores", "Control de Stock Máximo y Mínimo"] } ]
     }

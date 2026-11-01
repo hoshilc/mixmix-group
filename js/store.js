@@ -130,7 +130,7 @@
     if (live()) return LIVE.orders.slice();                            /* el servidor ya las manda de la más reciente a la más antigua */
     return (read(K_ORDERS, {})[u.email] || []).slice().reverse();   /* la más reciente primero */
   };
-  /* precio del carrito: los manuales sueltos se cobran por volumen (paquetes de 1, 3, 5, 7, 10, 15 y 20);
+  /* precio del carrito: los manuales sueltos se cobran por volumen (paquetes de 1, 3, 5, 10 y 20);
      lo demás (documentos cortos, juegos, paquetes) va a su precio. */
   S.pricing = function (ids) {
     ids = ids || S.cart();

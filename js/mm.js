@@ -64,12 +64,12 @@
   }
 
   /* ---------- manuales por volumen ----------
-     Escalones de js/catalog.js (volume.manuales): 1, 3, 5, 7, 10, 15 y 20 manuales.
+     Escalones de js/catalog.js (volume.manuales): 1, 3, 5, 10 y 20 manuales.
      El precio de N manuales es el más barato entre todas las combinaciones de paquetes que cubran
      al menos N (p. ej. 4 = paquete de 3 + 1 suelto). Nunca baja al agregar un manual, y a veces
      llevar uno más cuesta lo mismo: por eso se avisa "puedes elegir X más sin pagar más". */
   var VOL = ((C.volume && C.volume.manuales) || []).slice().sort(function (a, b) { return a.n - b.n; });
-  function manualBase() { return (catById.manuales && catById.manuales.price) || 299; }
+  function manualBase() { return (catById.manuales && catById.manuales.price) || 99; }
   function volumeCost(n) {
     if (n <= 0) return { cost: 0, slots: 0, plan: [] };
     if (!VOL.length) return { cost: Math.round(n * manualBase()), raw: n * manualBase(), slots: n, plan: [n] };

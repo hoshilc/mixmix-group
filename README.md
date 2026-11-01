@@ -37,16 +37,16 @@ Todo parte de dos precios base; el precio de cualquier paquete es consecuencia d
 
 | Capa | Producto | Precio |
 |---|---|---|
-| Documento suelto | Manual completo (52): se vende **por volumen** (abajo) | $299 MXN base |
-| Documento suelto | Documento corto (63): puestos, controles, KPIs, Mystery | $129 MXN |
-| Documento suelto | Juegos: Lotería (2) $249 · Memorama (3) $149 | |
-| Volumen | **Manuales por volumen:** 1 → $299 · 3 → $799 · 5 → $1,149 · 7 → $1,599 · 10 → $1,949 · 15 → $2,899 · 20 → $3,849 (de $266 a $192 por manual) | |
-| Paquete | Categoría de manuales (8) | $549 – $2,499 |
-| Paquete | Por tipo: Puestos $2,249 · Controles $1,149 · KPIs $749 · Mystery $579 · Juegos $699 | |
-| Paquete | Por perfil (8): Apertura $3,299 · Operación $1,999 · Talento $3,399 · Servicio $1,849 · Marketing $1,299 · Liderazgo $1,349 · Blindaje $1,799 · Finanzas $799 | |
-| Ancla | Catálogo completo (115 documentos, sin juegos) | $6,999 (suma suelta $23,675) |
+| Documento suelto | Manual completo (52): se vende **por volumen** (abajo) | $99 MXN |
+| Documento suelto | Documento corto (63): puestos, controles, KPIs, Mystery | $49 MXN |
+| Documento suelto | Juegos: Lotería (2) $79 · Memorama (3) $49 | |
+| Volumen | **Manuales por volumen:** 1 → $99 · 3 → $199 · 5 → $299 · 10 → $499 · 20 → $899 (de $66 a $45 por manual) | |
+| Paquete | Categoría de manuales (8) | $149 – $549 |
+| Paquete | Por tipo: Puestos $849 · Controles $449 · KPIs $299 · Mystery $199 · Juegos $199 | |
+| Paquete | Por perfil (8): Apertura $999 · Operación $799 · Talento $999 · Servicio $599 · Marketing $399 · Liderazgo $349 · Blindaje $449 · Finanzas $199 | |
+| Ancla | Catálogo completo (115 documentos, sin juegos) | $1,999 (suma suelta $8,235) |
 
-Descuento por volumen de referencia: 2–4 docs 10% · 5–9 25% · 10–20 35% · 21+ 50%.
+Estrategia de precios: impulso (manual $99, documento corto $49). Ningún paquete cuesta más que comprar su contenido por volumen.
 
 **Manuales por volumen.** No hay un paquete con todos los manuales. El cliente marca los que quiera y el precio se ajusta solo: se cobra la combinación de paquetes más barata que cubra esa cantidad (4 = 3 + 1 suelto = $1,098; 9 = paquete de 10 = $1,949, y se avisa que puede llevar 1 más sin pagar más). Los escalones se editan en `tools/catalog-config.json` (`prices.volume.manuales`), se regeneran con `tools\build-catalog.ps1` y el servidor deberá recalcular el mismo precio al cobrar. Para llevar más de 20 manuales conviene el Catálogo completo.
 
