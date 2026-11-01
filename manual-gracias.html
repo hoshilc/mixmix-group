@@ -27,7 +27,7 @@
       <p class="mf-label">Manual gratuito</p>
       <h1 class="mf-title" id="g-title">¡Listo!</h1>
       <span class="mf-rule" aria-hidden="true"></span>
-      <p class="mf-sub">Tu manual va en camino a tu WhatsApp. También puedes descargarlo aquí.</p>
+      <p class="mf-sub" id="g-sub">Descarga tu manual aquí abajo.</p>
 
       <div class="mf-card" style="margin-top:28px">
         <a class="mf-btn" id="g-download" href="/descargas/manual-donde-pierde-dinero.pdf" download style="margin-top:0">Descargar el manual (PDF)</a>
@@ -53,8 +53,9 @@
   "use strict";
   var C = window.MM_CONFIG || {};
   function $(id) { return document.getElementById(id); }
-  function show(nombre) {
+  function show(nombre, correo) {
     $("g-title").textContent = nombre ? "¡Listo, " + nombre + "!" : "¡Listo!";
+    if (correo) $("g-sub").textContent = "Descarga tu manual aquí abajo. También te lo enviamos a tu correo.";
     if (C.whatsapp) {   /* el número de WhatsApp Business se pone en js/config.js; sin número el botón no aparece */
       var a = $("g-wa");
       a.href = "https://wa.me/" + C.whatsapp + "?text=" + encodeURIComponent("Hola, ya descargué el manual");
@@ -67,7 +68,7 @@
     .catch(function () { return { ok: false, error: "network" }; })
     .then(function (d) {
       if (d && d.ok) {
-        show(d.nombre || "");
+        show(d.nombre || "", !!d.correo);
         /* Lead: una sola vez por registro (el servidor solo lo marca "nuevo" la primera vez) */
         if (d.lead && window.MMTrack) window.MMTrack.lead(d.event_id);
         return;

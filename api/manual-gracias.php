@@ -35,4 +35,4 @@ if ($lead) {
     ), array(), $cfg['site_url'] . '/manual/gracias');
 }
 $first = trim(mb_substr($c['nombre'], 0, (int)mb_strpos($c['nombre'] . ' ', ' ')));
-ok(array('nombre' => $first, 'lead' => $lead, 'event_id' => $eventId));
+ok(array('nombre' => $first, 'correo' => !empty($c['correo']), 'lead' => $lead, 'event_id' => $eventId));
